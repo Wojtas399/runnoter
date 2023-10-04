@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../mapper/firebase_exception_mapper.dart';
+import '../mapper/custom_firebase_exception_mapper.dart';
 import '../model/auth_provider.dart';
 import '../social_auth/facebook_auth_service.dart';
 import '../social_auth/google_auth_service.dart';
@@ -30,7 +30,7 @@ class FirebaseAuthService {
         password: password,
       );
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      throw mapFirebaseAuthExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -43,7 +43,7 @@ class FirebaseAuthService {
       if (_isInternalError(exception)) {
         code = 'network-request-failed';
       }
-      throw mapFirebaseExceptionFromCodeStr(code);
+      throw mapFirebaseAuthExceptionFromCodeStr(code);
     }
   }
 
@@ -56,7 +56,7 @@ class FirebaseAuthService {
       if (_isInternalError(exception)) {
         code = 'network-request-failed';
       }
-      throw mapFirebaseExceptionFromCodeStr(code);
+      throw mapFirebaseAuthExceptionFromCodeStr(code);
     }
   }
 
@@ -72,7 +72,7 @@ class FirebaseAuthService {
       );
       return credential.user?.uid;
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      throw mapFirebaseAuthExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -80,7 +80,7 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      throw mapFirebaseAuthExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -88,7 +88,7 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      throw mapFirebaseAuthExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -98,7 +98,7 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      throw mapFirebaseAuthExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -106,7 +106,7 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      throw mapFirebaseAuthExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -114,7 +114,7 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.currentUser?.delete();
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      throw mapFirebaseAuthExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -136,7 +136,7 @@ class FirebaseAuthService {
       if (_isInternalError(exception)) {
         code = 'network-request-failed';
       }
-      throw mapFirebaseExceptionFromCodeStr(code);
+      throw mapFirebaseAuthExceptionFromCodeStr(code);
     }
   }
 
@@ -144,7 +144,7 @@ class FirebaseAuthService {
     try {
       await FirebaseAuth.instance.currentUser?.reload();
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      throw mapFirebaseAuthExceptionFromCodeStr(exception.code);
     }
   }
 

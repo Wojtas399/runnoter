@@ -55,6 +55,16 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
     ).thenAnswer((_) => Stream.value(allWorkouts));
   }
 
+  void mockRefreshWorkoutsByDateRange() {
+    when(
+      () => refreshWorkoutsByDateRange(
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockAddWorkout() {
     when(
       () => addWorkout(
@@ -67,17 +77,12 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockUpdateWorkout() {
-    when(
-      () => updateWorkout(
-        workoutId: any(named: 'workoutId'),
-        userId: any(named: 'userId'),
-        date: any(named: 'date'),
-        workoutName: any(named: 'workoutName'),
-        status: any(named: 'status'),
-        stages: any(named: 'stages'),
-      ),
-    ).thenAnswer((_) => Future.value());
+  void mockUpdateWorkout({Object? throwable}) {
+    if (throwable != null) {
+      when(_updateWorkoutCall).thenThrow(throwable);
+    } else {
+      when(_updateWorkoutCall).thenAnswer((_) => Future.value());
+    }
   }
 
   void mockDeleteWorkout() {
@@ -96,4 +101,13 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
       ),
     ).thenAnswer((_) => Future.value());
   }
+
+  Future<void> _updateWorkoutCall() => updateWorkout(
+        workoutId: any(named: 'workoutId'),
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+        workoutName: any(named: 'workoutName'),
+        status: any(named: 'status'),
+        stages: any(named: 'stages'),
+      );
 }

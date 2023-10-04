@@ -8,21 +8,13 @@ class PageNotFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: PageNotFoundInfo(),
-    );
-  }
-}
-
-class PageNotFoundInfo extends StatelessWidget {
-  const PageNotFoundInfo({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return EmptyContentInfo(
-      icon: Icons.warning,
-      title: Str.of(context).pageNotFoundTitle,
-      subtitle: Str.of(context).pageNotFoundMessage,
+    return Scaffold(
+      appBar: AppBar(),
+      body: EmptyContentInfo(
+        icon: Icons.warning,
+        title: Str.of(context).pageNotFoundTitle,
+        subtitle: Str.of(context).pageNotFoundMessage,
+      ),
     );
   }
 }

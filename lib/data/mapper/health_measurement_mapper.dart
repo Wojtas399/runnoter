@@ -2,7 +2,7 @@ import 'package:firebase/firebase.dart';
 
 import '../../domain/entity/health_measurement.dart';
 
-HealthMeasurementDto mapHealthMeasurementToFirebase(
+HealthMeasurementDto mapHealthMeasurementToDto(
   HealthMeasurement healthMeasurement,
 ) =>
     HealthMeasurementDto(
@@ -12,7 +12,7 @@ HealthMeasurementDto mapHealthMeasurementToFirebase(
       fastingWeight: healthMeasurement.fastingWeight,
     );
 
-HealthMeasurement mapHealthMeasurementFromFirebase(
+HealthMeasurement mapHealthMeasurementFromDto(
   HealthMeasurementDto healthMeasurementDto,
 ) =>
     HealthMeasurement(

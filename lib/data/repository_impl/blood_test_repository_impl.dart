@@ -8,6 +8,7 @@ import '../../domain/entity/blood_test.dart';
 import '../../domain/repository/blood_test_repository.dart';
 import '../mapper/blood_parameter_result_mapper.dart';
 import '../mapper/blood_test_mapper.dart';
+import '../mapper/custom_exception_mapper.dart';
 
 class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     implements BloodTestRepository {
@@ -25,19 +26,31 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
       BloodTest? bloodTest = bloodTests?.firstWhereOrNull(
         (BloodTest test) => test.id == bloodTestId && test.userId == userId,
       );
-      bloodTest ??= await _loadTestByIdFromRemoteDb(bloodTestId, userId);
+      bloodTest ??= await _loadTestByIdFromDb(bloodTestId, userId);
       yield bloodTest;
     }
   }
 
   @override
-  Stream<List<BloodTest>?> getAllTests({
-    required String userId,
-  }) async* {
-    await _loadTestsFromRemoteDb(userId);
+  Stream<List<BloodTest>?> getTestsByUserId({required String userId}) async* {
+    final testsLoadedFromDb = await _loadTestsByUserIdFromDb(userId);
+    if (testsLoadedFromDb?.isNotEmpty == true) {
+      addOrUpdateEntities(testsLoadedFromDb!);
+    }
     await for (final readings in dataStream$) {
       yield readings?.where((bloodTest) => bloodTest.userId == userId).toList();
     }
+  }
+
+  @override
+  Future<void> refreshTestsByUserId({required String userId}) async {
+    final existingTests = await dataStream$.first;
+    final userTestsLoadedFromDb = await _loadTestsByUserIdFromDb(userId);
+    final List<BloodTest> updatedTests = [
+      ...?existingTests?.where((test) => test.userId != userId),
+      ...?userTestsLoadedFromDb,
+    ];
+    setEntities(updatedTests);
   }
 
   @override
@@ -65,16 +78,24 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) async {
-    final updatedTestDto = await _dbBloodTestService.updateTest(
-      bloodTestId: bloodTestId,
-      userId: userId,
-      date: date,
-      parameterResultDtos:
-          parameterResults?.map(mapBloodParameterResultToDto).toList(),
-    );
-    if (updatedTestDto != null) {
-      final BloodTest updatedTest = mapBloodTestFromDto(updatedTestDto);
-      updateEntity(updatedTest);
+    try {
+      final updatedTestDto = await _dbBloodTestService.updateTest(
+        bloodTestId: bloodTestId,
+        userId: userId,
+        date: date,
+        parameterResultDtos:
+            parameterResults?.map(mapBloodParameterResultToDto).toList(),
+      );
+      if (updatedTestDto != null) {
+        final BloodTest updatedTest = mapBloodTestFromDto(updatedTestDto);
+        updateEntity(updatedTest);
+      }
+    } on firebase.FirebaseDocumentException catch (documentException) {
+      if (documentException.code ==
+          firebase.FirebaseDocumentExceptionCode.documentNotFound) {
+        removeEntity(bloodTestId);
+      }
+      throw mapExceptionFromDb(documentException);
     }
   }
 
@@ -91,15 +112,13 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
   }
 
   @override
-  Future<void> deleteAllUserTests({
-    required String userId,
-  }) async {
+  Future<void> deleteAllUserTests({required String userId}) async {
     final List<String> idsOfDeletedTests =
         await _dbBloodTestService.deleteAllUserTests(userId: userId);
     removeEntities(idsOfDeletedTests);
   }
 
-  Future<BloodTest?> _loadTestByIdFromRemoteDb(
+  Future<BloodTest?> _loadTestByIdFromDb(
     String bloodTestId,
     String userId,
   ) async {
@@ -115,13 +134,10 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     return null;
   }
 
-  Future<void> _loadTestsFromRemoteDb(String userId) async {
-    final testsDtos = await _dbBloodTestService.loadAllTests(
+  Future<List<BloodTest>?> _loadTestsByUserIdFromDb(String userId) async {
+    final testsDtos = await _dbBloodTestService.loadTestsByUserId(
       userId: userId,
     );
-    if (testsDtos != null) {
-      final List<BloodTest> tests = testsDtos.map(mapBloodTestFromDto).toList();
-      addOrUpdateEntities(tests);
-    }
+    return testsDtos?.map(mapBloodTestFromDto).toList();
   }
 }

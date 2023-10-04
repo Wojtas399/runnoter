@@ -18,7 +18,7 @@ void main() {
       status: const CubitStatusInitial(),
       stages: const [],
     );
-    dateService.mockAreDatesTheSame(expected: true);
+    dateService.mockAreDaysTheSame(expected: true);
   });
 
   tearDown(() {
@@ -171,7 +171,7 @@ void main() {
     'date is different than the original workout date, '
     'should be true',
     () {
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       state = state.copyWith(
         status: const CubitStatusComplete(),
         date: DateTime(2023, 2, 1),

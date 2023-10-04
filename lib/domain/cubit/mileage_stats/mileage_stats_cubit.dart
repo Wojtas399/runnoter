@@ -62,6 +62,21 @@ class MileageStatsCubit extends Cubit<MileageStatsState> {
     _dateRangeManagerCubit.nextDateRange();
   }
 
+  Future<void> refresh() async {
+    final DateRange? dateRange = state.dateRange;
+    if (dateRange == null) return;
+    await _workoutRepository.refreshWorkoutsByDateRange(
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+      userId: _userId,
+    );
+    await _raceRepository.refreshRacesByDateRange(
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+      userId: _userId,
+    );
+  }
+
   void _dateRangeUpdated(DateRangeManagerState dateRangeManagerState) {
     final DateRangeType dateRangeType = dateRangeManagerState.dateRangeType;
     final DateRange? dateRange = dateRangeManagerState.dateRange;

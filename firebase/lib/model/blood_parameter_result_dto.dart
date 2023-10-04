@@ -15,7 +15,7 @@ class BloodParameterResultDto extends Equatable {
   BloodParameterResultDto.fromJson(Map<String, dynamic>? json)
       : this(
           parameter: mapBloodParameterFromString(json?[_parameterField]),
-          value: json?[_valueField],
+          value: (json?[_valueField] as num).toDouble(),
         );
 
   @override
@@ -26,7 +26,7 @@ class BloodParameterResultDto extends Equatable {
 
   Map<String, dynamic> toJson() => {
         _parameterField: mapBloodParameterToString(parameter),
-        _valueField: value,
+        _valueField: value.toDouble(),
       };
 }
 

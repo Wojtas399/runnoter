@@ -2,8 +2,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 import 'package:runnoter/domain/entity/user.dart';
@@ -124,7 +125,7 @@ void main() {
   );
 
   blocTest(
-    'date changed, '
+    'dateChanged, '
     'should update date in state',
     build: () => createCubit(),
     act: (cubit) => cubit.dateChanged(DateTime(2023, 5, 20)),
@@ -137,7 +138,7 @@ void main() {
   );
 
   blocTest(
-    'parameter value changed, '
+    'parameterValueChanged, '
     'parameter exists in state, '
     'should update parameter value',
     build: () => createCubit(
@@ -174,7 +175,7 @@ void main() {
   );
 
   blocTest(
-    'parameter value changed, '
+    'parameterValueChanged, '
     'parameter exists in state and its new value is null, '
     'should remove parameter from list of parameter results',
     build: () => createCubit(
@@ -207,7 +208,7 @@ void main() {
   );
 
   blocTest(
-    'parameter value changed, '
+    'parameterValueChanged, '
     'parameter does not exist in state, '
     'should add parameter to list',
     build: () => createCubit(
@@ -250,21 +251,15 @@ void main() {
 
   blocTest(
     'submit, '
-    'blood test in state is null, '
+    'blood test is null, '
     'should call method from blood test repository to add new blood test and '
     'should emit complete status with bloodTestAdded info',
     build: () => createCubit(
       gender: Gender.male,
       date: DateTime(2023, 5, 20),
       parameterResults: const [
-        BloodParameterResult(
-          parameter: BloodParameter.wbc,
-          value: 4.45,
-        ),
-        BloodParameterResult(
-          parameter: BloodParameter.sodium,
-          value: 139,
-        ),
+        BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+        BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
       ],
     ),
     setUp: () => bloodTestRepository.mockAddNewTest(),
@@ -275,14 +270,8 @@ void main() {
         gender: Gender.male,
         date: DateTime(2023, 5, 20),
         parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-          BloodParameterResult(
-            parameter: BloodParameter.sodium,
-            value: 139,
-          ),
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
         ],
       ),
       BloodTestCreatorState(
@@ -292,14 +281,8 @@ void main() {
         gender: Gender.male,
         date: DateTime(2023, 5, 20),
         parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-          BloodParameterResult(
-            parameter: BloodParameter.sodium,
-            value: 139,
-          ),
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
         ],
       ),
     ],
@@ -308,14 +291,8 @@ void main() {
         userId: userId,
         date: DateTime(2023, 5, 20),
         parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-          BloodParameterResult(
-            parameter: BloodParameter.sodium,
-            value: 139,
-          ),
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
         ],
       ),
     ).called(1),
@@ -323,31 +300,22 @@ void main() {
 
   blocTest(
     'submit, '
-    'blood test in state is not null, '
+    'blood test is not null, '
     'should call method from blood test repository to update blood test and '
-    'should emit complete status with blood test updated info',
+    'should emit complete status with bloodTestUpdated info',
     build: () => createCubit(
       gender: Gender.male,
       bloodTest: createBloodTest(
         id: bloodTestId,
         date: DateTime(2023, 5, 12),
         parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.cpk,
-            value: 300,
-          ),
+          BloodParameterResult(parameter: BloodParameter.cpk, value: 300),
         ],
       ),
       date: DateTime(2023, 5, 20),
       parameterResults: const [
-        BloodParameterResult(
-          parameter: BloodParameter.wbc,
-          value: 4.45,
-        ),
-        BloodParameterResult(
-          parameter: BloodParameter.sodium,
-          value: 139,
-        ),
+        BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+        BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
       ],
     ),
     setUp: () => bloodTestRepository.mockUpdateTest(),
@@ -360,22 +328,13 @@ void main() {
           id: bloodTestId,
           date: DateTime(2023, 5, 12),
           parameterResults: const [
-            BloodParameterResult(
-              parameter: BloodParameter.cpk,
-              value: 300,
-            ),
+            BloodParameterResult(parameter: BloodParameter.cpk, value: 300),
           ],
         ),
         date: DateTime(2023, 5, 20),
         parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-          BloodParameterResult(
-            parameter: BloodParameter.sodium,
-            value: 139,
-          ),
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
         ],
       ),
       BloodTestCreatorState(
@@ -387,22 +346,13 @@ void main() {
           id: bloodTestId,
           date: DateTime(2023, 5, 12),
           parameterResults: const [
-            BloodParameterResult(
-              parameter: BloodParameter.cpk,
-              value: 300,
-            ),
+            BloodParameterResult(parameter: BloodParameter.cpk, value: 300),
           ],
         ),
         date: DateTime(2023, 5, 20),
         parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-          BloodParameterResult(
-            parameter: BloodParameter.sodium,
-            value: 139,
-          ),
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
         ],
       ),
     ],
@@ -412,14 +362,84 @@ void main() {
         userId: userId,
         date: DateTime(2023, 5, 20),
         parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-          BloodParameterResult(
-            parameter: BloodParameter.sodium,
-            value: 139,
-          ),
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
+        ],
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'submit, '
+    'blood test is not null, '
+    'repository method to update blood test throws entity exception with'
+    'entityNotFound code, '
+    'should emit error status with bloodTestNoLongerExists info',
+    build: () => createCubit(
+      gender: Gender.male,
+      bloodTest: createBloodTest(
+        id: bloodTestId,
+        date: DateTime(2023, 5, 12),
+        parameterResults: const [
+          BloodParameterResult(parameter: BloodParameter.cpk, value: 300),
+        ],
+      ),
+      date: DateTime(2023, 5, 20),
+      parameterResults: const [
+        BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+        BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
+      ],
+    ),
+    setUp: () => bloodTestRepository.mockUpdateTest(
+      throwable: const EntityException(
+        code: EntityExceptionCode.entityNotFound,
+      ),
+    ),
+    act: (cubit) => cubit.submit(),
+    expect: () => [
+      BloodTestCreatorState(
+        status: const CubitStatusLoading(),
+        gender: Gender.male,
+        bloodTest: createBloodTest(
+          id: bloodTestId,
+          date: DateTime(2023, 5, 12),
+          parameterResults: const [
+            BloodParameterResult(parameter: BloodParameter.cpk, value: 300),
+          ],
+        ),
+        date: DateTime(2023, 5, 20),
+        parameterResults: const [
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
+        ],
+      ),
+      BloodTestCreatorState(
+        status: const CubitStatusError<BloodTestCreatorCubitError>(
+          error: BloodTestCreatorCubitError.bloodTestNoLongerExists,
+        ),
+        gender: Gender.male,
+        bloodTest: createBloodTest(
+          id: bloodTestId,
+          date: DateTime(2023, 5, 12),
+          parameterResults: const [
+            BloodParameterResult(parameter: BloodParameter.cpk, value: 300),
+          ],
+        ),
+        date: DateTime(2023, 5, 20),
+        parameterResults: const [
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
+        ],
+      ),
+    ],
+    verify: (_) => verify(
+      () => bloodTestRepository.updateTest(
+        bloodTestId: bloodTestId,
+        userId: userId,
+        date: DateTime(2023, 5, 20),
+        parameterResults: const [
+          BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+          BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
         ],
       ),
     ).called(1),

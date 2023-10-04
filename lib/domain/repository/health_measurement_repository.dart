@@ -16,6 +16,12 @@ abstract class HealthMeasurementRepository {
     required String userId,
   });
 
+  Future<void> refreshMeasurementsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  });
+
   Future<bool> doesMeasurementFromDateExist({
     required String userId,
     required DateTime date,

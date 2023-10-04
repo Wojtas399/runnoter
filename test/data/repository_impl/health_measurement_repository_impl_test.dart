@@ -31,7 +31,7 @@ void main() {
   });
 
   test(
-    'get measurement by date, '
+    'getMeasurementByDate, '
     'measurement exists in repository, '
     'should emit matching measurement',
     () {
@@ -42,7 +42,7 @@ void main() {
         userId: userId,
       );
       repository = HealthMeasurementRepositoryImpl(
-        initialState: [
+        initialData: [
           createHealthMeasurement(
             date: DateTime(2023, 2, 10),
             userId: userId,
@@ -77,7 +77,7 @@ void main() {
   );
 
   test(
-    'get measurement by date, '
+    'getMeasurementByDate, '
     'measurement does not exist in repository, '
     'should load measurement from db and should emit loaded measurement',
     () {
@@ -98,7 +98,7 @@ void main() {
         healthMeasurementDto: healthMeasurementDto,
       );
       repository = HealthMeasurementRepositoryImpl(
-        initialState: [
+        initialData: [
           createHealthMeasurement(
             date: DateTime(2023, 2, 10),
             userId: userId,
@@ -132,8 +132,10 @@ void main() {
   );
 
   test(
-    'get measurements by date range, '
-    'should emit existing and matching measurements, should load new measurements from db and should also emit newly loaded measurements',
+    'getMeasurementsByDateRange, '
+    'should emit existing and matching measurements, '
+    'should load new measurements from db and '
+    'should also emit newly loaded measurements',
     () {
       final DateTime startDate = DateTime(2023, 1, 1);
       final DateTime endDate = DateTime(2023, 1, 7);
@@ -205,7 +207,7 @@ void main() {
         healthMeasurementDtos: loadedMeasurementDtos,
       );
       repository =
-          HealthMeasurementRepositoryImpl(initialState: existingMeasurements);
+          HealthMeasurementRepositoryImpl(initialData: existingMeasurements);
 
       Stream<List<HealthMeasurement>?> measurements$ =
           repository.getMeasurementsByDateRange(
@@ -229,8 +231,9 @@ void main() {
   );
 
   test(
-    'get all measurements, '
-    'should load new measurements from remote db and should emit measurements belonging to given user',
+    'getAllMeasurements, '
+    'should load new measurements from db and '
+    'should emit measurements belonging to given user',
     () {
       final List<HealthMeasurement> existingMeasurements = [
         HealthMeasurement(
@@ -284,7 +287,7 @@ void main() {
         healthMeasurementDtos: loadedMeasurementDtos,
       );
       repository =
-          HealthMeasurementRepositoryImpl(initialState: existingMeasurements);
+          HealthMeasurementRepositoryImpl(initialData: existingMeasurements);
 
       Stream<List<HealthMeasurement>?> measurements$ =
           repository.getAllMeasurements(userId: userId);
@@ -304,17 +307,106 @@ void main() {
   );
 
   test(
-    'does measurement from date exist, '
+    'refreshMeasurementsByDateRange, '
+    'should load measurements by date range from db and '
+    'should add or update them in repo',
+    () async {
+      final DateTime startDate = DateTime(2023, 1, 10);
+      final DateTime endDate = DateTime(2023, 1, 16);
+      final List<HealthMeasurement> existingMeasurements = [
+        createHealthMeasurement(userId: userId, date: DateTime(2023, 1, 11)),
+        createHealthMeasurement(userId: userId, date: DateTime(2023, 1, 9)),
+        createHealthMeasurement(userId: userId, date: DateTime(2023, 1, 18)),
+        createHealthMeasurement(userId: userId, date: DateTime(2023, 1, 15)),
+        createHealthMeasurement(userId: 'u2', date: DateTime(2023, 1, 14)),
+      ];
+      final List<HealthMeasurementDto> loadedMeasurementDtos = [
+        HealthMeasurementDto(
+          userId: userId,
+          date: DateTime(2023, 1, 11),
+          restingHeartRate: 49,
+          fastingWeight: 78,
+        ),
+        HealthMeasurementDto(
+          userId: userId,
+          date: DateTime(2023, 1, 13),
+          restingHeartRate: 50,
+          fastingWeight: 78.5,
+        ),
+      ];
+      final List<HealthMeasurement> loadedWorkouts = [
+        HealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 1, 11),
+          restingHeartRate: 49,
+          fastingWeight: 78,
+        ),
+        HealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 1, 13),
+          restingHeartRate: 50,
+          fastingWeight: 78.5,
+        ),
+      ];
+      dateService.mockIsDateFromRange(expected: true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 9),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 18),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
+      dbHealthMeasurementService.mockLoadMeasurementsByDateRange(
+        healthMeasurementDtos: loadedMeasurementDtos,
+      );
+      repository = HealthMeasurementRepositoryImpl(
+        initialData: existingMeasurements,
+      );
+
+      await repository.refreshMeasurementsByDateRange(
+        startDate: startDate,
+        endDate: endDate,
+        userId: userId,
+      );
+
+      expect(
+        repository.dataStream$,
+        emits([
+          existingMeasurements[1],
+          existingMeasurements[2],
+          existingMeasurements.last,
+          ...loadedWorkouts,
+        ]),
+      );
+      verify(
+        () => dbHealthMeasurementService.loadMeasurementsByDateRange(
+          startDate: startDate,
+          endDate: endDate,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'doesMeasurementFromDateExist, '
     'measurement exist in repo, '
     'should return true',
     () async {
       final DateTime date = DateTime(2023, 7, 2);
       repository = HealthMeasurementRepositoryImpl(
-        initialState: [
+        initialData: [
           createHealthMeasurement(userId: userId, date: date),
         ],
       );
-      dateService.mockAreDatesTheSame(expected: true);
+      dateService.mockAreDaysTheSame(expected: true);
 
       final bool doesMeasurementExist = await repository
           .doesMeasurementFromDateExist(userId: userId, date: date);
@@ -324,7 +416,7 @@ void main() {
   );
 
   test(
-    'does measurement from date exist, '
+    'doesMeasurementFromDateExist, '
     'measurement does not exist in repo, '
     'measurement loaded from remote db is not null, '
     'should add measurement to repo and should return true',
@@ -343,11 +435,11 @@ void main() {
         fastingWeight: 60,
       );
       repository = HealthMeasurementRepositoryImpl(
-        initialState: [
+        initialData: [
           createHealthMeasurement(userId: 'u2', date: date),
         ],
       );
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       dbHealthMeasurementService.mockLoadMeasurementByDate(
         healthMeasurementDto: loadedMeasurementDto,
       );
@@ -371,18 +463,18 @@ void main() {
   );
 
   test(
-    'does measurement from date exist, '
+    'doesMeasurementFromDateExist, '
     'measurement does not exist in repo, '
     'measurement loaded from remote db is null, '
     'should return false',
     () async {
       final DateTime date = DateTime(2023, 7, 2);
       repository = HealthMeasurementRepositoryImpl(
-        initialState: [
+        initialData: [
           createHealthMeasurement(userId: 'u2', date: date),
         ],
       );
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       dbHealthMeasurementService.mockLoadMeasurementByDate();
 
       final bool doesMeasurementExist = await repository
@@ -393,7 +485,7 @@ void main() {
   );
 
   test(
-    'add measurement, '
+    'addMeasurement, '
     'should add measurement to db and repo',
     () {
       final DateTime date = DateTime(2023, 2, 9);
@@ -438,7 +530,7 @@ void main() {
   );
 
   test(
-    'update measurement, '
+    'updateMeasurement, '
     'should update measurement in db and in repo',
     () {
       final DateTime date = DateTime(2023, 2, 9);
@@ -473,7 +565,7 @@ void main() {
         updatedMeasurementDto: updatedHealthMeasurementDto,
       );
       repository = HealthMeasurementRepositoryImpl(
-        initialState: existingMeasurements,
+        initialData: existingMeasurements,
       );
 
       final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
@@ -511,7 +603,7 @@ void main() {
   );
 
   test(
-    'delete measurement, '
+    'deleteMeasurement, '
     'should delete measurement in db and in repo',
     () {
       final DateTime date = DateTime(2023, 2, 9);
@@ -525,13 +617,13 @@ void main() {
           date: date,
         ),
       ];
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       when(
         () => dateService.areDaysTheSame(date, date),
       ).thenReturn(true);
       dbHealthMeasurementService.mockDeleteMeasurement();
       repository = HealthMeasurementRepositoryImpl(
-        initialState: existingMeasurements,
+        initialData: existingMeasurements,
       );
 
       final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
@@ -564,7 +656,7 @@ void main() {
   );
 
   test(
-    'delete all user measurements, '
+    'deleteAllUserMeasurements, '
     'should delete all user measurements in db and in repo',
     () {
       final List<HealthMeasurement> existingMeasurements = [
@@ -589,7 +681,7 @@ void main() {
         idsOfDeletedMeasurements: ['2023-02-10', '2023-02,12'],
       );
       repository = HealthMeasurementRepositoryImpl(
-        initialState: existingMeasurements,
+        initialData: existingMeasurements,
       );
 
       final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;

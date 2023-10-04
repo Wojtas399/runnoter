@@ -276,6 +276,14 @@
   "@workoutCreatorUpdatedWorkoutMessage": {
     "description": "Message to inform that workout has been updated"
   },
+  "workoutCreatorWorkoutNoLongerExistsDialogTitle": "Trening już nie istnieje",
+  "@workoutCreatorWorkoutNoLongerExistsDialogTitle": {
+    "description": "Title of the dialog to inform that workout no longer exists"
+  },
+  "workoutCreatorWorkoutNoLongerExistsDialogMessage": "Ten trening został niedawno usunięty, więc nie możesz go edytować",
+  "@workoutCreatorWorkoutNoLongerExistsDialogMessage": {
+    "description": "Message of the dialog to inform that workout no longer exists"
+  },
   "@__________WORKOUT_STAGE_CREATOR__________": {},
   "workoutStageCreatorScreenTitleAddMode": "Nowy etap treningu",
   "@workoutStageCreatorScreenTitleAddMode": {
@@ -621,6 +629,14 @@
   "@bloodTestCreatorSuccessfullyEditedTest": {
     "description": "Message to inform that blood test has been edited"
   },
+  "bloodTestCreatorBloodTestNoLongerExistsDialogTitle": "Badanie już nie istnieje",
+  "@bloodTestCreatorBloodTestNoLongerExistsDialogTitle": {
+    "description": "Title of the dialog to inform that blood test no longer exists"
+  },
+  "bloodTestCreatorBloodTestNoLongerExistsDialogMessage": "To badanie zostało niedawno usunięte, więc nie możesz go edytować",
+  "@bloodTestCreatorBloodTestNoLongerExistsDialogMessage": {
+    "description": "Message of the dialog to inform that blood test no longer exists"
+  },
   "@__________BLOOD_TEST_PREVIEW__________": {},
   "bloodTestPreviewTitle": "Badanie krwi",
   "@bloodTestPreviewTitle": {
@@ -676,6 +692,14 @@
   "@raceCreatorUpdatedRaceMessage": {
     "description": "Message to inform that race has been updated"
   },
+  "raceCreatorRaceNoLongerExistsDialogTitle": "Wyścig już nie istnieje",
+  "@raceCreatorRaceNoLongerExistsDialogTitle": {
+    "description": "Title of the dialog to inform that race no longer exists"
+  },
+  "raceCreatorRaceNoLongerExistsDialogMessage": "Ten wyścig został niedawno usunięty, więc nie możesz go edytować",
+  "@raceCreatorRaceNoLongerExistsDialogMessage": {
+    "description": "Message of the dialog to inform that race no longer exists"
+  },
   "@__________RACES__________": {},
   "racesTitle": "Wyścigi",
   "@racesTitle": {
@@ -724,6 +748,14 @@
     "description": "Label of race expected duration"
   },
   "@__________CLIENTS__________": {},
+  "clientsNoInternetConnectionTitle": "Brak połączenia z internetem",
+  "@clientsNoInternetConnectionTitle": {
+    "description": "Title of the information about no internet connection"
+  },
+  "clientsNoInternetConnectionMessage": "Aby korzystać z tej strony musisz mieć połączenie internetowe",
+  "@clientsNoInternetConnectionMessage": {
+    "description": "Message of the information about no internet connection"
+  },
   "clientsTitle": "Klienci",
   "@clientsTitle": {
     "description": "Title of clients screen"

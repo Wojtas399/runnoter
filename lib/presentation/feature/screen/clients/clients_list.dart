@@ -23,13 +23,13 @@ class ClientsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: context.isMobileSize ? 8 : 0),
+      padding: EdgeInsets.symmetric(horizontal: context.isMobileSize ? 16 : 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: context.isMobileSize ? 16 : 0,
+              horizontal: context.isMobileSize ? 8 : 0,
             ),
             child: TitleLarge(Str.of(context).clientsTitle),
           ),
@@ -61,16 +61,17 @@ class _Content extends StatelessWidget {
           subtitle: Str.of(context).clientsNoClientsMessage,
         ),
       [...] => Column(
-          children: clients
-              .map(
-                (Person client) => _ClientItem(
-                  clientInfo: client,
-                  showMessageBadge:
-                      idsOfClientsWithAwaitingMessages?.contains(client.id) ==
-                          true,
-                ),
-              )
-              .toList(),
+          children: ListTile.divideTiles(
+            context: context,
+            tiles: clients.map(
+              (Person client) => _ClientItem(
+                clientInfo: client,
+                showMessageBadge:
+                    idsOfClientsWithAwaitingMessages?.contains(client.id) ==
+                        true,
+              ),
+            ),
+          ).toList(),
         ),
     };
   }
@@ -88,7 +89,7 @@ class _ClientItem extends StatelessWidget {
       title: Text('${clientInfo.name} ${clientInfo.surname}'),
       subtitle: Text(clientInfo.email),
       contentPadding: EdgeInsets.symmetric(
-        horizontal: context.isMobileSize ? 16 : 0,
+        horizontal: context.isMobileSize ? 8 : 0,
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

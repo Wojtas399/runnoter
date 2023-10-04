@@ -29,9 +29,7 @@ void main() {
   });
 
   setUp(() {
-    dateService.mockGetToday(
-      todayDate: DateTime(2023, 5, 20),
-    );
+    dateService.mockGetToday(todayDate: DateTime(2023, 5, 20));
   });
 
   tearDown(() {
@@ -303,7 +301,7 @@ void main() {
       ),
     ),
     setUp: () {
-      dateService.mockAreDatesTheSame(expected: true);
+      dateService.mockAreDaysTheSame(expected: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockUpdateMeasurement();
     },
@@ -370,7 +368,7 @@ void main() {
       ),
     ),
     setUp: () {
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockDoesMeasurementFromDateExist(
         expected: false,

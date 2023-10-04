@@ -50,30 +50,40 @@ class _CubitListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CubitWithStatusListener<WorkoutCreatorCubit, WorkoutCreatorState,
-        WorkoutCreatorCubitInfo, dynamic>(
+        WorkoutCreatorCubitInfo, WorkoutCreatorCubitError>(
       onInfo: (WorkoutCreatorCubitInfo info) => _manageInfo(context, info),
+      onError: (WorkoutCreatorCubitError error) => _manageError(context, error),
       child: child,
     );
   }
 
   void _manageInfo(BuildContext context, WorkoutCreatorCubitInfo info) {
+    final str = Str.of(context);
     switch (info) {
       case WorkoutCreatorCubitInfo.workoutAdded:
-        _onWorkoutAddedInfo(context);
-        break;
+        navigateBack();
+        showSnackbarMessage(str.workoutCreatorAddedWorkoutMessage);
       case WorkoutCreatorCubitInfo.workoutUpdated:
-        _onWorkoutUpdatedInfo(context);
-        break;
+        navigateBack();
+        showSnackbarMessage(str.workoutCreatorUpdatedWorkoutMessage);
     }
   }
 
-  void _onWorkoutAddedInfo(BuildContext context) {
-    navigateBack();
-    showSnackbarMessage(Str.of(context).workoutCreatorAddedWorkoutMessage);
-  }
-
-  void _onWorkoutUpdatedInfo(BuildContext context) {
-    navigateBack();
-    showSnackbarMessage(Str.of(context).workoutCreatorUpdatedWorkoutMessage);
+  Future<void> _manageError(
+    BuildContext context,
+    WorkoutCreatorCubitError error,
+  ) async {
+    final str = Str.of(context);
+    switch (error) {
+      case WorkoutCreatorCubitError.workoutNoLongerExists:
+        await showMessageDialog(
+          title: str.workoutCreatorWorkoutNoLongerExistsDialogTitle,
+          message: str.workoutCreatorWorkoutNoLongerExistsDialogMessage,
+        );
+        if (context.mounted) {
+          context.router.removeLast();
+          context.router.removeLast();
+        }
+    }
   }
 }

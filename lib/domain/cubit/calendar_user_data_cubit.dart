@@ -52,6 +52,27 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
     }
   }
 
+  Future<void> refresh({
+    required final DateTime startDate,
+    required final DateTime endDate,
+  }) async {
+    await _workoutRepository.refreshWorkoutsByDateRange(
+      startDate: startDate,
+      endDate: endDate,
+      userId: userId,
+    );
+    await _raceRepository.refreshRacesByDateRange(
+      startDate: startDate,
+      endDate: endDate,
+      userId: userId,
+    );
+    await _healthMeasurementRepository.refreshMeasurementsByDateRange(
+      startDate: startDate,
+      endDate: endDate,
+      userId: userId,
+    );
+  }
+
   void _setDataListener(DateTime startDate, DateTime endDate) {
     _listener ??= Rx.combineLatest3(
       _healthMeasurementRepository.getMeasurementsByDateRange(

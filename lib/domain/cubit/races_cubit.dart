@@ -24,8 +24,13 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
   }
 
   void initialize() {
-    _racesListener ??=
-        _raceRepository.getAllRaces(userId: userId).listen(_onRacesChanged);
+    _racesListener ??= _raceRepository
+        .getRacesByUserId(userId: userId)
+        .listen(_onRacesChanged);
+  }
+
+  Future<void> refresh() async {
+    await _raceRepository.refreshRacesByUserId(userId: userId);
   }
 
   void _onRacesChanged(final List<Race>? races) {

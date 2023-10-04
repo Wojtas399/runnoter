@@ -21,7 +21,10 @@ void main() {
   final dateRangeManagerCubit = MockDateRangeManagerCubit();
   const String userId = 'u1';
 
-  HealthStatsCubit createCubit() => HealthStatsCubit(userId: userId);
+  HealthStatsCubit createCubit({DateRange? dateRange}) => HealthStatsCubit(
+        userId: userId,
+        initialState: HealthStatsState(dateRange: dateRange),
+      );
 
   setUpAll(() {
     GetIt.I.registerFactory<DateService>(() => dateService);
@@ -81,7 +84,7 @@ void main() {
             expectedStream: dateRangeManagerState$.stream,
           );
           healthMeasurementRepository.mockGetMeasurementsByDateRange();
-          dateService.mockAreDatesTheSame(expected: false);
+          dateService.mockAreDaysTheSame(expected: false);
           when(
             () => dateService.areDaysTheSame(
               DateTime(2023, 8, 28),
@@ -193,7 +196,7 @@ void main() {
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
           );
-          dateService.mockAreDatesTheSame(expected: false);
+          dateService.mockAreDaysTheSame(expected: false);
           when(
             () => dateService.areDaysTheSame(
               DateTime(2023, 5, 9),
@@ -322,7 +325,7 @@ void main() {
           dateRangeManagerCubit.mockStream(
             expectedStreamValue: dateRangeManagerState,
           );
-          dateService.mockAreDatesTheSame(expected: false);
+          dateService.mockAreDaysTheSame(expected: false);
           when(
             () => dateService.areDaysTheSame(
               DateTime(2023, 5, 9),
@@ -522,5 +525,37 @@ void main() {
     act: (cubit) => cubit.nextChartDateRange(),
     expect: () => [],
     verify: (_) => verify(dateRangeManagerCubit.nextDateRange).called(1),
+  );
+
+  blocTest(
+    'refresh, '
+    'if date range is null should do nothing',
+    build: () => createCubit(),
+    act: (cubit) => cubit.refresh(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'refresh, '
+    'date range is not null, '
+    'should call health measurement repository method to '
+    'refresh measurements by date range',
+    build: () => createCubit(
+      dateRange: DateRange(
+        startDate: DateTime(2023, 1, 10),
+        endDate: DateTime(2023, 1, 16),
+      ),
+    ),
+    setUp: () =>
+        healthMeasurementRepository.mockRefreshMeasurementsByDateRange(),
+    act: (cubit) => cubit.refresh(),
+    expect: () => [],
+    verify: (_) => verify(
+      () => healthMeasurementRepository.refreshMeasurementsByDateRange(
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+        userId: userId,
+      ),
+    ).called(1),
   );
 }

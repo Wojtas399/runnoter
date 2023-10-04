@@ -43,13 +43,45 @@ class _BloodTests extends StatelessWidget {
 
     return switch (bloodTestsSortedByYear) {
       null => const LoadingInfo(),
-      [] => EmptyContentInfo(
-          icon: Icons.water_drop_outlined,
-          title: Str.of(context).bloodTestsNoTestsTitle,
-          subtitle: Str.of(context).bloodTestsNoTestsMessage,
+      [] => RefreshIndicator(
+          onRefresh: context.read<BloodTestsCubit>().refresh,
+          child: const _NoTestsContent(),
         ),
-      [...] => _BloodTestsList(bloodTestsSortedByYear: bloodTestsSortedByYear),
+      [...] => RefreshIndicator(
+          onRefresh: context.read<BloodTestsCubit>().refresh,
+          child: _BloodTestsList(
+            bloodTestsSortedByYear: bloodTestsSortedByYear,
+          ),
+        ),
     };
+  }
+}
+
+class _NoTestsContent extends StatelessWidget {
+  const _NoTestsContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final str = Str.of(context);
+
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+              maxHeight: double.infinity,
+            ),
+            child: EmptyContentInfo(
+              icon: Icons.water_drop_outlined,
+              title: str.bloodTestsNoTestsTitle,
+              subtitle: str.bloodTestsNoTestsMessage,
+            ),
+          ),
+        );
+      },
+    );
   }
 }
 

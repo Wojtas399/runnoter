@@ -1,10 +1,11 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ConnectivityService {
-  Stream<bool> onConnectivityStatusChanged() {
-    return Connectivity().onConnectivityChanged.map(
-          (connectivityResult) => connectivityResult != ConnectivityResult.none,
-        );
+  Stream<bool> get connectivityStatus$ async* {
+    yield await hasDeviceInternetConnection();
+    await for (final conResult in Connectivity().onConnectivityChanged) {
+      yield conResult != ConnectivityResult.none;
+    }
   }
 
   Future<bool> hasDeviceInternetConnection() async {

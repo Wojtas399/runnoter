@@ -11,10 +11,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
     registerFallbackValue(const ActivityStatusPending());
   }
 
-  void mockGetRaceById({
-    Race? race,
-    Stream<Race?>? raceStream,
-  }) {
+  void mockGetRaceById({Race? race, Stream<Race?>? raceStream}) {
     when(
       () => getRaceById(
         raceId: any(named: 'raceId'),
@@ -48,15 +45,29 @@ class MockRaceRepository extends Mock implements RaceRepository {
     ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
-  void mockGetAllRaces({
+  void mockGetRacesByUserId({
     List<Race>? races,
     Stream<List<Race>?>? racesStream,
   }) {
     when(
-      () => getAllRaces(
+      () => getRacesByUserId(userId: any(named: 'userId')),
+    ).thenAnswer((_) => racesStream ?? Stream.value(races));
+  }
+
+  void mockRefreshRacesByDateRange() {
+    when(
+      () => refreshRacesByDateRange(
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((_) => racesStream ?? Stream.value(races));
+    ).thenAnswer((_) => Future.value());
+  }
+
+  void mockRefreshRacesByUserId() {
+    when(
+      () => refreshRacesByUserId(userId: any(named: 'userId')),
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockAddNewRace() {
@@ -73,20 +84,12 @@ class MockRaceRepository extends Mock implements RaceRepository {
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockUpdateRace() {
-    when(
-      () => updateRace(
-        raceId: any(named: 'raceId'),
-        userId: any(named: 'userId'),
-        name: any(named: 'name'),
-        date: any(named: 'date'),
-        place: any(named: 'place'),
-        distance: any(named: 'distance'),
-        expectedDuration: any(named: 'expectedDuration'),
-        setDurationAsNull: any(named: 'setDurationAsNull'),
-        status: any(named: 'status'),
-      ),
-    ).thenAnswer((_) => Future.value());
+  void mockUpdateRace({Object? throwable}) {
+    if (throwable != null) {
+      when(_updateRaceCall).thenThrow(throwable);
+    } else {
+      when(_updateRaceCall).thenAnswer((_) => Future.value());
+    }
   }
 
   void mockDeleteRace() {
@@ -100,9 +103,19 @@ class MockRaceRepository extends Mock implements RaceRepository {
 
   void mockDeleteAllUserRaces() {
     when(
-      () => deleteAllUserRaces(
-        userId: any(named: 'userId'),
-      ),
+      () => deleteAllUserRaces(userId: any(named: 'userId')),
     ).thenAnswer((_) => Future.value());
   }
+
+  Future<void> _updateRaceCall() => updateRace(
+        raceId: any(named: 'raceId'),
+        userId: any(named: 'userId'),
+        name: any(named: 'name'),
+        date: any(named: 'date'),
+        place: any(named: 'place'),
+        distance: any(named: 'distance'),
+        expectedDuration: any(named: 'expectedDuration'),
+        setDurationAsNull: any(named: 'setDurationAsNull'),
+        status: any(named: 'status'),
+      );
 }

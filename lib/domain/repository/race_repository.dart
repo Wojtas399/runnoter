@@ -2,10 +2,7 @@ import '../additional_model/activity_status.dart';
 import '../entity/race.dart';
 
 abstract interface class RaceRepository {
-  Stream<Race?> getRaceById({
-    required String raceId,
-    required String userId,
-  });
+  Stream<Race?> getRaceById({required String raceId, required String userId});
 
   Stream<List<Race>?> getRacesByDateRange({
     required DateTime startDate,
@@ -18,9 +15,15 @@ abstract interface class RaceRepository {
     required String userId,
   });
 
-  Stream<List<Race>?> getAllRaces({
+  Stream<List<Race>?> getRacesByUserId({required String userId});
+
+  Future<void> refreshRacesByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
     required String userId,
   });
+
+  Future<void> refreshRacesByUserId({required String userId});
 
   Future<void> addNewRace({
     required String userId,
@@ -44,12 +47,7 @@ abstract interface class RaceRepository {
     ActivityStatus? status,
   });
 
-  Future<void> deleteRace({
-    required String raceId,
-    required String userId,
-  });
+  Future<void> deleteRace({required String raceId, required String userId});
 
-  Future<void> deleteAllUserRaces({
-    required String userId,
-  });
+  Future<void> deleteAllUserRaces({required String userId});
 }

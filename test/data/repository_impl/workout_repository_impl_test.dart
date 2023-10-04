@@ -7,6 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 
@@ -38,8 +39,8 @@ void main() {
   });
 
   test(
-    'get workouts by date range, '
-    'should emit workouts existing in state and workouts loaded from remote db',
+    'getWorkoutsByDateRange, '
+    'should emit workouts existing in repo and workouts loaded from db',
     () {
       final DateTime startDate = DateTime(2023, 4, 3);
       final DateTime endDate = DateTime(2023, 4, 9);
@@ -116,7 +117,7 @@ void main() {
         workoutDtos: newlyLoadedWorkoutDtos,
       );
       repository = WorkoutRepositoryImpl(
-        initialState: existingWorkouts,
+        initialData: existingWorkouts,
       );
 
       final Stream<List<Workout>?> workouts$ =
@@ -141,7 +142,7 @@ void main() {
   );
 
   test(
-    'get workout by id, '
+    'getWorkoutById, '
     'workout exists in repository, '
     'should emit workout from repository',
     () {
@@ -159,7 +160,7 @@ void main() {
           name: 'workout 2',
         ),
       ];
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
 
       final Stream<Workout?> workout$ = repository.getWorkoutById(
         workoutId: id,
@@ -174,7 +175,7 @@ void main() {
   );
 
   test(
-    'get workout by id, '
+    'getWorkoutById, '
     'workout does not exist in repository, '
     'should load workout from db, add it to repository and emit it',
     () {
@@ -193,7 +194,7 @@ void main() {
           name: 'workout 2',
         ),
       ];
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
       dbWorkoutService.mockLoadWorkoutById(
         workoutDto: expectedWorkoutDto,
       );
@@ -211,8 +212,9 @@ void main() {
   );
 
   test(
-    'get workouts by date, '
-    'should load workouts from remote db and should emit workouts belonging to given user and matching to given date',
+    'getWorkoutsByDate, '
+    'should load workouts from db and should emit workouts belonging to '
+    'given user and matching to given date',
     () {
       final DateTime date = DateTime(2023, 2, 1);
       final List<Workout> existingWorkouts = [
@@ -242,14 +244,14 @@ void main() {
         userId: userId,
         date: date,
       );
-      dateService.mockAreDatesTheSame(expected: true);
+      dateService.mockAreDaysTheSame(expected: true);
       when(
         () => dateService.areDaysTheSame(DateTime(2023, 1, 10), date),
       ).thenReturn(false);
       dbWorkoutService.mockLoadWorkoutsByDate(
         workoutDtos: [loadedWorkoutDto],
       );
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
 
       final Stream<List<Workout>?> workouts$ = repository.getWorkoutsByDate(
         userId: userId,
@@ -271,8 +273,9 @@ void main() {
   );
 
   test(
-    'get all workouts, '
-    'should load workouts from remote db and should emit workouts belonging to given user',
+    'getAllWorkouts, '
+    'should load workouts from db and should emit '
+    'workouts belonging to given user',
     () {
       final List<Workout> existingWorkouts = [
         createWorkout(
@@ -330,7 +333,7 @@ void main() {
         workoutDtos: newlyLoadedWorkoutDtos,
       );
       repository = WorkoutRepositoryImpl(
-        initialState: existingWorkouts,
+        initialData: existingWorkouts,
       );
 
       final Stream<List<Workout>?> workouts$ =
@@ -346,8 +349,90 @@ void main() {
   );
 
   test(
-    'add workout, '
-    'should call method from db service to add workout and should add new workout to repository',
+    'refreshWorkoutsByDateRange, '
+    'should load workouts by date range from db and '
+    'should add or update them in repo',
+    () async {
+      final DateTime startDate = DateTime(2023, 1, 10);
+      final DateTime endDate = DateTime(2023, 1, 16);
+      final List<Workout> existingWorkouts = [
+        createWorkout(
+          id: 'w1',
+          userId: userId,
+          name: 'first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createWorkout(id: 'w2', userId: userId, date: DateTime(2023, 1, 9)),
+        createWorkout(id: 'w3', userId: userId, date: DateTime(2023, 1, 18)),
+        createWorkout(id: 'w4', userId: userId, date: DateTime(2023, 1, 15)),
+        createWorkout(id: 'w5', userId: 'u2', date: DateTime(2023, 1, 14)),
+      ];
+      final List<firebase.WorkoutDto> loadedWorkoutDtos = [
+        createWorkoutDto(
+          id: 'w1',
+          userId: userId,
+          name: 'updated first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createWorkoutDto(id: 'w6', userId: userId, date: DateTime(2023, 1, 13)),
+      ];
+      final List<Workout> loadedWorkouts = [
+        createWorkout(
+          id: 'w1',
+          userId: userId,
+          name: 'updated first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createWorkout(id: 'w6', userId: userId, date: DateTime(2023, 1, 13)),
+      ];
+      dateService.mockIsDateFromRange(expected: true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 9),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 18),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
+      dbWorkoutService.mockLoadWorkoutsByDateRange(
+        workoutDtos: loadedWorkoutDtos,
+      );
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
+
+      await repository.refreshWorkoutsByDateRange(
+        startDate: startDate,
+        endDate: endDate,
+        userId: userId,
+      );
+
+      expect(
+        repository.dataStream$,
+        emits([
+          existingWorkouts[1],
+          existingWorkouts[2],
+          existingWorkouts.last,
+          ...loadedWorkouts,
+        ]),
+      );
+      verify(
+        () => dbWorkoutService.loadWorkoutsByDateRange(
+          startDate: startDate,
+          endDate: endDate,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'addWorkout, '
+    'should add workout to db and repo',
     () async {
       const String id = 'w3';
       const String workoutName = 'workout 3';
@@ -393,7 +478,7 @@ void main() {
         stages: stages,
       );
       dbWorkoutService.mockAddWorkout(addedWorkoutDto: addedWorkoutDto);
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
 
       await repository.addWorkout(
         userId: userId,
@@ -420,9 +505,9 @@ void main() {
   );
 
   test(
-    'update workout, '
-    'should call method from db service to update workout and should update workout in repository',
-    () {
+    'updateWorkout, '
+    'should update workout in db and repo',
+    () async {
       const String id = 'w1';
       final DateTime newDate = DateTime(2023, 5, 10);
       const String newWorkoutName = 'new workout name';
@@ -475,13 +560,9 @@ void main() {
       dbWorkoutService.mockUpdateWorkout(
         updatedWorkoutDto: updatedWorkoutDto,
       );
-      repository = WorkoutRepositoryImpl(initialState: [existingWorkout]);
+      repository = WorkoutRepositoryImpl(initialData: [existingWorkout]);
 
-      final Stream<Workout?> workout$ = repository.getWorkoutById(
-        workoutId: id,
-        userId: userId,
-      );
-      repository.updateWorkout(
+      await repository.updateWorkout(
         workoutId: id,
         userId: userId,
         date: newDate,
@@ -491,8 +572,8 @@ void main() {
       );
 
       expect(
-        workout$,
-        emitsInOrder([expectedUpdatedWorkout]),
+        repository.getWorkoutById(workoutId: id, userId: userId),
+        emits(expectedUpdatedWorkout),
       );
       verify(
         () => dbWorkoutService.updateWorkout(
@@ -508,88 +589,73 @@ void main() {
   );
 
   test(
-    'update workout, '
-    'workout name is null, '
-    'should call db method to update workout with workout name set as null',
+    'updateWorkout, '
+    'db method throws document exception with documentNotFound code, '
+    'should remove entity from repo and '
+    'should throw entity exception with entityNotFound code',
     () async {
       const String id = 'w1';
-      dbWorkoutService.mockUpdateWorkout();
-
-      await repository.updateWorkout(
-        workoutId: id,
+      final DateTime newDate = DateTime(2023, 5, 10);
+      const String newWorkoutName = 'new workout name';
+      const ActivityStatus newStatus = ActivityStatusUndone();
+      const newStatusDto = firebase.ActivityStatusUndoneDto();
+      const List<WorkoutStage> newStages = [
+        WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
+      ];
+      const List<firebase.WorkoutStageDto> newStageDtos = [
+        firebase.WorkoutStageCardioDto(distanceInKm: 10, maxHeartRate: 150),
+      ];
+      final Workout existingWorkout = createWorkout(
+        id: id,
         userId: userId,
-        workoutName: null,
+        date: DateTime(2023, 5, 5),
+        name: 'workout name',
         status: const ActivityStatusPending(),
-        stages: [],
+        stages: const [
+          WorkoutStageCardio(distanceInKm: 8, maxHeartRate: 150),
+        ],
       );
+      dbWorkoutService.mockUpdateWorkout(
+        throwable: const firebase.FirebaseDocumentException(
+          code: firebase.FirebaseDocumentExceptionCode.documentNotFound,
+        ),
+      );
+      repository = WorkoutRepositoryImpl(initialData: [existingWorkout]);
 
+      Object? exception;
+      try {
+        await repository.updateWorkout(
+          workoutId: id,
+          userId: userId,
+          date: newDate,
+          workoutName: newWorkoutName,
+          status: newStatus,
+          stages: newStages,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(
+        exception,
+        const EntityException(code: EntityExceptionCode.entityNotFound),
+      );
+      expect(repository.dataStream$, emits([]));
       verify(
         () => dbWorkoutService.updateWorkout(
           workoutId: id,
           userId: userId,
-          status: const firebase.ActivityStatusPendingDto(),
-          stages: [],
+          date: newDate,
+          workoutName: newWorkoutName,
+          status: newStatusDto,
+          stages: newStageDtos,
         ),
       ).called(1);
     },
   );
 
   test(
-    'update workout, '
-    'workout status is null, '
-    'should call db method to update workout with workout status set as null',
-    () async {
-      const String id = 'w1';
-      dbWorkoutService.mockUpdateWorkout();
-
-      await repository.updateWorkout(
-        workoutId: id,
-        userId: userId,
-        workoutName: 'workout name',
-        stages: [],
-      );
-
-      verify(
-        () => dbWorkoutService.updateWorkout(
-          workoutId: id,
-          userId: userId,
-          workoutName: 'workout name',
-          status: null,
-          stages: [],
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'update workout, '
-    'list of stages is null, '
-    'should call db method to update workout with stages set as null',
-    () async {
-      const String id = 'w1';
-      dbWorkoutService.mockUpdateWorkout();
-
-      await repository.updateWorkout(
-        workoutId: id,
-        userId: userId,
-        workoutName: 'new workout name',
-        status: const ActivityStatusPending(),
-      );
-
-      verify(
-        () => dbWorkoutService.updateWorkout(
-          workoutId: id,
-          userId: userId,
-          workoutName: 'new workout name',
-          status: const firebase.ActivityStatusPendingDto(),
-          stages: null,
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'delete workout, '
+    'deleteWorkout, '
     'should call method from db service to delete workout and should delete workout from the state of repository',
     () {
       const String id = 'w1';
@@ -597,7 +663,7 @@ void main() {
         createWorkout(id: 'w2', userId: userId),
         createWorkout(id: id, userId: userId),
       ];
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
       dbWorkoutService.mockDeleteWorkout();
 
       final Stream<List<Workout>?> repositoryState$ = repository.dataStream$;
@@ -628,7 +694,7 @@ void main() {
   );
 
   test(
-    'delete all user workouts, '
+    'deleteAllUserWorkouts, '
     'should call method from db service to delete all user workouts and should delete these workouts from the state of repository',
     () {
       final List<Workout> existingWorkouts = [
@@ -638,7 +704,7 @@ void main() {
         createWorkout(id: 'w3', userId: 'u2'),
         createWorkout(id: 'w4', userId: userId),
       ];
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
       dbWorkoutService.mockDeleteAllUserWorkouts(
         idsOfDeletedWorkouts: ['w2', 'w1', 'w4'],
       );

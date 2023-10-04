@@ -231,4 +231,46 @@ void main() {
       );
     },
   );
+
+  blocTest(
+    'refresh, '
+    'should call workout repository method to refresh workouts by date range, '
+    'should call race repository method to refresh races by date range, '
+    'should call health measurement repository method to refresh health '
+    'measurements by date range',
+    build: () => CalendarUserDataCubit(userId: userId),
+    setUp: () {
+      workoutRepository.mockRefreshWorkoutsByDateRange();
+      raceRepository.mockRefreshRacesByDateRange();
+      healthMeasurementRepository.mockRefreshMeasurementsByDateRange();
+    },
+    act: (cubit) => cubit.refresh(
+      startDate: DateTime(2023, 1, 10),
+      endDate: DateTime(2023, 1, 17),
+    ),
+    expect: () => [],
+    verify: (_) {
+      verify(
+        () => workoutRepository.refreshWorkoutsByDateRange(
+          startDate: DateTime(2023, 1, 10),
+          endDate: DateTime(2023, 1, 17),
+          userId: userId,
+        ),
+      ).called(1);
+      verify(
+        () => raceRepository.refreshRacesByDateRange(
+          startDate: DateTime(2023, 1, 10),
+          endDate: DateTime(2023, 1, 17),
+          userId: userId,
+        ),
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.refreshMeasurementsByDateRange(
+          startDate: DateTime(2023, 1, 10),
+          endDate: DateTime(2023, 1, 17),
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
 }

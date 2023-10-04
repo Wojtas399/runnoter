@@ -21,7 +21,7 @@ void main() {
   setUp(() {
     state = HealthMeasurementCreatorState(status: const CubitStatusInitial());
     dateService.mockGetToday(todayDate: todayDate);
-    dateService.mockAreDatesTheSame(expected: false);
+    dateService.mockAreDaysTheSame(expected: false);
   });
 
   tearDown(() {
@@ -130,7 +130,7 @@ void main() {
         restingHeartRate: 51,
         fastingWeight: 61.5,
       );
-      dateService.mockAreDatesTheSame(expected: true);
+      dateService.mockAreDaysTheSame(expected: true);
 
       expect(state.canSubmit, false);
     },

@@ -45,8 +45,10 @@ class _CubitListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CubitWithStatusListener<BloodTestCreatorCubit, BloodTestCreatorState,
-        BloodTestCreatorCubitInfo, dynamic>(
+        BloodTestCreatorCubitInfo, BloodTestCreatorCubitError>(
       onInfo: (BloodTestCreatorCubitInfo info) => _manageInfo(context, info),
+      onError: (BloodTestCreatorCubitError error) =>
+          _manageError(context, error),
       child: child,
     );
   }
@@ -59,6 +61,24 @@ class _CubitListener extends StatelessWidget {
     } else if (info == BloodTestCreatorCubitInfo.bloodTestUpdated) {
       navigateBack();
       showSnackbarMessage(str.bloodTestCreatorSuccessfullyEditedTest);
+    }
+  }
+
+  Future<void> _manageError(
+    BuildContext context,
+    BloodTestCreatorCubitError error,
+  ) async {
+    final str = Str.of(context);
+    switch (error) {
+      case BloodTestCreatorCubitError.bloodTestNoLongerExists:
+        await showMessageDialog(
+          title: str.bloodTestCreatorBloodTestNoLongerExistsDialogTitle,
+          message: str.bloodTestCreatorBloodTestNoLongerExistsDialogMessage,
+        );
+        if (context.mounted) {
+          context.router.removeLast();
+          context.router.removeLast();
+        }
     }
   }
 }

@@ -45,6 +45,16 @@ class MockHealthMeasurementRepository extends Mock
     ).thenAnswer((_) => Stream.value(measurements));
   }
 
+  void mockRefreshMeasurementsByDateRange() {
+    when(
+      () => refreshMeasurementsByDateRange(
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockDoesMeasurementFromDateExist({
     required bool expected,
   }) {

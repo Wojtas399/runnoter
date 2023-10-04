@@ -223,17 +223,17 @@ void main() {
 
   test(
     'createChatForUsers, '
-    'db chat exception with chatAlreadyExists code, '
-    'should throw chat exception with chatAlreadyExists code',
+    'db document exception with documentAlreadyExists code, '
+    'should throw entity exception with entityAlreadyExists code',
     () async {
-      const ChatException expectedChatException = ChatException(
-        code: ChatExceptionCode.chatAlreadyExists,
+      const CustomException expectedException = EntityException(
+        code: EntityExceptionCode.entityAlreadyExists,
       );
       const String user1Id = 'u1';
       const String user2Id = 'u2';
       dbChatService.mockAddNewChat(
-        throwable: const FirebaseChatException(
-          code: FirebaseChatExceptionCode.chatAlreadyExists,
+        throwable: const FirebaseDocumentException(
+          code: FirebaseDocumentExceptionCode.documentAlreadyExists,
         ),
       );
 
@@ -244,7 +244,7 @@ void main() {
         exception = e;
       }
 
-      expect(exception, expectedChatException);
+      expect(exception, expectedException);
       verify(
         () => dbChatService.addNewChat(
           user1Id: user1Id,

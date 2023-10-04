@@ -114,6 +114,7 @@ class _TodayMeasurement extends StatelessWidget {
     if (isConfirmed) {
       showLoadingDialog();
       await todayMeasurementCubit.deleteTodayMeasurement();
+      closeLoadingDialog();
       showSnackbarMessage(str.successfullyDeletedMeasurement);
     }
   }

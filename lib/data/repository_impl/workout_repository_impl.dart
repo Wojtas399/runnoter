@@ -9,6 +9,7 @@ import '../../domain/additional_model/workout_stage.dart';
 import '../../domain/entity/workout.dart';
 import '../../domain/repository/workout_repository.dart';
 import '../mapper/activity_status_mapper.dart';
+import '../mapper/custom_exception_mapper.dart';
 import '../mapper/workout_mapper.dart';
 import '../mapper/workout_stage_mapper.dart';
 
@@ -17,11 +18,9 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   final FirebaseWorkoutService _dbWorkoutService;
   final DateService _dateService;
 
-  WorkoutRepositoryImpl({
-    List<Workout>? initialState,
-  })  : _dbWorkoutService = getIt<FirebaseWorkoutService>(),
-        _dateService = getIt<DateService>(),
-        super(initialData: initialState);
+  WorkoutRepositoryImpl({super.initialData})
+      : _dbWorkoutService = getIt<FirebaseWorkoutService>(),
+        _dateService = getIt<DateService>();
 
   @override
   Stream<List<Workout>?> getWorkoutsByDateRange({
@@ -29,7 +28,11 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required DateTime endDate,
     required String userId,
   }) async* {
-    await _loadWorkoutsByDateRangeFromRemoteDb(startDate, endDate, userId);
+    final workoutsLoadedFromDb =
+        await _loadWorkoutsByDateRangeFromDb(startDate, endDate, userId);
+    if (workoutsLoadedFromDb?.isNotEmpty == true) {
+      addOrUpdateEntities(workoutsLoadedFromDb!);
+    }
     await for (final workouts in dataStream$) {
       yield workouts
           ?.where(
@@ -85,6 +88,30 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   }
 
   @override
+  Future<void> refreshWorkoutsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  }) async {
+    final existingWorkouts = await dataStream$.first;
+    final workoutsLoadedFromDb =
+        await _loadWorkoutsByDateRangeFromDb(startDate, endDate, userId);
+    final List<Workout> updatedWorkouts = [
+      ...?existingWorkouts?.where(
+        (Workout workout) =>
+            workout.userId != userId ||
+            !_dateService.isDateFromRange(
+              date: workout.date,
+              startDate: startDate,
+              endDate: endDate,
+            ),
+      ),
+      ...?workoutsLoadedFromDb,
+    ];
+    setEntities(updatedWorkouts);
+  }
+
+  @override
   Future<void> addWorkout({
     required String userId,
     required String workoutName,
@@ -100,7 +127,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       stages: stages.map(mapWorkoutStageToFirebase).toList(),
     );
     if (workoutDto != null) {
-      final Workout addedWorkout = mapWorkoutFromFirebase(workoutDto);
+      final Workout addedWorkout = mapWorkoutFromDto(workoutDto);
       addEntity(addedWorkout);
     }
   }
@@ -114,17 +141,26 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     ActivityStatus? status,
     List<WorkoutStage>? stages,
   }) async {
-    final WorkoutDto? updatedWorkoutDto = await _dbWorkoutService.updateWorkout(
-      workoutId: workoutId,
-      userId: userId,
-      date: date,
-      workoutName: workoutName,
-      status: status != null ? mapActivityStatusToDto(status) : null,
-      stages: stages?.map(mapWorkoutStageToFirebase).toList(),
-    );
-    if (updatedWorkoutDto != null) {
-      final Workout updatedWorkout = mapWorkoutFromFirebase(updatedWorkoutDto);
-      updateEntity(updatedWorkout);
+    try {
+      final WorkoutDto? updatedWorkoutDto =
+          await _dbWorkoutService.updateWorkout(
+        workoutId: workoutId,
+        userId: userId,
+        date: date,
+        workoutName: workoutName,
+        status: status != null ? mapActivityStatusToDto(status) : null,
+        stages: stages?.map(mapWorkoutStageToFirebase).toList(),
+      );
+      if (updatedWorkoutDto != null) {
+        final Workout updatedWorkout = mapWorkoutFromDto(updatedWorkoutDto);
+        updateEntity(updatedWorkout);
+      }
+    } on FirebaseDocumentException catch (documentException) {
+      if (documentException.code ==
+          FirebaseDocumentExceptionCode.documentNotFound) {
+        removeEntity(workoutId);
+      }
+      throw mapExceptionFromDb(documentException);
     }
   }
 
@@ -144,25 +180,17 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     removeEntities(idsOfDeletedWorkouts);
   }
 
-  Future<void> _loadWorkoutsByDateRangeFromRemoteDb(
+  Future<List<Workout>?> _loadWorkoutsByDateRangeFromDb(
     DateTime startDate,
     DateTime endDate,
     String userId,
   ) async {
-    final List<WorkoutDto>? workoutDtos =
-        await _dbWorkoutService.loadWorkoutsByDateRange(
+    final workoutDtos = await _dbWorkoutService.loadWorkoutsByDateRange(
       userId: userId,
       startDate: startDate,
       endDate: endDate,
     );
-    if (workoutDtos != null) {
-      final List<Workout> workouts = workoutDtos
-          .map(
-            (WorkoutDto workoutDto) => mapWorkoutFromFirebase(workoutDto),
-          )
-          .toList();
-      addOrUpdateEntities(workouts);
-    }
+    return workoutDtos?.map(mapWorkoutFromDto).toList();
   }
 
   Future<Workout?> _loadWorkoutByIdFromRemoteDb(
@@ -174,7 +202,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       userId: userId,
     );
     if (workoutDto != null) {
-      final Workout workout = mapWorkoutFromFirebase(workoutDto);
+      final Workout workout = mapWorkoutFromDto(workoutDto);
       addEntity(workout);
       return workout;
     }
@@ -186,7 +214,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         await _dbWorkoutService.loadAllWorkouts(userId: userId);
     if (workoutDtos != null) {
       final List<Workout> workouts =
-          workoutDtos.map(mapWorkoutFromFirebase).toList();
+          workoutDtos.map(mapWorkoutFromDto).toList();
       addOrUpdateEntities(workouts);
     }
   }
@@ -199,7 +227,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         await _dbWorkoutService.loadWorkoutsByDate(date: date, userId: userId);
     if (workoutDtos != null) {
       final List<Workout> workouts =
-          workoutDtos.map(mapWorkoutFromFirebase).toList();
+          workoutDtos.map(mapWorkoutFromDto).toList();
       addOrUpdateEntities(workouts);
     }
   }

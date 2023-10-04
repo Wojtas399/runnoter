@@ -23,21 +23,53 @@ class MileageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const ResponsiveLayout(
-      mobileBody: Padding(
-        padding: EdgeInsets.all(16),
-        child: _CommonContent(),
-      ),
-      desktopBody: Column(
-        children: [
-          BigBody(
-            child: Paddings24(
-              child: CardBody(
-                child: _CommonContent(),
-              ),
+      mobileBody: _MobileContent(),
+      desktopBody: _DesktopContent(),
+    );
+  }
+}
+
+class _MobileContent extends StatelessWidget {
+  const _MobileContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: context.read<MileageStatsCubit>().refresh,
+      child: LayoutBuilder(builder: (_, BoxConstraints constraints) {
+        return SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: constraints.maxHeight,
+              maxHeight: double.infinity,
+            ),
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: _CommonContent(),
             ),
           ),
-        ],
-      ),
+        );
+      }),
+    );
+  }
+}
+
+class _DesktopContent extends StatelessWidget {
+  const _DesktopContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        BigBody(
+          child: Paddings24(
+            child: CardBody(
+              child: _CommonContent(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -5,17 +5,17 @@ import 'package:runnoter/domain/additional_model/custom_exception.dart';
 
 void main() {
   test(
-    'map exception from firebase, '
+    'mapExceptionFromDb, '
     'FirebaseAuthException with invalidEmail code should be mapped to AuthException with invalidEmail code',
     () {
-      const FirebaseException firebaseException = FirebaseAuthException(
+      const CustomFirebaseException firebaseException = FirebaseAuthException(
         code: FirebaseAuthExceptionCode.invalidEmail,
       );
       const CustomException expectedException = AuthException(
         code: AuthExceptionCode.invalidEmail,
       );
 
-      final CustomException exception = mapExceptionFromFirebase(
+      final CustomException exception = mapExceptionFromDb(
         firebaseException,
       );
 
@@ -24,133 +24,141 @@ void main() {
   );
 
   test(
-    'map exception from firebase, '
+    'mapExceptionFromDb, '
     'FirebaseAuthException with emailAlreadyInUse code should be mapped to AuthException with emailAlreadyInUse code',
     () {
-      const FirebaseException firebaseException = FirebaseAuthException(
+      const CustomFirebaseException firebaseException = FirebaseAuthException(
         code: FirebaseAuthExceptionCode.emailAlreadyInUse,
       );
       const CustomException expectedException = AuthException(
         code: AuthExceptionCode.emailAlreadyInUse,
       );
 
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
+      final CustomException exception = mapExceptionFromDb(firebaseException);
 
       expect(exception, expectedException);
     },
   );
 
   test(
-    'map exception from firebase, '
+    'mapExceptionFromDb, '
     'FirebaseAuthException with userNotFound code should be mapped to AuthException with userNotFound code',
     () {
-      const FirebaseException firebaseException = FirebaseAuthException(
+      const CustomFirebaseException firebaseException = FirebaseAuthException(
         code: FirebaseAuthExceptionCode.userNotFound,
       );
       const CustomException expectedException = AuthException(
         code: AuthExceptionCode.userNotFound,
       );
 
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
+      final CustomException exception = mapExceptionFromDb(firebaseException);
 
       expect(exception, expectedException);
     },
   );
 
   test(
-    'map exception from firebase, '
+    'mapExceptionFromDb, '
     'FirebaseAuthException with wrongPassword code should be mapped to AuthException with wrongPassword code',
     () {
-      const FirebaseException firebaseException = FirebaseAuthException(
+      const CustomFirebaseException firebaseException = FirebaseAuthException(
         code: FirebaseAuthExceptionCode.wrongPassword,
       );
       const CustomException expectedException = AuthException(
         code: AuthExceptionCode.wrongPassword,
       );
 
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
+      final CustomException exception = mapExceptionFromDb(firebaseException);
 
       expect(exception, expectedException);
     },
   );
 
   test(
-    'map exception from firebase, '
+    'mapExceptionFromDb, '
+    'FirebaseDocumentException with documentNotFound code should be mapped to EntityException with entityNotFound code',
+    () {
+      const CustomFirebaseException firebaseException =
+          FirebaseDocumentException(
+        code: FirebaseDocumentExceptionCode.documentNotFound,
+      );
+      const CustomException expectedException = EntityException(
+        code: EntityExceptionCode.entityNotFound,
+      );
+
+      final CustomException exception = mapExceptionFromDb(firebaseException);
+
+      expect(exception, expectedException);
+    },
+  );
+
+  test(
+    'mapExceptionFromDb, '
+    'FirebaseDocumentException with documentAlreadyExists code should be mapped to EntityException with entityAlreadyExists code',
+    () {
+      const CustomFirebaseException firebaseException =
+          FirebaseDocumentException(
+        code: FirebaseDocumentExceptionCode.documentAlreadyExists,
+      );
+      const CustomException expectedException = EntityException(
+        code: EntityExceptionCode.entityAlreadyExists,
+      );
+
+      final CustomException exception = mapExceptionFromDb(firebaseException);
+
+      expect(exception, expectedException);
+    },
+  );
+
+  test(
+    'mapExceptionFromDb, '
     'FirebaseNetworkException with requestFailed code should be mapped to NetworkException with requestFailed code',
     () {
-      const FirebaseException firebaseException = FirebaseNetworkException(
+      const CustomFirebaseException firebaseException =
+          FirebaseNetworkException(
         code: FirebaseNetworkExceptionCode.requestFailed,
       );
       const CustomException expectedException = NetworkException(
         code: NetworkExceptionCode.requestFailed,
       );
 
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
+      final CustomException exception = mapExceptionFromDb(firebaseException);
 
       expect(exception, expectedException);
     },
   );
 
   test(
-    'map exception from firebase, '
+    'mapExceptionFromDb, '
     'FirebaseNetworkException with tooManyRequests code should be mapped to NetworkException with tooManyRequests code',
     () {
-      const FirebaseException firebaseException = FirebaseNetworkException(
+      const CustomFirebaseException firebaseException =
+          FirebaseNetworkException(
         code: FirebaseNetworkExceptionCode.tooManyRequests,
       );
       const CustomException expectedException = NetworkException(
         code: NetworkExceptionCode.tooManyRequests,
       );
 
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
+      final CustomException exception = mapExceptionFromDb(firebaseException);
 
       expect(exception, expectedException);
     },
   );
 
   test(
-    'map exception from firebase, '
-    'FirebaseChatException with chatAlreadyExists code should be mapped to ChatException with chatAlreadyExists code',
-    () {
-      const FirebaseException firebaseException = FirebaseChatException(
-        code: FirebaseChatExceptionCode.chatAlreadyExists,
-      );
-      const CustomException expectedException = ChatException(
-        code: ChatExceptionCode.chatAlreadyExists,
-      );
-
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
-
-      expect(exception, expectedException);
-    },
-  );
-
-  test(
-    'map exception from firebase, '
+    'mapExceptionFromDb, '
     'FirebaseUnknownException should be mapped to UnknownException',
     () {
-      const FirebaseException firebaseException = FirebaseUnknownException(
+      const CustomFirebaseException firebaseException =
+          FirebaseUnknownException(
         message: 'unknown exception',
       );
       const CustomException expectedException = UnknownException(
         message: 'unknown exception',
       );
 
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
+      final CustomException exception = mapExceptionFromDb(firebaseException);
 
       expect(exception, expectedException);
     },

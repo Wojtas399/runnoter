@@ -25,8 +25,12 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
 
   void initialize() {
     _bloodTestsListener ??= _bloodTestRepository
-        .getAllTests(userId: userId)
+        .getTestsByUserId(userId: userId)
         .listen(_onBloodTestsChanged);
+  }
+
+  Future<void> refresh() async {
+    await _bloodTestRepository.refreshTestsByUserId(userId: userId);
   }
 
   void _onBloodTestsChanged(final List<BloodTest>? bloodTests) {

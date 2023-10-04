@@ -14,10 +14,9 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   final FirebaseHealthMeasurementService _dbHealthMeasurementService;
 
   HealthMeasurementRepositoryImpl({
-    List<HealthMeasurement>? initialState,
+    super.initialData,
   })  : _dateService = getIt<DateService>(),
-        _dbHealthMeasurementService = getIt<FirebaseHealthMeasurementService>(),
-        super(initialData: initialState);
+        _dbHealthMeasurementService = getIt<FirebaseHealthMeasurementService>();
 
   @override
   Stream<HealthMeasurement?> getMeasurementByDate({
@@ -30,7 +29,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
             measurement.userId == userId &&
             _dateService.areDaysTheSame(measurement.date, date),
       );
-      measurement ??= await _loadMeasurementByDateFromRemoteDb(date, userId);
+      measurement ??= await _loadMeasurementByDateFromDb(date, userId);
       yield measurement;
     }
   }
@@ -41,7 +40,11 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required DateTime endDate,
     required String userId,
   }) async* {
-    await _loadMeasurementsByDateRangeFromRemoteDb(startDate, endDate, userId);
+    final measurementsLoadedFromDb =
+        await _loadMeasurementsByDateRangeFromDb(startDate, endDate, userId);
+    if (measurementsLoadedFromDb?.isNotEmpty == true) {
+      addOrUpdateEntities(measurementsLoadedFromDb!);
+    }
     await for (final measurements in dataStream$) {
       yield measurements
           ?.where(
@@ -61,12 +64,36 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   Stream<List<HealthMeasurement>?> getAllMeasurements({
     required String userId,
   }) async* {
-    await _loadAllMeasurementsFromRemoteDb(userId);
+    await _loadAllMeasurementsFromDb(userId);
     await for (final measurements in dataStream$) {
       yield measurements
           ?.where((measurement) => measurement.userId == userId)
           .toList();
     }
+  }
+
+  @override
+  Future<void> refreshMeasurementsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  }) async {
+    final existingMeasurements = await dataStream$.first;
+    final measurementsLoadedFromDb =
+        await _loadMeasurementsByDateRangeFromDb(startDate, endDate, userId);
+    final List<HealthMeasurement> updatedMeasurements = [
+      ...?existingMeasurements?.where(
+        (measurement) =>
+            measurement.userId != userId ||
+            !_dateService.isDateFromRange(
+              date: measurement.date,
+              startDate: startDate,
+              endDate: endDate,
+            ),
+      ),
+      ...?measurementsLoadedFromDb,
+    ];
+    setEntities(updatedMeasurements);
   }
 
   @override
@@ -87,7 +114,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
       return true;
     } else {
       final HealthMeasurement? measurement =
-          await _loadMeasurementByDateFromRemoteDb(date, userId);
+          await _loadMeasurementByDateFromDb(date, userId);
       return measurement != null;
     }
   }
@@ -99,11 +126,11 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     final HealthMeasurementDto? healthMeasurementDto =
         await _dbHealthMeasurementService.addMeasurement(
       userId: measurement.userId,
-      measurementDto: mapHealthMeasurementToFirebase(measurement),
+      measurementDto: mapHealthMeasurementToDto(measurement),
     );
     if (healthMeasurementDto != null) {
       final HealthMeasurement healthMeasurement =
-          mapHealthMeasurementFromFirebase(healthMeasurementDto);
+          mapHealthMeasurementFromDto(healthMeasurementDto);
       addEntity(healthMeasurement);
     }
   }
@@ -124,7 +151,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     );
     if (updatedHealthMeasurementDto != null) {
       final HealthMeasurement updatedMeasurement =
-          mapHealthMeasurementFromFirebase(updatedHealthMeasurementDto);
+          mapHealthMeasurementFromDto(updatedHealthMeasurementDto);
       updateEntity(updatedMeasurement);
     }
   }
@@ -171,7 +198,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     removeEntities(idsOfUserMeasurements);
   }
 
-  Future<HealthMeasurement?> _loadMeasurementByDateFromRemoteDb(
+  Future<HealthMeasurement?> _loadMeasurementByDateFromDb(
     DateTime date,
     String userId,
   ) async {
@@ -181,16 +208,15 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
       date: date,
     );
     if (measurementDto != null) {
-      final HealthMeasurement measurement = mapHealthMeasurementFromFirebase(
-        measurementDto,
-      );
+      final HealthMeasurement measurement =
+          mapHealthMeasurementFromDto(measurementDto);
       addEntity(measurement);
       return measurement;
     }
     return null;
   }
 
-  Future<void> _loadMeasurementsByDateRangeFromRemoteDb(
+  Future<List<HealthMeasurement>?> _loadMeasurementsByDateRangeFromDb(
     DateTime startDate,
     DateTime endDate,
     String userId,
@@ -201,12 +227,10 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
       endDate: endDate,
       userId: userId,
     );
-    if (measurementDtos != null) {
-      _addDtos(measurementDtos);
-    }
+    return measurementDtos?.map(mapHealthMeasurementFromDto).toList();
   }
 
-  Future<void> _loadAllMeasurementsFromRemoteDb(String userId) async {
+  Future<void> _loadAllMeasurementsFromDb(String userId) async {
     final List<HealthMeasurementDto>? measurementDtos =
         await _dbHealthMeasurementService.loadAllMeasurements(
       userId: userId,
@@ -218,7 +242,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
 
   void _addDtos(List<HealthMeasurementDto> dtos) {
     final List<HealthMeasurement> measurements =
-        dtos.map(mapHealthMeasurementFromFirebase).toList();
+        dtos.map(mapHealthMeasurementFromDto).toList();
     addOrUpdateEntities(measurements);
   }
 }

@@ -45,12 +45,18 @@ class _Races extends StatelessWidget {
 
     return switch (racesGroupedByYear) {
       null => const LoadingInfo(),
-      [] => EmptyContentInfo(
-          icon: Icons.emoji_events_outlined,
-          title: Str.of(context).racesNoRacesTitle,
-          subtitle: Str.of(context).racesNoRacesMessage,
+      [] => RefreshIndicator(
+          onRefresh: context.read<RacesCubit>().refresh,
+          child: EmptyContentInfo(
+            icon: Icons.emoji_events_outlined,
+            title: Str.of(context).racesNoRacesTitle,
+            subtitle: Str.of(context).racesNoRacesMessage,
+          ),
         ),
-      [...] => _RacesList(racesGroupedByYear: racesGroupedByYear),
+      [...] => RefreshIndicator(
+          onRefresh: context.read<RacesCubit>().refresh,
+          child: _RacesList(racesGroupedByYear: racesGroupedByYear),
+        ),
     };
   }
 }
