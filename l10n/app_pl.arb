@@ -629,6 +629,14 @@
   "@bloodTestCreatorSuccessfullyEditedTest": {
     "description": "Message to inform that blood test has been edited"
   },
+  "bloodTestCreatorBloodTestNoLongerExistsDialogTitle": "Badanie już nie istnieje",
+  "@bloodTestCreatorBloodTestNoLongerExistsDialogTitle": {
+    "description": "Title of the dialog to inform that blood test no longer exists"
+  },
+  "bloodTestCreatorBloodTestNoLongerExistsDialogMessage": "To badanie zostało niedawno usunięte, więc nie możesz go edytować",
+  "@bloodTestCreatorBloodTestNoLongerExistsDialogMessage": {
+    "description": "Message of the dialog to inform that blood test no longer exists"
+  },
   "@__________BLOOD_TEST_PREVIEW__________": {},
   "bloodTestPreviewTitle": "Badanie krwi",
   "@bloodTestPreviewTitle": {

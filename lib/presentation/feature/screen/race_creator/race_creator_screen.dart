@@ -40,27 +40,22 @@ class RaceCreatorScreen extends StatelessWidget {
   }
 }
 
-class _CubitListener extends StatefulWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
   const _CubitListener({required this.child});
 
   @override
-  State<StatefulWidget> createState() => _CubitListenerState();
-}
-
-class _CubitListenerState extends State<_CubitListener> {
-  @override
   Widget build(BuildContext context) {
     return CubitWithStatusListener<RaceCreatorCubit, RaceCreatorState,
         RaceCreatorCubitInfo, RaceCreatorCubitError>(
-      onInfo: _manageInfo,
-      onError: _manageError,
-      child: widget.child,
+      onInfo: (RaceCreatorCubitInfo info) => _manageInfo(context, info),
+      onError: (RaceCreatorCubitError error) => _manageError(context, error),
+      child: child,
     );
   }
 
-  void _manageInfo(RaceCreatorCubitInfo info) {
+  void _manageInfo(BuildContext context, RaceCreatorCubitInfo info) {
     final str = Str.of(context);
     if (info == RaceCreatorCubitInfo.raceAdded) {
       navigateBack();
@@ -71,7 +66,10 @@ class _CubitListenerState extends State<_CubitListener> {
     }
   }
 
-  Future<void> _manageError(RaceCreatorCubitError error) async {
+  Future<void> _manageError(
+    BuildContext context,
+    RaceCreatorCubitError error,
+  ) async {
     final str = Str.of(context);
     switch (error) {
       case RaceCreatorCubitError.raceNoLongerExists:
@@ -79,7 +77,7 @@ class _CubitListenerState extends State<_CubitListener> {
           title: str.raceCreatorRaceNoLongerExistsDialogTitle,
           message: str.raceCreatorRaceNoLongerExistsDialogMessage,
         );
-        if (mounted) {
+        if (context.mounted) {
           context.router.removeLast();
           context.router.removeLast();
         }

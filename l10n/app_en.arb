@@ -171,6 +171,8 @@
   "bloodTestCreatorChangeDate": "Change date",
   "bloodTestCreatorSuccessfullyAddedTest": "Successfully added blood test",
   "bloodTestCreatorSuccessfullyEditedTest": "Successfully updated blood test",
+  "bloodTestCreatorBloodTestNoLongerExistsDialogTitle": "Blood test no longer exists",
+  "bloodTestCreatorBloodTestNoLongerExistsDialogMessage": "This blood test has been deleted recently, so you can't update it",
   "@__________BLOOD_TEST_PREVIEW__________": {},
   "bloodTestPreviewTitle": "Blood test",
   "bloodTestPreviewDeleteTestTitle": "Blood test deletion",
