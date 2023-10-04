@@ -7,6 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 
@@ -39,7 +40,7 @@ void main() {
 
   test(
     'getWorkoutsByDateRange, '
-    'should emit workouts existing in state and workouts loaded from remote db',
+    'should emit workouts existing in repo and workouts loaded from db',
     () {
       final DateTime startDate = DateTime(2023, 4, 3);
       final DateTime endDate = DateTime(2023, 4, 9);
@@ -212,7 +213,8 @@ void main() {
 
   test(
     'getWorkoutsByDate, '
-    'should load workouts from remote db and should emit workouts belonging to given user and matching to given date',
+    'should load workouts from db and should emit workouts belonging to '
+    'given user and matching to given date',
     () {
       final DateTime date = DateTime(2023, 2, 1);
       final List<Workout> existingWorkouts = [
@@ -272,7 +274,8 @@ void main() {
 
   test(
     'getAllWorkouts, '
-    'should load workouts from remote db and should emit workouts belonging to given user',
+    'should load workouts from db and should emit '
+    'workouts belonging to given user',
     () {
       final List<Workout> existingWorkouts = [
         createWorkout(
@@ -429,7 +432,7 @@ void main() {
 
   test(
     'addWorkout, '
-    'should call method from db service to add workout and should add new workout to repository',
+    'should add workout to db and repo',
     () async {
       const String id = 'w3';
       const String workoutName = 'workout 3';
@@ -503,8 +506,8 @@ void main() {
 
   test(
     'updateWorkout, '
-    'should call method from db service to update workout and should update workout in repository',
-    () {
+    'should update workout in db and repo',
+    () async {
       const String id = 'w1';
       final DateTime newDate = DateTime(2023, 5, 10);
       const String newWorkoutName = 'new workout name';
@@ -559,11 +562,7 @@ void main() {
       );
       repository = WorkoutRepositoryImpl(initialData: [existingWorkout]);
 
-      final Stream<Workout?> workout$ = repository.getWorkoutById(
-        workoutId: id,
-        userId: userId,
-      );
-      repository.updateWorkout(
+      await repository.updateWorkout(
         workoutId: id,
         userId: userId,
         date: newDate,
@@ -573,8 +572,8 @@ void main() {
       );
 
       expect(
-        workout$,
-        emitsInOrder([expectedUpdatedWorkout]),
+        repository.getWorkoutById(workoutId: id, userId: userId),
+        emits(expectedUpdatedWorkout),
       );
       verify(
         () => dbWorkoutService.updateWorkout(
@@ -591,80 +590,65 @@ void main() {
 
   test(
     'updateWorkout, '
-    'workout name is null, '
-    'should call db method to update workout with workout name set as null',
+    'db method throws document exception with documentNotFound code, '
+    'should remove entity from repo and '
+    'should throw entity exception with entityNotFound code',
     () async {
       const String id = 'w1';
-      dbWorkoutService.mockUpdateWorkout();
-
-      await repository.updateWorkout(
-        workoutId: id,
+      final DateTime newDate = DateTime(2023, 5, 10);
+      const String newWorkoutName = 'new workout name';
+      const ActivityStatus newStatus = ActivityStatusUndone();
+      const newStatusDto = firebase.ActivityStatusUndoneDto();
+      const List<WorkoutStage> newStages = [
+        WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
+      ];
+      const List<firebase.WorkoutStageDto> newStageDtos = [
+        firebase.WorkoutStageCardioDto(distanceInKm: 10, maxHeartRate: 150),
+      ];
+      final Workout existingWorkout = createWorkout(
+        id: id,
         userId: userId,
-        workoutName: null,
+        date: DateTime(2023, 5, 5),
+        name: 'workout name',
         status: const ActivityStatusPending(),
-        stages: [],
+        stages: const [
+          WorkoutStageCardio(distanceInKm: 8, maxHeartRate: 150),
+        ],
       );
-
-      verify(
-        () => dbWorkoutService.updateWorkout(
-          workoutId: id,
-          userId: userId,
-          status: const firebase.ActivityStatusPendingDto(),
-          stages: [],
+      dbWorkoutService.mockUpdateWorkout(
+        throwable: const firebase.FirebaseDocumentException(
+          code: firebase.FirebaseDocumentExceptionCode.documentNotFound,
         ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'updateWorkout, '
-    'workout status is null, '
-    'should call db method to update workout with workout status set as null',
-    () async {
-      const String id = 'w1';
-      dbWorkoutService.mockUpdateWorkout();
-
-      await repository.updateWorkout(
-        workoutId: id,
-        userId: userId,
-        workoutName: 'workout name',
-        stages: [],
       );
+      repository = WorkoutRepositoryImpl(initialData: [existingWorkout]);
 
+      Object? exception;
+      try {
+        await repository.updateWorkout(
+          workoutId: id,
+          userId: userId,
+          date: newDate,
+          workoutName: newWorkoutName,
+          status: newStatus,
+          stages: newStages,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(
+        exception,
+        const EntityException(code: EntityExceptionCode.entityNotFound),
+      );
+      expect(repository.dataStream$, emits([]));
       verify(
         () => dbWorkoutService.updateWorkout(
           workoutId: id,
           userId: userId,
-          workoutName: 'workout name',
-          status: null,
-          stages: [],
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'updateWorkout, '
-    'list of stages is null, '
-    'should call db method to update workout with stages set as null',
-    () async {
-      const String id = 'w1';
-      dbWorkoutService.mockUpdateWorkout();
-
-      await repository.updateWorkout(
-        workoutId: id,
-        userId: userId,
-        workoutName: 'new workout name',
-        status: const ActivityStatusPending(),
-      );
-
-      verify(
-        () => dbWorkoutService.updateWorkout(
-          workoutId: id,
-          userId: userId,
-          workoutName: 'new workout name',
-          status: const firebase.ActivityStatusPendingDto(),
-          stages: null,
+          date: newDate,
+          workoutName: newWorkoutName,
+          status: newStatusDto,
+          stages: newStageDtos,
         ),
       ).called(1);
     },

@@ -9,6 +9,7 @@ import '../../domain/additional_model/workout_stage.dart';
 import '../../domain/entity/workout.dart';
 import '../../domain/repository/workout_repository.dart';
 import '../mapper/activity_status_mapper.dart';
+import '../mapper/custom_exception_mapper.dart';
 import '../mapper/workout_mapper.dart';
 import '../mapper/workout_stage_mapper.dart';
 
@@ -140,17 +141,26 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     ActivityStatus? status,
     List<WorkoutStage>? stages,
   }) async {
-    final WorkoutDto? updatedWorkoutDto = await _dbWorkoutService.updateWorkout(
-      workoutId: workoutId,
-      userId: userId,
-      date: date,
-      workoutName: workoutName,
-      status: status != null ? mapActivityStatusToDto(status) : null,
-      stages: stages?.map(mapWorkoutStageToFirebase).toList(),
-    );
-    if (updatedWorkoutDto != null) {
-      final Workout updatedWorkout = mapWorkoutFromDto(updatedWorkoutDto);
-      updateEntity(updatedWorkout);
+    try {
+      final WorkoutDto? updatedWorkoutDto =
+          await _dbWorkoutService.updateWorkout(
+        workoutId: workoutId,
+        userId: userId,
+        date: date,
+        workoutName: workoutName,
+        status: status != null ? mapActivityStatusToDto(status) : null,
+        stages: stages?.map(mapWorkoutStageToFirebase).toList(),
+      );
+      if (updatedWorkoutDto != null) {
+        final Workout updatedWorkout = mapWorkoutFromDto(updatedWorkoutDto);
+        updateEntity(updatedWorkout);
+      }
+    } on FirebaseDocumentException catch (documentException) {
+      if (documentException.code ==
+          FirebaseDocumentExceptionCode.documentNotFound) {
+        removeEntity(workoutId);
+        throw mapExceptionFromDb(documentException);
+      }
     }
   }
 

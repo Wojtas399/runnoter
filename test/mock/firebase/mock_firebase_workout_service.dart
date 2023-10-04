@@ -18,7 +18,7 @@ class MockFirebaseWorkoutService extends Mock
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
       ),
-    ).thenAnswer((invocation) => Future.value(workoutDtos));
+    ).thenAnswer((_) => Future.value(workoutDtos));
   }
 
   void mockLoadWorkoutById({
@@ -29,7 +29,7 @@ class MockFirebaseWorkoutService extends Mock
         workoutId: any(named: 'workoutId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(workoutDto));
+    ).thenAnswer((_) => Future.value(workoutDto));
   }
 
   void mockLoadWorkoutsByDate({
@@ -40,7 +40,7 @@ class MockFirebaseWorkoutService extends Mock
         userId: any(named: 'userId'),
         date: any(named: 'date'),
       ),
-    ).thenAnswer((invocation) => Future.value(workoutDtos));
+    ).thenAnswer((_) => Future.value(workoutDtos));
   }
 
   void mockLoadAllWorkouts({
@@ -50,7 +50,7 @@ class MockFirebaseWorkoutService extends Mock
       () => loadAllWorkouts(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(workoutDtos));
+    ).thenAnswer((_) => Future.value(workoutDtos));
   }
 
   void mockAddWorkout({
@@ -64,22 +64,20 @@ class MockFirebaseWorkoutService extends Mock
         status: any(named: 'status'),
         stages: any(named: 'stages'),
       ),
-    ).thenAnswer((invocation) => Future.value(addedWorkoutDto));
+    ).thenAnswer((_) => Future.value(addedWorkoutDto));
   }
 
   void mockUpdateWorkout({
     WorkoutDto? updatedWorkoutDto,
+    Object? throwable,
   }) {
-    when(
-      () => updateWorkout(
-        workoutId: any(named: 'workoutId'),
-        userId: any(named: 'userId'),
-        date: any(named: 'date'),
-        workoutName: any(named: 'workoutName'),
-        status: any(named: 'status'),
-        stages: any(named: 'stages'),
-      ),
-    ).thenAnswer((invocation) => Future.value(updatedWorkoutDto));
+    if (throwable != null) {
+      when(_updateWorkoutCall).thenThrow(throwable);
+    } else {
+      when(
+        _updateWorkoutCall,
+      ).thenAnswer((_) => Future.value(updatedWorkoutDto));
+    }
   }
 
   void mockDeleteWorkout() {
@@ -88,7 +86,7 @@ class MockFirebaseWorkoutService extends Mock
         userId: any(named: 'userId'),
         workoutId: any(named: 'workoutId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteAllUserWorkouts({
@@ -98,6 +96,15 @@ class MockFirebaseWorkoutService extends Mock
       () => deleteAllUserWorkouts(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(idsOfDeletedWorkouts));
+    ).thenAnswer((_) => Future.value(idsOfDeletedWorkouts));
   }
+
+  Future<WorkoutDto?> _updateWorkoutCall() => updateWorkout(
+        workoutId: any(named: 'workoutId'),
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+        workoutName: any(named: 'workoutName'),
+        status: any(named: 'status'),
+        stages: any(named: 'stages'),
+      );
 }
