@@ -748,6 +748,14 @@
     "description": "Label of race expected duration"
   },
   "@__________CLIENTS__________": {},
+  "clientsNoInternetConnectionTitle": "Brak połączenia z internetem",
+  "@clientsNoInternetConnectionTitle": {
+    "description": "Title of the information about no internet connection"
+  },
+  "clientsNoInternetConnectionMessage": "Aby korzystać z tej strony musisz mieć połączenie internetowe",
+  "@clientsNoInternetConnectionMessage": {
+    "description": "Message of the information about no internet connection"
+  },
   "clientsTitle": "Klienci",
   "@clientsTitle": {
     "description": "Title of clients screen"

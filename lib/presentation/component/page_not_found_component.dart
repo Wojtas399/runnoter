@@ -10,20 +10,11 @@ class PageNotFound extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const PageNotFoundInfo(),
-    );
-  }
-}
-
-class PageNotFoundInfo extends StatelessWidget {
-  const PageNotFoundInfo({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return EmptyContentInfo(
-      icon: Icons.warning,
-      title: Str.of(context).pageNotFoundTitle,
-      subtitle: Str.of(context).pageNotFoundMessage,
+      body: EmptyContentInfo(
+        icon: Icons.warning,
+        title: Str.of(context).pageNotFoundTitle,
+        subtitle: Str.of(context).pageNotFoundMessage,
+      ),
     );
   }
 }

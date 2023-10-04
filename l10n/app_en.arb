@@ -206,6 +206,8 @@
   "raceDistance": "Distance",
   "raceExpectedDuration": "Expected duration",
   "@__________CLIENTS__________": {},
+  "clientsNoInternetConnectionTitle": "No internet connection",
+  "clientsNoInternetConnectionMessage": "You must have internet connection to use this page",
   "clientsTitle": "Clients",
   "clientsSearchUsers": "Search for users",
   "clientsMessage": "Message",

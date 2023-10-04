@@ -8,8 +8,9 @@ import '../../../../domain/cubit/clients/clients_cubit.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
+import '../../../component/empty_content_info_component.dart';
 import '../../../component/gap/gap_components.dart';
-import '../../../component/page_not_found_component.dart';
+import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../config/navigation/router.dart';
 import '../../../extension/context_extensions.dart';
@@ -31,7 +32,7 @@ class ClientsScreen extends StatelessWidget {
           selector: (ClientsState state) => state.status,
           builder: (_, CubitStatus cubitStatus) {
             return cubitStatus is CubitStatusNoInternetConnection
-                ? const PageNotFoundInfo()
+                ? const _NoInternetConnectionInfo()
                 : const _Content();
           },
         ),
@@ -89,6 +90,21 @@ class _CubitListener extends StatelessWidget {
     if (state.selectedChatId != null) {
       navigateTo(ChatRoute(chatId: state.selectedChatId));
     }
+  }
+}
+
+class _NoInternetConnectionInfo extends StatelessWidget {
+  const _NoInternetConnectionInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    return Paddings24(
+      child: EmptyContentInfo(
+        icon: Icons.wifi_off,
+        title: Str.of(context).clientsNoInternetConnectionTitle,
+        subtitle: Str.of(context).clientsNoInternetConnectionMessage,
+      ),
+    );
   }
 }
 
