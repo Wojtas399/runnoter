@@ -70,4 +70,13 @@ class FirebaseMessageImageService {
       await messageImagesRef.doc(dto.id).set(dto);
     }
   }
+
+  Future<void> deleteAllMessageImagesFromChat({required String chatId}) async {
+    final messageImages = await getMessageImagesRef(chatId).get();
+    final batch = FirebaseFirestore.instance.batch();
+    for (final messageImg in messageImages.docs) {
+      batch.delete(messageImg.reference);
+    }
+    await batch.commit();
+  }
 }

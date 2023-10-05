@@ -459,8 +459,9 @@ void main() {
 
   test(
     'delete all images from chat, '
-    'should load all message images from db message image service and then '
-    'should delete each image from db storage and from repo',
+    'should load all message images from db message image service then '
+    'should delete each image from db storage and from repo and '
+    'should call message image service method to delete all message images',
     () async {
       const String chatId = 'c1';
       final List<MessageImage> existingMessageImages = [
@@ -481,6 +482,7 @@ void main() {
         messageImageDtos: dtosOfMessageImagesFromChat,
       );
       dbStorageService.mockDeleteMessageImage();
+      dbMessageImageService.mockDeleteAllMessageImagesFromChat();
       repository = MessageImageRepositoryImpl(
         initialData: existingMessageImages,
       );
@@ -518,6 +520,11 @@ void main() {
         () => dbStorageService.deleteMessageImage(
           messageId: 'm3',
           imageId: 'i31',
+        ),
+      ).called(1);
+      verify(
+        () => dbMessageImageService.deleteAllMessageImagesFromChat(
+          chatId: chatId,
         ),
       ).called(1);
     },

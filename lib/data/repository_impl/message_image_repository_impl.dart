@@ -129,6 +129,7 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
       );
       idsOfDeletedMessageImages.add(messageImageDto.id);
     }
+    await _dbMessageImageService.deleteAllMessageImagesFromChat(chatId: chatId);
     removeEntities(idsOfDeletedMessageImages);
   }
 
