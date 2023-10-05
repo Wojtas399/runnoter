@@ -155,8 +155,10 @@ class MessageRepositoryImpl extends StateRepository<Message>
     addOrUpdateEntities(messages);
   }
 
-  Stream<List<Message>?> _getMessagesFromChat(String chatId) => dataStream$.map(
-        (msgs) => msgs?.where((message) => message.chatId == chatId).toList(),
+  Stream<List<Message>> _getMessagesFromChat(String chatId) => dataStream$.map(
+        (msgs) =>
+            msgs?.where((message) => message.chatId == chatId).toList() ??
+            const [],
       );
 
   Future<void> _manageAddedOrModifiedMessages(

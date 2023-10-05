@@ -172,6 +172,23 @@ void main() {
   );
 
   test(
+    'getMessagesForChat, '
+    'should emit empty list if there are no messages in repo',
+    () async {
+      const String chatId = 'c1';
+      dbMessageService.mockLoadMessagesForChat(messageDtos: const []);
+      dbMessageService.mockGetAddedOrModifiedMessagesForChat(
+        messageDtosStream: Stream.value(const []),
+      );
+
+      final Stream<List<Message>?> messages$ =
+          repository.getMessagesForChat(chatId: chatId);
+
+      expect(messages$, emits(const []));
+    },
+  );
+
+  test(
     'doesUserHaveUnreadMessagesInChat, '
     'at least one unread message sent by second user exists in repo, '
     'should return true',
