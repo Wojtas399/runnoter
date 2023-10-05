@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/cubit/chat/chat_cubit.dart';
 import '../../../component/dialog/actions_dialog_component.dart';
 import '../../../service/dialog_service.dart';
@@ -12,10 +11,16 @@ import '../../../service/image_service.dart';
 import '../../../service/utils.dart';
 import 'chat_message_input_images.dart';
 
-class ChatBottomPart extends StatelessWidget {
-  final TextEditingController _messageController = TextEditingController();
+class ChatBottomPart extends StatefulWidget {
+  const ChatBottomPart({super.key});
 
-  ChatBottomPart({super.key});
+  @override
+  State<StatefulWidget> createState() => _State();
+}
+
+class _State extends State<ChatBottomPart> {
+  final TextEditingController _messageController = TextEditingController();
+  bool _isMessageSubmitting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +55,7 @@ class ChatBottomPart extends StatelessWidget {
                             child: _MessageInput(
                               messageController: _messageController,
                               onSubmitted: () => _onSubmit(context),
+                              isDisabled: _isMessageSubmitting,
                             ),
                           ),
                         ],
@@ -62,6 +68,7 @@ class ChatBottomPart extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: kIsWeb ? 4 : 0),
                 child: _SubmitButton(
                   onPressed: () => _onSubmit(context),
+                  isLoading: _isMessageSubmitting,
                 ),
               ),
             ],
@@ -72,8 +79,14 @@ class ChatBottomPart extends StatelessWidget {
   }
 
   Future<void> _onSubmit(BuildContext context) async {
+    setState(() {
+      _isMessageSubmitting = true;
+    });
     await context.read<ChatCubit>().submitMessage();
     _messageController.clear();
+    setState(() {
+      _isMessageSubmitting = false;
+    });
   }
 }
 
@@ -136,10 +149,12 @@ class _ImageButtonState extends State<_ImageButton> {
 class _MessageInput extends StatelessWidget {
   final TextEditingController messageController;
   final VoidCallback onSubmitted;
+  final bool isDisabled;
 
   const _MessageInput({
     required this.messageController,
     required this.onSubmitted,
+    this.isDisabled = false,
   });
 
   @override
@@ -149,9 +164,6 @@ class _MessageInput extends StatelessWidget {
       borderSide: BorderSide(
         color: Theme.of(context).colorScheme.surfaceVariant,
       ),
-    );
-    final CubitStatus cubitStatus = context.select(
-      (ChatCubit cubit) => cubit.state.status,
     );
     const double contentPadding = kIsWeb ? 16 : 8;
 
@@ -173,7 +185,7 @@ class _MessageInput extends StatelessWidget {
           ),
           counterText: '',
         ),
-        enabled: cubitStatus is! CubitStatusLoading,
+        enabled: !isDisabled,
         maxLength: 500,
         maxLines: null,
         textInputAction: TextInputAction.send,
@@ -188,14 +200,12 @@ class _MessageInput extends StatelessWidget {
 
 class _SubmitButton extends StatelessWidget {
   final VoidCallback onPressed;
+  final bool isLoading;
 
-  const _SubmitButton({required this.onPressed});
+  const _SubmitButton({required this.onPressed, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
-    final CubitStatus cubitStatus = context.select(
-      (ChatCubit cubit) => cubit.state.status,
-    );
     final bool canSubmit = context.select(
       (ChatCubit cubit) => cubit.state.canSubmitMessage,
     );
@@ -205,9 +215,8 @@ class _SubmitButton extends StatelessWidget {
         shape: const CircleBorder(),
         padding: const EdgeInsets.all(kIsWeb ? 16 : 8),
       ),
-      onPressed:
-          cubitStatus is! CubitStatusLoading && canSubmit ? onPressed : null,
-      child: cubitStatus is CubitStatusLoading
+      onPressed: !isLoading && canSubmit ? onPressed : null,
+      child: isLoading
           ? Container(
               width: 24,
               height: 24,

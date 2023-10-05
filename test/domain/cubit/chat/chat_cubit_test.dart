@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
 import 'package:runnoter/domain/entity/chat.dart';
 import 'package:runnoter/domain/entity/message.dart';
@@ -17,7 +16,6 @@ import 'package:runnoter/domain/repository/message_image_repository.dart';
 import 'package:runnoter/domain/repository/message_repository.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
-import 'package:runnoter/domain/service/connectivity_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../creators/chat_creator.dart';
@@ -29,7 +27,6 @@ import '../../../mock/domain/repository/mock_message_image_repository.dart';
 import '../../../mock/domain/repository/mock_message_repository.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_connectivity_service.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -38,7 +35,6 @@ void main() {
   final messageImageRepository = MockMessageImageRepository();
   final personRepository = MockPersonRepository();
   final dateService = MockDateService();
-  final connectivityService = MockConnectivityService();
   const String chatId = 'c1';
   const String loggedUserId = 'u1';
 
@@ -50,7 +46,6 @@ void main() {
       ChatCubit(
         chatId: chatId,
         initialState: ChatState(
-          status: const CubitStatusInitial(),
           messagesFromLatest: messagesFromLatest,
           messageToSend: messageToSend,
           imagesToSend: imagesToSend,
@@ -64,7 +59,6 @@ void main() {
     GetIt.I.registerSingleton<MessageImageRepository>(messageImageRepository);
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
     GetIt.I.registerFactory<DateService>(() => dateService);
-    GetIt.I.registerFactory<ConnectivityService>(() => connectivityService);
   });
 
   tearDown(() {
@@ -74,7 +68,6 @@ void main() {
     reset(messageImageRepository);
     reset(personRepository);
     reset(dateService);
-    reset(connectivityService);
   });
 
   group(
@@ -124,17 +117,14 @@ void main() {
         wait: const Duration(seconds: 6),
         expect: () => [
           const ChatState(
-            status: CubitStatusComplete(),
             recipientFullName: 'name surname',
             isRecipientTyping: false,
           ),
           const ChatState(
-            status: CubitStatusComplete(),
             recipientFullName: 'name surname',
             isRecipientTyping: true,
           ),
           const ChatState(
-            status: CubitStatusComplete(),
             recipientFullName: 'name surname',
             isRecipientTyping: false,
           ),
@@ -272,12 +262,8 @@ void main() {
           messages$.add(const []);
         },
         expect: () => [
+          ChatState(messagesFromLatest: expectedMessages),
           ChatState(
-            status: const CubitStatusComplete(),
-            messagesFromLatest: expectedMessages,
-          ),
-          ChatState(
-            status: const CubitStatusComplete(),
             messagesFromLatest: [
               expectedMessages.first,
               expectedMessages[1].copyWith(status: MessageStatus.read),
@@ -287,7 +273,6 @@ void main() {
             ],
           ),
           ChatState(
-            status: const CubitStatusComplete(),
             messagesFromLatest: [
               expectedMessages.first.copyWith(images: []),
               expectedMessages[1].copyWith(status: MessageStatus.read),
@@ -296,10 +281,7 @@ void main() {
               expectedMessages[4],
             ],
           ),
-          const ChatState(
-            status: CubitStatusComplete(),
-            messagesFromLatest: [],
-          ),
+          const ChatState(messagesFromLatest: []),
         ],
         verify: (_) {
           verify(
@@ -337,8 +319,8 @@ void main() {
     },
     wait: const Duration(seconds: 5),
     expect: () => [
-      const ChatState(status: CubitStatusComplete(), messageToSend: 'msg'),
-      const ChatState(status: CubitStatusComplete(), messageToSend: 'message'),
+      const ChatState(messageToSend: 'msg'),
+      const ChatState(messageToSend: 'message'),
     ],
     verify: (_) {
       verify(
@@ -358,10 +340,7 @@ void main() {
     ),
     act: (cubit) => cubit.addImagesToSend([Uint8List(2), Uint8List(3)]),
     expect: () => [
-      ChatState(
-        status: const CubitStatusComplete(),
-        imagesToSend: [Uint8List(1), Uint8List(2), Uint8List(3)],
-      ),
+      ChatState(imagesToSend: [Uint8List(1), Uint8List(2), Uint8List(3)]),
     ],
   );
 
@@ -384,49 +363,19 @@ void main() {
     ),
     act: (cubit) => cubit.deleteImageToSend(1),
     expect: () => [
-      ChatState(
-        status: const CubitStatusComplete(),
-        imagesToSend: [Uint8List(1), Uint8List(3)],
-      ),
+      ChatState(imagesToSend: [Uint8List(1), Uint8List(3)]),
     ],
-  );
-
-  blocTest(
-    'submitMessage, '
-    'no internet connection, '
-    'should emit noInternetConnection error',
-    build: () => createCubit(messageToSend: 'message'),
-    setUp: () => connectivityService.mockHasDeviceInternetConnection(
-      hasConnection: false,
-    ),
-    act: (cubit) => cubit.submitMessage(),
-    expect: () => [
-      const ChatState(
-        status: CubitStatusNoInternetConnection(),
-        messageToSend: 'message',
-      ),
-    ],
-    verify: (_) => verify(
-      () => connectivityService.hasDeviceInternetConnection(),
-    ).called(1),
   );
 
   blocTest(
     'submitMessage, '
     'logged user does not exist, '
-    'should emit no logged user status',
+    'should do nothing',
     build: () => createCubit(messageToSend: 'message'),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
-      authService.mockGetLoggedUserId();
-    },
+    setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.submitMessage(),
-    expect: () => [
-      const ChatState(
-        status: CubitStatusNoLoggedUser(),
-        messageToSend: 'message',
-      ),
-    ],
+    expect: () => [],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
@@ -439,7 +388,6 @@ void main() {
     'Should set messageToSend as null.',
     build: () => createCubit(messageToSend: 'message', imagesToSend: []),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
       chatRepository.mockGetChatById(
@@ -450,16 +398,7 @@ void main() {
     },
     act: (cubit) => cubit.submitMessage(),
     expect: () => [
-      const ChatState(
-        status: CubitStatusLoading(),
-        messageToSend: 'message',
-        imagesToSend: [],
-      ),
-      const ChatState(
-        status: CubitStatusLoading(),
-        messageToSend: null,
-        imagesToSend: [],
-      ),
+      const ChatState(messageToSend: null, imagesToSend: []),
     ],
     verify: (_) {
       verify(
@@ -493,7 +432,6 @@ void main() {
       imagesToSend: [Uint8List(1), Uint8List(2)],
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
       chatRepository.mockGetChatById(
@@ -505,16 +443,7 @@ void main() {
     },
     act: (cubit) => cubit.submitMessage(),
     expect: () => [
-      ChatState(
-        status: const CubitStatusLoading(),
-        messageToSend: 'message',
-        imagesToSend: [Uint8List(1), Uint8List(2)],
-      ),
-      const ChatState(
-        status: CubitStatusLoading(),
-        messageToSend: null,
-        imagesToSend: [],
-      ),
+      const ChatState(messageToSend: null, imagesToSend: []),
     ],
     verify: (_) {
       verify(
