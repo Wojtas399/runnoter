@@ -41,7 +41,8 @@ void main() {
 
   test(
     'get images by message id, '
-    'should load new images from db, add them to repo and '
+    'should load new images from db and add them to repo, '
+    'should listen to newly added images, '
     'should emit all message images with given message id',
     () {
       const String messageId = 'm1';
@@ -56,36 +57,35 @@ void main() {
         createMessageImage(id: 'i3', messageId: 'm3'),
       ];
       final List<MessageImageDto> loadedMessageImageDtos = [
-        MessageImageDto(
-          id: 'i4',
-          messageId: messageId,
-          sendDateTime: DateTime(2023, 1, 10),
-          order: 1,
-        ),
-        MessageImageDto(
-          id: 'i5',
-          messageId: messageId,
-          sendDateTime: DateTime(2023, 1, 12),
-          order: 2,
-        ),
+        createMessageImageDto(id: 'i4', messageId: messageId),
+        createMessageImageDto(id: 'i5', messageId: messageId),
       ];
       final List<MessageImage> loadedMessageImages = [
-        MessageImage(
-          id: 'i4',
-          messageId: messageId,
-          order: 1,
-          bytes: Uint8List(1),
-        ),
-        MessageImage(
-          id: 'i5',
-          messageId: messageId,
-          order: 2,
-          bytes: Uint8List(2),
-        ),
+        createMessageImage(id: 'i4', messageId: messageId, bytes: Uint8List(1)),
+        createMessageImage(id: 'i5', messageId: messageId, bytes: Uint8List(2)),
       ];
+      final List<MessageImageDto> firstAddedMessageImageDtos = [
+        createMessageImageDto(id: 'i6', messageId: messageId),
+        createMessageImageDto(id: 'i7', messageId: messageId),
+      ];
+      final List<MessageImageDto> secondAddedMessageImageDtos = [
+        createMessageImageDto(id: 'i8', messageId: messageId),
+      ];
+      final List<MessageImage> firstAddedMessageImages = [
+        createMessageImage(id: 'i6', messageId: messageId, bytes: Uint8List(3)),
+        createMessageImage(id: 'i7', messageId: messageId, bytes: Uint8List(4)),
+      ];
+      final List<MessageImage> secondAddedMessageImages = [
+        createMessageImage(id: 'i8', messageId: messageId, bytes: Uint8List(5)),
+      ];
+      final StreamController<List<MessageImageDto>> addedImages$ =
+          StreamController()..add(const []);
       dbMessageService.mockLoadMessageById(messageDto: messageDto);
       dbMessageImageService.mockLoadMessageImagesByMessageId(
         messageImageDtos: loadedMessageImageDtos,
+      );
+      dbMessageImageService.mockGetAddedImagesForMessage(
+        imagesStream: addedImages$.stream,
       );
       when(
         () => dbStorageService.loadMessageImage(
@@ -99,24 +99,66 @@ void main() {
           imageId: 'i5',
         ),
       ).thenAnswer((_) => Future.value(Uint8List(2)));
+      when(
+        () => dbStorageService.loadMessageImage(
+          messageId: messageId,
+          imageId: 'i6',
+        ),
+      ).thenAnswer((_) => Future.value(Uint8List(3)));
+      when(
+        () => dbStorageService.loadMessageImage(
+          messageId: messageId,
+          imageId: 'i7',
+        ),
+      ).thenAnswer((_) => Future.value(Uint8List(4)));
+      when(
+        () => dbStorageService.loadMessageImage(
+          messageId: messageId,
+          imageId: 'i8',
+        ),
+      ).thenAnswer((_) => Future.value(Uint8List(5)));
       repository = MessageImageRepositoryImpl(
         initialData: existingMessageImages,
       );
 
       final Stream<List<MessageImage>> messageImages$ =
           repository.getImagesByMessageId(messageId: messageId);
+      addedImages$.add(firstAddedMessageImageDtos);
+      addedImages$.add(secondAddedMessageImageDtos);
 
       expect(
         messageImages$,
         emitsInOrder([
           [existingMessageImages.first, ...loadedMessageImages],
+          [
+            existingMessageImages.first,
+            ...loadedMessageImages,
+            ...firstAddedMessageImages,
+          ],
+          [
+            existingMessageImages.first,
+            ...loadedMessageImages,
+            ...firstAddedMessageImages,
+            ...secondAddedMessageImages,
+          ],
         ]),
       );
       expect(
         repository.dataStream$,
         emitsInOrder([
           existingMessageImages,
-          [...existingMessageImages, ...loadedMessageImages]
+          [...existingMessageImages, ...loadedMessageImages],
+          [
+            ...existingMessageImages,
+            ...loadedMessageImages,
+            ...firstAddedMessageImages,
+          ],
+          [
+            ...existingMessageImages,
+            ...loadedMessageImages,
+            ...firstAddedMessageImages,
+            ...secondAddedMessageImages,
+          ],
         ]),
       );
     },

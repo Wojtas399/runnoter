@@ -24,6 +24,30 @@ class FirebaseMessageImageService {
     );
   }
 
+  Stream<List<MessageImageDto>?> getAddedImagesForMessage({
+    required String chatId,
+    required final String messageId,
+  }) {
+    bool isFirstQuery = true;
+    return getMessageImagesRef(chatId)
+        .where(messageIdField, isEqualTo: messageId)
+        .snapshots()
+        .map(
+      (QuerySnapshot<MessageImageDto> querySnapshot) {
+        if (isFirstQuery) {
+          isFirstQuery = false;
+          return null;
+        }
+        return querySnapshot.docChanges
+            .where((docChange) =>
+                docChange.type == DocumentChangeType.added &&
+                docChange.doc.data() != null)
+            .map((docChange) => docChange.doc.data()!)
+            .toList();
+      },
+    );
+  }
+
   Future<List<MessageImageDto>> loadMessageImagesByMessageId({
     required final String chatId,
     required final String messageId,

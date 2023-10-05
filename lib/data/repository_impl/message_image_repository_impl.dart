@@ -25,15 +25,30 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
   @override
   Stream<List<MessageImage>> getImagesByMessageId({
     required String messageId,
-  }) async* {
-    await _loadImagesFromDbByMessageId(messageId);
-    await for (final messageImages in dataStream$) {
-      yield [
-        ...?messageImages?.where(
-          (MessageImage messageImage) => messageImage.messageId == messageId,
-        ),
-      ];
-    }
+  }) {
+    final StreamController<bool> canEmit$ = StreamController()..add(false);
+    _loadImagesFromDbByMessageId(messageId).then((_) => canEmit$.add(true));
+    StreamSubscription<List<MessageImageDto>?>? newMessageImagesListener;
+    return canEmit$.stream
+        .switchMap(
+          (bool canEmit) =>
+              canEmit ? _getImagesByMessageId(messageId) : Stream.value(null),
+        )
+        .whereNotNull()
+        .doOnData(
+          (_) => newMessageImagesListener ??=
+              Rx.fromCallable(() async => await _loadMessageChatId(messageId))
+                  .whereNotNull()
+                  .switchMap(
+                    (chatId) => _dbMessageImageService.getAddedImagesForMessage(
+                      chatId: chatId,
+                      messageId: messageId,
+                    ),
+                  )
+                  .whereNotNull()
+                  .listen(_manageNewImages),
+        )
+        .doOnCancel(() => newMessageImagesListener?.cancel());
   }
 
   @override
@@ -161,6 +176,11 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     addOrUpdateEntities(images);
   }
 
+  Stream<List<MessageImage>?> _getImagesByMessageId(String messageId) =>
+      dataStream$.map(
+        (images) => images?.where((img) => img.messageId == messageId).toList(),
+      );
+
   Stream<List<MessageImage>?> _getImagesFromChat(String chatId) =>
       dataStream$.asyncMap(
         (images) async {
@@ -199,5 +219,11 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
       }
     }
     return images;
+  }
+
+  Future<String?> _loadMessageChatId(String messageId) async {
+    final messageDto =
+        await _dbMessageService.loadMessageById(messageId: messageId);
+    return messageDto?.chatId;
   }
 }

@@ -11,6 +11,17 @@ class MockFirebaseMessageImageService extends Mock
     ).thenAnswer((_) => imagesStream);
   }
 
+  void mockGetAddedImagesForMessage({
+    required Stream<List<MessageImageDto>> imagesStream,
+  }) {
+    when(
+      () => getAddedImagesForMessage(
+        chatId: any(named: 'chatId'),
+        messageId: any(named: 'messageId'),
+      ),
+    ).thenAnswer((_) => imagesStream);
+  }
+
   void mockLoadMessageImagesByMessageId({
     required final List<MessageImageDto> messageImageDtos,
   }) {
