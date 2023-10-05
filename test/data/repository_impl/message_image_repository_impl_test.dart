@@ -123,7 +123,7 @@ void main() {
 
   test(
     'get images for chat, '
-    'should load new images from db, add them to repo and '
+    'should load limited images from db, add them to repo and '
     'should listen and emit all existing and newly added images with matching with matching chat id',
     () {
       const String chatId = 'c1';
@@ -170,7 +170,7 @@ void main() {
           createMessageImage(id: 'i7', messageId: 'm6', bytes: Uint8List(4));
       final StreamController<List<MessageImageDto>> addedImages$ =
           StreamController()..add([]);
-      dbMessageImageService.mockLoadMessageImagesForChat(
+      dbMessageImageService.mockLoadLimitedMessageImagesForChat(
         messageImageDtos: loadedImageDtos,
       );
       dbMessageImageService.mockGetAddedImagesForChat(
@@ -236,7 +236,7 @@ void main() {
 
   test(
     'load older images for chat, '
-    'should load new images from db base on last visible image id and '
+    'should load limited images from db base on last visible image id and '
     'should add them to repo',
     () async {
       const String chatId = 'c1';
@@ -253,7 +253,7 @@ void main() {
         createMessageImage(id: 'i3', messageId: 'm3', bytes: Uint8List(3)),
         createMessageImage(id: 'i4', messageId: 'm4', bytes: Uint8List(4)),
       ];
-      dbMessageImageService.mockLoadMessageImagesForChat(
+      dbMessageImageService.mockLoadLimitedMessageImagesForChat(
         messageImageDtos: loadedImageDtos,
       );
       when(
@@ -274,7 +274,7 @@ void main() {
         emits([...existingImages, ...loadedImages]),
       );
       verify(
-        () => dbMessageImageService.loadMessageImagesForChat(
+        () => dbMessageImageService.loadLimitedMessageImagesForChat(
           chatId: chatId,
           lastVisibleImageId: lastVisibleImageId,
         ),
@@ -451,6 +451,69 @@ void main() {
         () => dbMessageImageService.addMessageImagesToChat(
           chatId: messageDto.chatId,
           imageDtos: imageDtos,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete all images from chat, '
+    'should load all message images from db message image service and then '
+    'should delete each image from db storage and from repo',
+    () async {
+      const String chatId = 'c1';
+      final List<MessageImage> existingMessageImages = [
+        createMessageImage(id: 'i1', messageId: 'm1'),
+        createMessageImage(id: 'i2', messageId: 'm1'),
+        createMessageImage(id: 'i1', messageId: 'm2'),
+        createMessageImage(id: 'i1', messageId: 'm3'),
+        createMessageImage(id: 'i1', messageId: 'm4'),
+        createMessageImage(id: 'i2', messageId: 'm4'),
+      ];
+      final List<MessageImageDto> messageImageDtos = [
+        createMessageImageDto(id: 'i1', messageId: 'm1'),
+        createMessageImageDto(id: 'i2', messageId: 'm1'),
+        createMessageImageDto(id: 'i1', messageId: 'm2'),
+        createMessageImageDto(id: 'i1', messageId: 'm3'),
+      ];
+      dbMessageImageService.mockLoadAllMessageImagesForChat(
+        messageImageDtos: messageImageDtos,
+      );
+      dbStorageService.mockDeleteMessageImage();
+      repository = MessageImageRepositoryImpl(
+        initialData: existingMessageImages,
+      );
+
+      await repository.deleteAllImagesFromChat(chatId: chatId);
+
+      expect(repository.dataStream$, emits(const []));
+      verify(
+        () => dbMessageImageService.loadAllMessageImagesForChat(
+          chatId: chatId,
+        ),
+      ).called(1);
+      verify(
+        () => dbStorageService.deleteMessageImage(
+          messageId: 'm1',
+          imageId: 'i1',
+        ),
+      ).called(1);
+      verify(
+        () => dbStorageService.deleteMessageImage(
+          messageId: 'm1',
+          imageId: 'i2',
+        ),
+      ).called(1);
+      verify(
+        () => dbStorageService.deleteMessageImage(
+          messageId: 'm2',
+          imageId: 'i1',
+        ),
+      ).called(1);
+      verify(
+        () => dbStorageService.deleteMessageImage(
+          messageId: 'm3',
+          imageId: 'i1',
         ),
       ).called(1);
     },

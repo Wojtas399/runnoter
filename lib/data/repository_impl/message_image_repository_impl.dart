@@ -39,7 +39,7 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
   @override
   Stream<List<MessageImage>> getImagesForChat({required String chatId}) {
     final StreamController<bool> canEmit$ = StreamController()..add(false);
-    _loadImagesFromDbForChat(chatId).then((_) => canEmit$.add(true));
+    _loadLimitedImagesFromDbForChat(chatId).then((_) => canEmit$.add(true));
     StreamSubscription<List<MessageImageDto>?>? newImagesListener;
     return canEmit$.stream
         .switchMap(
@@ -61,7 +61,7 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     required String chatId,
     required String lastVisibleImageId,
   }) async {
-    await _loadImagesFromDbForChat(
+    await _loadLimitedImagesFromDbForChat(
       chatId,
       lastVisibleImageId: lastVisibleImageId,
     );
@@ -117,8 +117,19 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
 
   @override
   Future<void> deleteAllImagesFromChat({required String chatId}) async {
-    //TODO
-    throw UnimplementedError();
+    final List<MessageImageDto> allMessageImageDtosFromChat =
+        await _dbMessageImageService.loadAllMessageImagesForChat(
+      chatId: chatId,
+    );
+    final List<String> idsOfDeletedMessageImages = [];
+    for (final messageImageDto in allMessageImageDtosFromChat) {
+      await _dbStorageService.deleteMessageImage(
+        messageId: messageImageDto.messageId,
+        imageId: messageImageDto.id,
+      );
+      idsOfDeletedMessageImages.add(messageImageDto.id);
+    }
+    removeEntities(idsOfDeletedMessageImages);
   }
 
   Future<void> _loadImagesFromDbByMessageId(String messageId) async {
@@ -135,11 +146,12 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     addOrUpdateEntities(images);
   }
 
-  Future<void> _loadImagesFromDbForChat(
+  Future<void> _loadLimitedImagesFromDbForChat(
     String chatId, {
     String? lastVisibleImageId,
   }) async {
-    final imageDtos = await _dbMessageImageService.loadMessageImagesForChat(
+    final imageDtos =
+        await _dbMessageImageService.loadLimitedMessageImagesForChat(
       chatId: chatId,
       lastVisibleImageId: lastVisibleImageId,
     );

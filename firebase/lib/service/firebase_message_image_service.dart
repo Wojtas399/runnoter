@@ -34,7 +34,7 @@ class FirebaseMessageImageService {
     return querySnapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
 
-  Future<List<MessageImageDto>> loadMessageImagesForChat({
+  Future<List<MessageImageDto>> loadLimitedMessageImagesForChat({
     required final String chatId,
     String? lastVisibleImageId,
   }) async {
@@ -49,6 +49,15 @@ class FirebaseMessageImageService {
     final messageImagesSnapshot = await limitedQuery.get();
     return messageImagesSnapshot.docs
         .map((snapshot) => snapshot.data())
+        .toList();
+  }
+
+  Future<List<MessageImageDto>> loadAllMessageImagesForChat({
+    required String chatId,
+  }) async {
+    final messageImages = await getMessageImagesRef(chatId).get();
+    return messageImages.docs
+        .map((querySnapshot) => querySnapshot.data())
         .toList();
   }
 

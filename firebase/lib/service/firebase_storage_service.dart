@@ -33,6 +33,18 @@ class FirebaseStorageService {
     }
   }
 
+  Future<void> deleteMessageImage({
+    required String messageId,
+    required String imageId,
+  }) async {
+    await _storageRef
+        .child(_createPathForMessageImage(messageId, imageId))
+        .delete();
+  }
+
+  String _createPathForMessageImages(String messageId) =>
+      'MessageImages/$messageId';
+
   String _createPathForMessageImage(String messageId, String imageId) =>
-      'MessageImages/$messageId/$imageId.jpg';
+      '${_createPathForMessageImages(messageId)}/$imageId.jpg';
 }
