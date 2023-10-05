@@ -448,4 +448,31 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete all messages from chat, '
+    'should delete all messages with matching chat id from db and from repo',
+    () async {
+      const String chatId = 'c1';
+      final List<Message> existingMessages = [
+        createMessage(id: 'm11', chatId: chatId),
+        createMessage(id: 'm21', chatId: 'c2'),
+        createMessage(id: 'm12', chatId: chatId),
+        createMessage(id: 'm13', chatId: chatId),
+        createMessage(id: 'm22', chatId: 'c2'),
+      ];
+      dbMessageService.mockDeleteAllMessagesFromChat();
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      await repository.deleteAllMessagesFromChat(chatId: chatId);
+
+      expect(
+        repository.dataStream$,
+        emits([existingMessages[1], existingMessages.last]),
+      );
+      verify(
+        () => dbMessageService.deleteAllMessagesFromChat(chatId: chatId),
+      ).called(1);
+    },
+  );
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -463,21 +464,21 @@ void main() {
     () async {
       const String chatId = 'c1';
       final List<MessageImage> existingMessageImages = [
-        createMessageImage(id: 'i1', messageId: 'm1'),
-        createMessageImage(id: 'i2', messageId: 'm1'),
-        createMessageImage(id: 'i1', messageId: 'm2'),
-        createMessageImage(id: 'i1', messageId: 'm3'),
-        createMessageImage(id: 'i1', messageId: 'm4'),
-        createMessageImage(id: 'i2', messageId: 'm4'),
+        createMessageImage(id: 'i11', messageId: 'm1'),
+        createMessageImage(id: 'i12', messageId: 'm1'),
+        createMessageImage(id: 'i21', messageId: 'm2'),
+        createMessageImage(id: 'i31', messageId: 'm3'),
+        createMessageImage(id: 'i41', messageId: 'm4'),
+        createMessageImage(id: 'i42', messageId: 'm4'),
       ];
-      final List<MessageImageDto> messageImageDtos = [
-        createMessageImageDto(id: 'i1', messageId: 'm1'),
-        createMessageImageDto(id: 'i2', messageId: 'm1'),
-        createMessageImageDto(id: 'i1', messageId: 'm2'),
-        createMessageImageDto(id: 'i1', messageId: 'm3'),
+      final List<MessageImageDto> dtosOfMessageImagesFromChat = [
+        createMessageImageDto(id: 'i11', messageId: 'm1'),
+        createMessageImageDto(id: 'i12', messageId: 'm1'),
+        createMessageImageDto(id: 'i21', messageId: 'm2'),
+        createMessageImageDto(id: 'i31', messageId: 'm3'),
       ];
       dbMessageImageService.mockLoadAllMessageImagesForChat(
-        messageImageDtos: messageImageDtos,
+        messageImageDtos: dtosOfMessageImagesFromChat,
       );
       dbStorageService.mockDeleteMessageImage();
       repository = MessageImageRepositoryImpl(
@@ -486,7 +487,10 @@ void main() {
 
       await repository.deleteAllImagesFromChat(chatId: chatId);
 
-      expect(repository.dataStream$, emits(const []));
+      expect(
+        repository.dataStream$,
+        emits(existingMessageImages.slice(4)),
+      );
       verify(
         () => dbMessageImageService.loadAllMessageImagesForChat(
           chatId: chatId,
@@ -495,25 +499,25 @@ void main() {
       verify(
         () => dbStorageService.deleteMessageImage(
           messageId: 'm1',
-          imageId: 'i1',
+          imageId: 'i11',
         ),
       ).called(1);
       verify(
         () => dbStorageService.deleteMessageImage(
           messageId: 'm1',
-          imageId: 'i2',
+          imageId: 'i12',
         ),
       ).called(1);
       verify(
         () => dbStorageService.deleteMessageImage(
           messageId: 'm2',
-          imageId: 'i1',
+          imageId: 'i21',
         ),
       ).called(1);
       verify(
         () => dbStorageService.deleteMessageImage(
           messageId: 'm3',
-          imageId: 'i1',
+          imageId: 'i31',
         ),
       ).called(1);
     },

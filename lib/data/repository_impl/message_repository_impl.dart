@@ -130,8 +130,14 @@ class MessageRepositoryImpl extends StateRepository<Message>
 
   @override
   Future<void> deleteAllMessagesFromChat({required String chatId}) async {
-    //TODO
-    throw UnimplementedError();
+    await _dbMessageService.deleteAllMessagesFromChat(chatId: chatId);
+    final messagesInRepo = await dataStream$.first;
+    if (messagesInRepo == null) return;
+    final List<String> idsOfMessagesToRemove = [];
+    for (final msg in messagesInRepo) {
+      if (msg.chatId == chatId) idsOfMessagesToRemove.add(msg.id);
+    }
+    if (idsOfMessagesToRemove.isNotEmpty) removeEntities(idsOfMessagesToRemove);
   }
 
   Future<Message?> _loadMessageByIdFromDb(String messageId) async {

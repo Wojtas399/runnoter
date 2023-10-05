@@ -66,4 +66,10 @@ class MockFirebaseMessageService extends Mock
       ),
     ).thenAnswer((_) => Future.value(updatedMessage));
   }
+
+  void mockDeleteAllMessagesFromChat() {
+    when(
+      () => deleteAllMessagesFromChat(chatId: any(named: 'chatId')),
+    ).thenAnswer((_) => Future.value());
+  }
 }
