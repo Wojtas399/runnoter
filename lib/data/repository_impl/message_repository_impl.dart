@@ -128,6 +128,12 @@ class MessageRepositoryImpl extends StateRepository<Message>
     if (updatedMessages.isNotEmpty) addOrUpdateEntities(updatedMessages);
   }
 
+  @override
+  Future<void> deleteMessagesForChat({required String chatId}) async {
+    //TODO
+    throw UnimplementedError();
+  }
+
   Future<Message?> _loadMessageByIdFromDb(String messageId) async {
     final firebase.MessageDto? messageDto =
         await _dbMessageService.loadMessageById(messageId: messageId);

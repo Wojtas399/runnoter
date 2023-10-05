@@ -92,6 +92,12 @@ class ChatRepositoryImpl extends StateRepository<Chat>
     }
   }
 
+  @override
+  Future<void> deleteChat({required String chatId}) async {
+    //TODO
+    throw UnimplementedError();
+  }
+
   void _manageChatChanges(Chat? chat) {
     if (chat == null) return;
     if (doesEntityNotExistInState(chat.id)) {

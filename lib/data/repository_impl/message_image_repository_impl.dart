@@ -115,6 +115,12 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     addOrUpdateEntities(addedMessageImages);
   }
 
+  @override
+  Future<void> deleteImagesForChat({required String chatId}) async {
+    //TODO
+    throw UnimplementedError();
+  }
+
   Future<void> _loadImagesFromDbByMessageId(String messageId) async {
     final MessageDto? messageDto =
         await _dbMessageService.loadMessageById(messageId: messageId);
