@@ -88,12 +88,15 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
           (messages) => _markUnreadMessagesAsRead(messages, loggedUserId),
         )
         .switchMap(
-          (List<Message> messages) => Rx.combineLatest(
-            messages.map(
-              (message) => _mapMessageToChatMessage(message, loggedUserId),
-            ),
-            (List<ChatMessage> chatMessages) => chatMessages,
-          ),
+          (List<Message> messages) => messages.isEmpty
+              ? Stream.value(<ChatMessage>[])
+              : Rx.combineLatest(
+                  messages.map(
+                    (message) =>
+                        _mapMessageToChatMessage(message, loggedUserId),
+                  ),
+                  (List<ChatMessage> chatMessages) => chatMessages,
+                ),
         )
         .listen(
           (List<ChatMessage> msgs) => emit(state.copyWith(

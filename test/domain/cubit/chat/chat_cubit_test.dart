@@ -78,7 +78,7 @@ void main() {
   });
 
   group(
-    'initialize chat listener',
+    'initializeChatListener',
     () {
       final DateTime now = DateTime(2023, 1, 1, 10, 30);
       final Chat chat = createChat(
@@ -147,7 +147,7 @@ void main() {
   );
 
   group(
-    'initialize messages listener',
+    'initializeMessagesListener',
     () {
       final List<Message> messages = [
         createMessage(
@@ -268,6 +268,8 @@ void main() {
           messages$.add(updatedMessages);
           await cubit.stream.first;
           m1MessageImages$.add([]);
+          await cubit.stream.first;
+          messages$.add(const []);
         },
         expect: () => [
           ChatState(
@@ -294,6 +296,10 @@ void main() {
               expectedMessages[4],
             ],
           ),
+          const ChatState(
+            status: CubitStatusComplete(),
+            messagesFromLatest: [],
+          ),
         ],
         verify: (_) {
           verify(
@@ -310,7 +316,7 @@ void main() {
   );
 
   blocTest(
-    'message changed, '
+    'messageChanged, '
     'Should update message to send in state. '
     'Should set interval to 2s to call chat repository method to update chat with '
     'updated logged user typing date time.'
@@ -345,7 +351,7 @@ void main() {
   );
 
   blocTest(
-    'add images to send, '
+    'addImagesToSend, '
     'should add new images to list',
     build: () => createCubit(
       imagesToSend: [Uint8List(1)],
@@ -360,7 +366,7 @@ void main() {
   );
 
   blocTest(
-    'delete image to send, '
+    'deleteImageToSend, '
     'index does not match to list indexes, '
     'should do nothing',
     build: () => createCubit(
@@ -371,7 +377,7 @@ void main() {
   );
 
   blocTest(
-    'delete image to send, '
+    'deleteImageToSend, '
     'should delete image from list at given index',
     build: () => createCubit(
       imagesToSend: [Uint8List(1), Uint8List(2), Uint8List(3)],
@@ -386,7 +392,7 @@ void main() {
   );
 
   blocTest(
-    'submit message, '
+    'submitMessage, '
     'no internet connection, '
     'should emit noInternetConnection error',
     build: () => createCubit(messageToSend: 'message'),
@@ -406,7 +412,7 @@ void main() {
   );
 
   blocTest(
-    'submit message, '
+    'submitMessage, '
     'logged user does not exist, '
     'should emit no logged user status',
     build: () => createCubit(messageToSend: 'message'),
@@ -424,7 +430,7 @@ void main() {
   );
 
   blocTest(
-    'submit message, '
+    'submitMessage, '
     'there are no images to send, '
     'Should call chat repository method to update chat with logged user typing '
     'dateTime downgraded by 5 min. '
@@ -475,7 +481,7 @@ void main() {
   );
 
   blocTest(
-    'submit message, '
+    'submitMessage, '
     'Should call chat repository method to update chat with logged user typing '
     'dateTime downgraded by 5 min. '
     'Should call message repository method to add new message with current '
@@ -536,7 +542,7 @@ void main() {
   );
 
   blocTest(
-    'load older messages, '
+    'loadOlderMessages, '
     'messages list is null, '
     'should do nothing',
     build: () => createCubit(),
@@ -552,7 +558,7 @@ void main() {
   );
 
   blocTest(
-    'load older messages, '
+    'loadOlderMessages, '
     'messages list is empty, '
     'should do nothing',
     build: () => createCubit(),
@@ -568,7 +574,7 @@ void main() {
   );
 
   blocTest(
-    'load older messages, '
+    'loadOlderMessages, '
     'should call message repository method to load older messages with id of the oldest message in state',
     build: () => createCubit(
       messagesFromLatest: [
