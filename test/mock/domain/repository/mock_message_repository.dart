@@ -9,9 +9,7 @@ class MockMessageRepository extends Mock implements MessageRepository {
 
   void mockLoadMessageById({Message? message}) {
     when(
-      () => loadMessageById(
-        messageId: any(named: 'messageId'),
-      ),
+      () => loadMessageById(messageId: any(named: 'messageId')),
     ).thenAnswer((_) => Future.value(message));
   }
 
@@ -20,9 +18,7 @@ class MockMessageRepository extends Mock implements MessageRepository {
     Stream<List<Message>>? messagesStream,
   }) {
     when(
-      () => getMessagesForChat(
-        chatId: any(named: 'chatId'),
-      ),
+      () => getMessagesForChat(chatId: any(named: 'chatId')),
     ).thenAnswer((_) => messagesStream ?? Stream.value(messages));
   }
 
@@ -58,9 +54,13 @@ class MockMessageRepository extends Mock implements MessageRepository {
 
   void mockMarkMessagesAsRead() {
     when(
-      () => markMessagesAsRead(
-        messageIds: any(named: 'messageIds'),
-      ),
+      () => markMessagesAsRead(messageIds: any(named: 'messageIds')),
+    ).thenAnswer((_) => Future.value());
+  }
+
+  void mockDeleteAllMessagesFromChat() {
+    when(
+      () => deleteAllMessagesFromChat(chatId: any(named: 'chatId')),
     ).thenAnswer((_) => Future.value());
   }
 }

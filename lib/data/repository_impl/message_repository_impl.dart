@@ -129,7 +129,7 @@ class MessageRepositoryImpl extends StateRepository<Message>
   }
 
   @override
-  Future<void> deleteMessagesForChat({required String chatId}) async {
+  Future<void> deleteAllMessagesFromChat({required String chatId}) async {
     //TODO
     throw UnimplementedError();
   }

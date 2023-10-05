@@ -116,7 +116,7 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
   }
 
   @override
-  Future<void> deleteImagesForChat({required String chatId}) async {
+  Future<void> deleteAllImagesFromChat({required String chatId}) async {
     //TODO
     throw UnimplementedError();
   }
