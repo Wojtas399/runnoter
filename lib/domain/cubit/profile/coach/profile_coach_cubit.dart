@@ -14,6 +14,7 @@ import '../../../repository/person_repository.dart';
 import '../../../repository/user_repository.dart';
 import '../../../service/auth_service.dart';
 import '../../../service/coaching_request_service.dart';
+import '../../../use_case/delete_chat_use_case.dart';
 import '../../../use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import '../../../use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import '../../../use_case/load_chat_id_use_case.dart';
@@ -31,6 +32,7 @@ class ProfileCoachCubit extends CubitWithStatus<ProfileCoachState,
   final GetReceivedCoachingRequestsWithSenderInfoUseCase
       _getReceivedCoachingRequestsWithSenderInfoUseCase;
   final LoadChatIdUseCase _loadChatIdUseCase;
+  final DeleteChatUseCase _deleteChatUseCase;
   StreamSubscription<ProfileCoachState>? _listener;
 
   ProfileCoachCubit({
@@ -46,6 +48,7 @@ class ProfileCoachCubit extends CubitWithStatus<ProfileCoachState,
         _getReceivedCoachingRequestsWithSenderInfoUseCase =
             getIt<GetReceivedCoachingRequestsWithSenderInfoUseCase>(),
         _loadChatIdUseCase = getIt<LoadChatIdUseCase>(),
+        _deleteChatUseCase = getIt<DeleteChatUseCase>(),
         super(initialState);
 
   @override
@@ -149,6 +152,11 @@ class ProfileCoachCubit extends CubitWithStatus<ProfileCoachState,
       user1Id: loggedUserId,
       user2Id: state.coachId!,
     );
+    final String? chatId = await _loadChatIdUseCase.execute(
+      user1Id: loggedUserId,
+      user2Id: state.coachId!,
+    );
+    if (chatId != null) await _deleteChatUseCase.execute(chatId: chatId);
     emitCompleteStatus(info: ProfileCoachCubitInfo.coachDeleted);
   }
 

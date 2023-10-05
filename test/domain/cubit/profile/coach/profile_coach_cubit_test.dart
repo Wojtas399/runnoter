@@ -14,6 +14,7 @@ import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
+import 'package:runnoter/domain/use_case/delete_chat_use_case.dart';
 import 'package:runnoter/domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import 'package:runnoter/domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
@@ -25,6 +26,7 @@ import '../../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../../mock/domain/service/mock_auth_service.dart';
 import '../../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../../mock/domain/use_case/mock_delete_chat_use_case.dart';
 import '../../../../mock/domain/use_case/mock_get_received_coaching_requests_with_sender_info_use_case.dart';
 import '../../../../mock/domain/use_case/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import '../../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
@@ -39,6 +41,7 @@ void main() {
       MockGetSentCoachingRequestsWithReceiverInfoUseCase();
   final getReceivedCoachingRequestsWithSenderInfoUseCase =
       MockGetReceivedCoachingRequestsWithSenderInfoUseCase();
+  final deleteChatUseCase = MockDeleteChatUseCase();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -55,6 +58,7 @@ void main() {
     GetIt.I.registerFactory<GetReceivedCoachingRequestsWithSenderInfoUseCase>(
       () => getReceivedCoachingRequestsWithSenderInfoUseCase,
     );
+    GetIt.I.registerFactory<DeleteChatUseCase>(() => deleteChatUseCase);
   });
 
   tearDown(() {
@@ -65,6 +69,7 @@ void main() {
     reset(loadChatIdUseCase);
     reset(getSentCoachingRequestsWithReceiverInfoUseCase);
     reset(getReceivedCoachingRequestsWithSenderInfoUseCase);
+    reset(deleteChatUseCase);
   });
 
   blocTest(
@@ -482,6 +487,7 @@ void main() {
     'deleteCoach, '
     'should call user repository method to update user with coach id set as null, '
     'should call coaching request service method to delete request between logged user and coach, '
+    'if chat exists should call use case to delete chat, '
     'should emit coachDeleted info',
     build: () => ProfileCoachCubit(
       initialState: const ProfileCoachState(
@@ -493,6 +499,54 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser();
       coachingRequestService.mockDeleteCoachingRequestBetweenUsers();
+      loadChatIdUseCase.mock(chatId: 'chat1');
+      deleteChatUseCase.mock();
+    },
+    act: (cubit) => cubit.deleteCoach(),
+    expect: () => [
+      const ProfileCoachState(status: CubitStatusLoading(), coachId: 'c1'),
+      const ProfileCoachState(
+        status: CubitStatusComplete<ProfileCoachCubitInfo>(
+          info: ProfileCoachCubitInfo.coachDeleted,
+        ),
+        coachId: 'c1',
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => userRepository.updateUser(
+          userId: loggedUserId,
+          coachIdAsNull: true,
+        ),
+      ).called(1);
+      verify(
+        () => coachingRequestService.deleteCoachingRequestBetweenUsers(
+          user1Id: loggedUserId,
+          user2Id: 'c1',
+        ),
+      ).called(1);
+      verify(() => deleteChatUseCase.execute(chatId: 'chat1')).called(1);
+    },
+  );
+
+  blocTest(
+    'deleteCoach, '
+    'should call user repository method to update user with coach id set as null, '
+    'should call coaching request service method to delete request between logged user and coach, '
+    'if chat does not exist should not call use case to delete chat, '
+    'should emit coachDeleted info',
+    build: () => ProfileCoachCubit(
+      initialState: const ProfileCoachState(
+        status: CubitStatusComplete(),
+        coachId: 'c1',
+      ),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockUpdateUser();
+      coachingRequestService.mockDeleteCoachingRequestBetweenUsers();
+      loadChatIdUseCase.mock();
     },
     act: (cubit) => cubit.deleteCoach(),
     expect: () => [
