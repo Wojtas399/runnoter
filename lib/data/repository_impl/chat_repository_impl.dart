@@ -94,8 +94,8 @@ class ChatRepositoryImpl extends StateRepository<Chat>
 
   @override
   Future<void> deleteChat({required String chatId}) async {
-    //TODO
-    throw UnimplementedError();
+    await _dbChatService.deleteChat(chatId: chatId);
+    removeEntity(chatId);
   }
 
   void _manageChatChanges(Chat? chat) {

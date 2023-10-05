@@ -43,6 +43,12 @@ class MockFirebaseChatService extends Mock implements FirebaseChatService {
     ).thenAnswer((_) => Future.value(updatedChatDto));
   }
 
+  void mockDeleteChat() {
+    when(
+      () => deleteChat(chatId: any(named: 'chatId')),
+    ).thenAnswer((_) => Future.value());
+  }
+
   Future<ChatDto?> _addNewChatCall() => addNewChat(
         user1Id: any(named: 'user1Id'),
         user2Id: any(named: 'user2Id'),
