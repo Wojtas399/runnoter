@@ -250,6 +250,8 @@
   "chatNoMessagesInfoMessage": "Send first message to start the conversation",
   "@__________CHAT_GALLERY__________": {},
   "chatGalleryTitle": "Chat gallery",
+  "chatGalleryNoImagesInfoTitle": "No images",
+  "chatGalleryNoImagesInfoMessage": "To be able to browse this gallery send your first image on chat",
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "activityStatusCoveredDistance": "Covered distance",

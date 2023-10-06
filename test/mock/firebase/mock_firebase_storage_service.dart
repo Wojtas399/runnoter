@@ -26,4 +26,13 @@ class MockFirebaseStorageService extends Mock
       ),
     ).thenAnswer((_) => Future.value(imageId));
   }
+
+  void mockDeleteMessageImage() {
+    when(
+      () => deleteMessageImage(
+        messageId: any(named: 'messageId'),
+        imageId: any(named: 'imageId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
 }

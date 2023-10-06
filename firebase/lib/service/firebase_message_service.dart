@@ -95,6 +95,16 @@ class FirebaseMessageService {
     return doc.data();
   }
 
+  Future<void> deleteAllMessagesFromChat({required String chatId}) async {
+    final messages =
+        await getMessagesRef().where(chatIdField, isEqualTo: chatId).get();
+    final batch = FirebaseFirestore.instance.batch();
+    for (final msg in messages.docs) {
+      batch.delete(msg.reference);
+    }
+    await batch.commit();
+  }
+
   Future<List<MessageDto>> _loadLimitedImagesByQuery({
     required Query<MessageDto> query,
     final String? lastVisibleMessageId,

@@ -16,4 +16,6 @@ abstract interface class MessageImageRepository {
     required String messageId,
     required List<Uint8List> bytesOfImages,
   });
+
+  Future<void> deleteAllImagesFromChat({required String chatId});
 }

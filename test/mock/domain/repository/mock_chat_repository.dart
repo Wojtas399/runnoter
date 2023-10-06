@@ -13,9 +13,7 @@ class MockChatRepository extends Mock implements ChatRepository {
     required Stream<List<Chat>> chatsStream,
   }) {
     when(
-      () => getChatsContainingUser(
-        userId: any(named: 'userId'),
-      ),
+      () => getChatsContainingUser(userId: any(named: 'userId')),
     ).thenAnswer((_) => chatsStream);
   }
 
@@ -44,6 +42,12 @@ class MockChatRepository extends Mock implements ChatRepository {
         user1LastTypingDateTime: any(named: 'user1LastTypingDateTime'),
         user2LastTypingDateTime: any(named: 'user2LastTypingDateTime'),
       ),
+    ).thenAnswer((_) => Future.value());
+  }
+
+  void mockDeleteChat() {
+    when(
+      () => deleteChat(chatId: any(named: 'chatId')),
     ).thenAnswer((_) => Future.value());
   }
 }

@@ -9,7 +9,9 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../domain/cubit/chat_gallery_cubit.dart';
 import '../../../../domain/entity/message_image.dart';
 import '../../../component/animated_refresh_indicator.dart';
+import '../../../component/empty_content_info_component.dart';
 import '../../../component/loading_info_component.dart';
+import '../../../component/padding/paddings_24.dart';
 import '../../../service/dialog_service.dart';
 import '../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
 
@@ -115,26 +117,34 @@ class _Images extends StatelessWidget {
       (ChatGalleryCubit cubit) => cubit.state,
     );
 
-    return images == null
-        ? const LoadingInfo()
-        : GridView.builder(
-            controller: scrollController,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-            ),
-            itemCount: images.length,
-            itemBuilder: (_, int itemIndex) {
-              final MessageImage image = images[itemIndex];
+    return switch (images) {
+      null => const LoadingInfo(),
+      [] => Paddings24(
+          child: EmptyContentInfo(
+            icon: Icons.image,
+            title: Str.of(context).chatGalleryNoImagesInfoTitle,
+            subtitle: Str.of(context).chatGalleryNoImagesInfoMessage,
+          ),
+        ),
+      [...] => GridView.builder(
+          controller: scrollController,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+          ),
+          itemCount: images.length,
+          itemBuilder: (_, int itemIndex) {
+            final MessageImage image = images[itemIndex];
 
-              return MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: () => _onImageTap(context, image),
-                  child: Image.memory(image.bytes, fit: BoxFit.cover),
-                ),
-              );
-            },
-          );
+            return MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () => _onImageTap(context, image),
+                child: Image.memory(image.bytes, fit: BoxFit.cover),
+              ),
+            );
+          },
+        ),
+    };
   }
 
   void _onImageTap(BuildContext context, MessageImage image) {

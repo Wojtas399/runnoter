@@ -13,6 +13,7 @@ import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
 import 'package:runnoter/domain/service/connectivity_service.dart';
+import 'package:runnoter/domain/use_case/delete_chat_use_case.dart';
 import 'package:runnoter/domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import 'package:runnoter/domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
@@ -22,6 +23,7 @@ import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
 import '../../../mock/domain/service/mock_connectivity_service.dart';
+import '../../../mock/domain/use_case/mock_delete_chat_use_case.dart';
 import '../../../mock/domain/use_case/mock_get_received_coaching_requests_with_sender_info_use_case.dart';
 import '../../../mock/domain/use_case/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import '../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
@@ -36,6 +38,7 @@ void main() {
   final getReceivedCoachingRequestsWithSenderInfoUseCase =
       MockGetReceivedCoachingRequestsWithSenderInfoUseCase();
   final loadChatIdUseCase = MockLoadChatIdUseCase();
+  final deleteChatUseCase = MockDeleteChatUseCase();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -52,6 +55,7 @@ void main() {
     GetIt.I.registerFactory<GetReceivedCoachingRequestsWithSenderInfoUseCase>(
       () => getReceivedCoachingRequestsWithSenderInfoUseCase,
     );
+    GetIt.I.registerFactory<DeleteChatUseCase>(() => deleteChatUseCase);
   });
 
   tearDown(() {
@@ -62,6 +66,7 @@ void main() {
     reset(loadChatIdUseCase);
     reset(getSentCoachingRequestsWithReceiverInfoUseCase);
     reset(getReceivedCoachingRequestsWithSenderInfoUseCase);
+    reset(deleteChatUseCase);
   });
 
   group(
@@ -400,12 +405,55 @@ void main() {
     'deleteClient, '
     'should call person repository method to update person with coachId set as null, '
     'should call coaching request service method to delete request between users, '
+    'if chat exists should call use case to delete chat, '
     'should emit clientDeleted info',
     build: () => ClientsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       personRepository.mockUpdateCoachIdOfPerson();
       coachingRequestService.mockDeleteCoachingRequestBetweenUsers();
+      loadChatIdUseCase.mock(chatId: 'chat1');
+      deleteChatUseCase.mock();
+    },
+    act: (cubit) => cubit.deleteClient('c1'),
+    expect: () => [
+      const ClientsState(status: CubitStatusLoading()),
+      const ClientsState(
+        status: CubitStatusComplete<ClientsCubitInfo>(
+          info: ClientsCubitInfo.clientDeleted,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.updateCoachIdOfPerson(
+          personId: 'c1',
+          coachId: null,
+        ),
+      ).called(1);
+      verify(
+        () => coachingRequestService.deleteCoachingRequestBetweenUsers(
+          user1Id: loggedUserId,
+          user2Id: 'c1',
+        ),
+      ).called(1);
+      verify(() => deleteChatUseCase.execute(chatId: 'chat1')).called(1);
+    },
+  );
+
+  blocTest(
+    'deleteClient, '
+    'should call person repository method to update person with coachId set as null, '
+    'should call coaching request service method to delete request between users, '
+    'if chat does not exist should not call use case to delete chat, '
+    'should emit clientDeleted info',
+    build: () => ClientsCubit(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      personRepository.mockUpdateCoachIdOfPerson();
+      coachingRequestService.mockDeleteCoachingRequestBetweenUsers();
+      loadChatIdUseCase.mock();
     },
     act: (cubit) => cubit.deleteClient('c1'),
     expect: () => [

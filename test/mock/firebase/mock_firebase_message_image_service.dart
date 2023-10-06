@@ -7,8 +7,17 @@ class MockFirebaseMessageImageService extends Mock
     required Stream<List<MessageImageDto>?> imagesStream,
   }) {
     when(
-      () => getAddedImagesForChat(
+      () => getAddedImagesForChat(chatId: any(named: 'chatId')),
+    ).thenAnswer((_) => imagesStream);
+  }
+
+  void mockGetAddedImagesForMessage({
+    required Stream<List<MessageImageDto>> imagesStream,
+  }) {
+    when(
+      () => getAddedImagesForMessage(
         chatId: any(named: 'chatId'),
+        messageId: any(named: 'messageId'),
       ),
     ).thenAnswer((_) => imagesStream);
   }
@@ -24,14 +33,22 @@ class MockFirebaseMessageImageService extends Mock
     ).thenAnswer((_) => Future.value(messageImageDtos));
   }
 
-  void mockLoadMessageImagesForChat({
+  void mockLoadLimitedMessageImagesForChat({
     required final List<MessageImageDto> messageImageDtos,
   }) {
     when(
-      () => loadMessageImagesForChat(
+      () => loadLimitedMessageImagesForChat(
         chatId: any(named: 'chatId'),
         lastVisibleImageId: any(named: 'lastVisibleImageId'),
       ),
+    ).thenAnswer((_) => Future.value(messageImageDtos));
+  }
+
+  void mockLoadAllMessageImagesForChat({
+    required List<MessageImageDto> messageImageDtos,
+  }) {
+    when(
+      () => loadAllMessageImagesForChat(chatId: any(named: 'chatId')),
     ).thenAnswer((_) => Future.value(messageImageDtos));
   }
 
@@ -41,6 +58,12 @@ class MockFirebaseMessageImageService extends Mock
         chatId: any(named: 'chatId'),
         imageDtos: any(named: 'imageDtos'),
       ),
+    ).thenAnswer((_) => Future.value());
+  }
+
+  void mockDeleteAllMessageImagesFromChat() {
+    when(
+      () => deleteAllMessageImagesFromChat(chatId: any(named: 'chatId')),
     ).thenAnswer((_) => Future.value());
   }
 }

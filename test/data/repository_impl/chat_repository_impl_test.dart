@@ -298,4 +298,27 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete chat, '
+    'should delete chat from db and from repo',
+    () async {
+      const String chatId = 'c2';
+      final List<Chat> existingChats = [
+        createChat(id: 'c1'),
+        createChat(id: 'c2'),
+        createChat(id: 'c3'),
+      ];
+      dbChatService.mockDeleteChat();
+      repository = ChatRepositoryImpl(initialData: existingChats);
+
+      await repository.deleteChat(chatId: chatId);
+
+      expect(
+        repository.dataStream$,
+        emits([existingChats.first, existingChats.last]),
+      );
+      verify(() => dbChatService.deleteChat(chatId: chatId)).called(1);
+    },
+  );
 }

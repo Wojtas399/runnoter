@@ -24,4 +24,6 @@ abstract interface class MessageRepository {
   });
 
   Future<void> markMessagesAsRead({required List<String> messageIds});
+
+  Future<void> deleteAllMessagesFromChat({required String chatId});
 }

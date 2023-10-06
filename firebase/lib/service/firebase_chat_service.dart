@@ -75,4 +75,8 @@ class FirebaseChatService {
     final docSnapshot = await docRef.get();
     return docSnapshot.data();
   }
+
+  Future<void> deleteChat({required String chatId}) async {
+    await getChatsRef().doc(chatId).delete();
+  }
 }

@@ -20,4 +20,6 @@ abstract interface class ChatRepository {
     DateTime? user1LastTypingDateTime,
     DateTime? user2LastTypingDateTime,
   });
+
+  Future<void> deleteChat({required String chatId});
 }

@@ -128,6 +128,18 @@ class MessageRepositoryImpl extends StateRepository<Message>
     if (updatedMessages.isNotEmpty) addOrUpdateEntities(updatedMessages);
   }
 
+  @override
+  Future<void> deleteAllMessagesFromChat({required String chatId}) async {
+    await _dbMessageService.deleteAllMessagesFromChat(chatId: chatId);
+    final messagesInRepo = await dataStream$.first;
+    if (messagesInRepo == null) return;
+    final List<String> idsOfMessagesToRemove = [];
+    for (final msg in messagesInRepo) {
+      if (msg.chatId == chatId) idsOfMessagesToRemove.add(msg.id);
+    }
+    if (idsOfMessagesToRemove.isNotEmpty) removeEntities(idsOfMessagesToRemove);
+  }
+
   Future<Message?> _loadMessageByIdFromDb(String messageId) async {
     final firebase.MessageDto? messageDto =
         await _dbMessageService.loadMessageById(messageId: messageId);
@@ -149,8 +161,10 @@ class MessageRepositoryImpl extends StateRepository<Message>
     addOrUpdateEntities(messages);
   }
 
-  Stream<List<Message>?> _getMessagesFromChat(String chatId) => dataStream$.map(
-        (msgs) => msgs?.where((message) => message.chatId == chatId).toList(),
+  Stream<List<Message>> _getMessagesFromChat(String chatId) => dataStream$.map(
+        (msgs) =>
+            msgs?.where((message) => message.chatId == chatId).toList() ??
+            const [],
       );
 
   Future<void> _manageAddedOrModifiedMessages(

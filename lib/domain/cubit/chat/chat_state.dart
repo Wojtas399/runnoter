@@ -1,6 +1,6 @@
 part of 'chat_cubit.dart';
 
-class ChatState extends CubitState<ChatState> {
+class ChatState extends Equatable {
   final String? recipientFullName;
   final bool isRecipientTyping;
   final List<ChatMessage>? messagesFromLatest;
@@ -8,7 +8,6 @@ class ChatState extends CubitState<ChatState> {
   final List<Uint8List> imagesToSend;
 
   const ChatState({
-    required super.status,
     this.recipientFullName,
     this.isRecipientTyping = false,
     this.messagesFromLatest,
@@ -18,7 +17,6 @@ class ChatState extends CubitState<ChatState> {
 
   @override
   List<Object?> get props => [
-        status,
         recipientFullName,
         isRecipientTyping,
         messagesFromLatest,
@@ -29,9 +27,7 @@ class ChatState extends CubitState<ChatState> {
   bool get canSubmitMessage =>
       messageToSend?.isNotEmpty == true || imagesToSend.isNotEmpty;
 
-  @override
   ChatState copyWith({
-    CubitStatus? status,
     String? recipientFullName,
     bool? isRecipientTyping,
     List<ChatMessage>? messagesFromLatest,
@@ -40,7 +36,6 @@ class ChatState extends CubitState<ChatState> {
     List<Uint8List>? imagesToSend,
   }) =>
       ChatState(
-        status: status ?? const CubitStatusComplete(),
         recipientFullName: recipientFullName ?? this.recipientFullName,
         isRecipientTyping: isRecipientTyping ?? this.isRecipientTyping,
         messagesFromLatest: messagesFromLatest ?? this.messagesFromLatest,

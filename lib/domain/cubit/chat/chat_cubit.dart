@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/cubit_state.dart';
-import '../../additional_model/cubit_status.dart';
-import '../../additional_model/cubit_with_status.dart';
 import '../../entity/chat.dart';
 import '../../entity/message.dart';
 import '../../entity/message_image.dart';
@@ -19,11 +17,10 @@ import '../../repository/message_image_repository.dart';
 import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
-import '../../service/connectivity_service.dart';
 
 part 'chat_state.dart';
 
-class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
+class ChatCubit extends Cubit<ChatState> {
   final String chatId;
   final AuthService _authService;
   final ChatRepository _chatRepository;
@@ -31,7 +28,6 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   final MessageImageRepository _messageImageRepository;
   final PersonRepository _personRepository;
   final DateService _dateService;
-  final ConnectivityService _connectivityService;
   StreamSubscription<Chat?>? _chatListener;
   StreamSubscription<List<ChatMessage>>? _chatMessagesListener;
   Timer? _recipientTypingTimer;
@@ -40,14 +36,13 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
 
   ChatCubit({
     required this.chatId,
-    ChatState initialState = const ChatState(status: CubitStatusInitial()),
+    ChatState initialState = const ChatState(),
   })  : _authService = getIt<AuthService>(),
         _chatRepository = getIt<ChatRepository>(),
         _messageRepository = getIt<MessageRepository>(),
         _messageImageRepository = getIt<MessageImageRepository>(),
         _personRepository = getIt<PersonRepository>(),
         _dateService = getIt<DateService>(),
-        _connectivityService = getIt<ConnectivityService>(),
         super(initialState);
 
   @override
@@ -88,12 +83,15 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
           (messages) => _markUnreadMessagesAsRead(messages, loggedUserId),
         )
         .switchMap(
-          (List<Message> messages) => Rx.combineLatest(
-            messages.map(
-              (message) => _mapMessageToChatMessage(message, loggedUserId),
-            ),
-            (List<ChatMessage> chatMessages) => chatMessages,
-          ),
+          (List<Message> messages) => messages.isEmpty
+              ? Stream.value(<ChatMessage>[])
+              : Rx.combineLatest(
+                  messages.map(
+                    (message) =>
+                        _mapMessageToChatMessage(message, loggedUserId),
+                  ),
+                  (List<ChatMessage> chatMessages) => chatMessages,
+                ),
         )
         .listen(
           (List<ChatMessage> msgs) => emit(state.copyWith(
@@ -131,17 +129,9 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
 
   Future<void> submitMessage() async {
     if (!state.canSubmitMessage) return;
-    if (!(await _connectivityService.hasDeviceInternetConnection())) {
-      emitNoInternetConnectionStatus();
-      return;
-    }
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus();
-      return;
-    }
+    if (loggedUserId == null) return;
     final DateTime now = _dateService.getNow();
-    emitLoadingStatus();
     final DateTime dateTime5minAgo =
         _dateService.getNow().subtract(const Duration(minutes: 5));
     await _updateLoggedUserTypingDateTime(dateTime5minAgo);
@@ -160,7 +150,6 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
       );
     }
     emit(state.copyWith(
-      status: const CubitStatusLoading(),
       messageToSendAsNull: true,
       imagesToSend: [],
     ));
