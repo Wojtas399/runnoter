@@ -909,6 +909,14 @@
   "@chatGalleryTitle": {
     "description": "Title of chat gallery"
   },
+  "chatGalleryNoImagesInfoTitle": "Brak zdjęć",
+  "@chatGalleryNoImagesInfoTitle": {
+    "description": "Title of the info about no images"
+  },
+  "chatGalleryNoImagesInfoMessage": "Aby móc przeglądać tę galerię wyślij swoje pierwsze zdjęcie na czacie",
+  "@chatGalleryNoImagesInfoMessage": {
+    "description": "Message of the info about no images"
+  },
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "@activityStatus": {
