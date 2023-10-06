@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../dependency_injection.dart';
 import '../../../../domain/cubit/chat/chat_cubit.dart';
@@ -87,7 +88,6 @@ class _InternetConnectionStatus extends StatelessWidget {
       stream: getIt<ConnectivityService>().connectivityStatus$,
       builder: (context, AsyncSnapshot<bool> asyncSnapshot) {
         final bool? isInternetConnection = asyncSnapshot.data;
-        print(isInternetConnection);
 
         return AnimatedContainer(
           duration: const Duration(milliseconds: 250),
@@ -100,7 +100,7 @@ class _InternetConnectionStatus extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 BodyMedium(
-                  'No internet connection',
+                  Str.of(context).noInternetConnectionDialogTitle,
                   color: Theme.of(context).canvasColor,
                 ),
               ],
