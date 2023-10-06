@@ -176,9 +176,11 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     addOrUpdateEntities(images);
   }
 
-  Stream<List<MessageImage>?> _getImagesByMessageId(String messageId) =>
+  Stream<List<MessageImage>> _getImagesByMessageId(String messageId) =>
       dataStream$.map(
-        (images) => images?.where((img) => img.messageId == messageId).toList(),
+        (images) =>
+            images?.where((img) => img.messageId == messageId).toList() ??
+            const [],
       );
 
   Stream<List<MessageImage>?> _getImagesFromChat(String chatId) =>
