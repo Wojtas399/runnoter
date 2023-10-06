@@ -140,7 +140,8 @@ class ProfileCoachCubit extends CubitWithStatus<ProfileCoachState,
   }
 
   Future<void> deleteCoach() async {
-    if (state.coachId == null) return;
+    final String? coachId = state.coachId;
+    if (coachId == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus();
@@ -150,11 +151,11 @@ class ProfileCoachCubit extends CubitWithStatus<ProfileCoachState,
     await _userRepository.updateUser(userId: loggedUserId, coachIdAsNull: true);
     await _coachingRequestService.deleteCoachingRequestBetweenUsers(
       user1Id: loggedUserId,
-      user2Id: state.coachId!,
+      user2Id: coachId,
     );
     final String? chatId = await _loadChatIdUseCase.execute(
       user1Id: loggedUserId,
-      user2Id: state.coachId!,
+      user2Id: coachId,
     );
     if (chatId != null) await _deleteChatUseCase.execute(chatId: chatId);
     emitCompleteStatus(info: ProfileCoachCubitInfo.coachDeleted);
