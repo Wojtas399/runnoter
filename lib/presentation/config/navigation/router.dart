@@ -13,120 +13,127 @@ class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(
-          page: SignInRoute.page,
+          page: AppBaseRoute.page,
           path: '/',
-        ),
-        AutoRoute(
-          page: SignUpRoute.page,
-          path: '/sign-up',
-        ),
-        AutoRoute(
-          page: ForgotPasswordRoute.page,
-          path: '/forgot-password',
-        ),
-        AutoRoute(
-          page: HomeBaseRoute.page,
-          path: '/home',
-          guards: [AuthGuard()],
           children: [
             AutoRoute(
-              page: HomeRoute.page,
+              page: SignInRoute.page,
               path: '',
+            ),
+            AutoRoute(
+              page: SignUpRoute.page,
+              path: 'sign-up',
+            ),
+            AutoRoute(
+              page: ForgotPasswordRoute.page,
+              path: 'forgot-password',
+            ),
+            AutoRoute(
+              page: HomeBaseRoute.page,
+              path: 'home',
+              guards: [AuthGuard()],
               children: [
-                RedirectRoute(path: '', redirectTo: 'calendar'),
                 AutoRoute(
-                  page: CalendarRoute.page,
-                  path: 'calendar',
-                  title: (context, _) => Str.of(context).calendarTitle,
+                  page: HomeRoute.page,
+                  path: '',
+                  children: [
+                    RedirectRoute(path: '', redirectTo: 'calendar'),
+                    AutoRoute(
+                      page: CalendarRoute.page,
+                      path: 'calendar',
+                      title: (context, _) => Str.of(context).calendarTitle,
+                    ),
+                    AutoRoute(
+                      page: HealthRoute.page,
+                      path: 'health',
+                      title: (context, _) => Str.of(context).healthTitle,
+                    ),
+                    AutoRoute(
+                      page: MileageRoute.page,
+                      path: 'mileage',
+                      title: (context, _) => Str.of(context).mileageTitle,
+                    ),
+                    AutoRoute(
+                      page: BloodTestsRoute.page,
+                      path: 'blood-tests',
+                      title: (context, _) => Str.of(context).bloodTestsTitle,
+                    ),
+                    AutoRoute(
+                      page: RacesRoute.page,
+                      path: 'races',
+                      title: (context, _) => Str.of(context).racesTitle,
+                    ),
+                    AutoRoute(
+                      page: ProfileRoute.page,
+                      path: 'profile',
+                      title: (context, _) => Str.of(context).profileTitle,
+                    ),
+                    AutoRoute(
+                      page: ClientsRoute.page,
+                      path: 'clients',
+                      title: (context, _) => Str.of(context).clientsTitle,
+                    ),
+                  ],
                 ),
                 AutoRoute(
-                  page: HealthRoute.page,
-                  path: 'health',
-                  title: (context, _) => Str.of(context).healthTitle,
+                  page: WorkoutPreviewRoute.page,
+                  path: 'workout-preview/:userId/:workoutId',
                 ),
                 AutoRoute(
-                  page: MileageRoute.page,
-                  path: 'mileage',
-                  title: (context, _) => Str.of(context).mileageTitle,
+                  page: WorkoutCreatorRoute.page,
+                  path: 'workout-creator/:userId/:dateStr/:workoutId',
                 ),
                 AutoRoute(
-                  page: BloodTestsRoute.page,
-                  path: 'blood-tests',
-                  title: (context, _) => Str.of(context).bloodTestsTitle,
+                  page: RacePreviewRoute.page,
+                  path: 'race-preview/:userId/:raceId',
                 ),
                 AutoRoute(
-                  page: RacesRoute.page,
-                  path: 'races',
-                  title: (context, _) => Str.of(context).racesTitle,
+                  page: RaceCreatorRoute.page,
+                  path: 'race-creator/:userId/:dateStr/:raceId',
                 ),
                 AutoRoute(
-                  page: ProfileRoute.page,
-                  path: 'profile',
-                  title: (context, _) => Str.of(context).profileTitle,
+                  page: HealthMeasurementsRoute.page,
+                  path: 'health-measurements',
                 ),
                 AutoRoute(
-                  page: ClientsRoute.page,
-                  path: 'clients',
-                  title: (context, _) => Str.of(context).clientsTitle,
-                ),
-              ],
-            ),
-            AutoRoute(
-              page: WorkoutPreviewRoute.page,
-              path: 'workout-preview/:userId/:workoutId',
-            ),
-            AutoRoute(
-              page: WorkoutCreatorRoute.page,
-              path: 'workout-creator/:userId/:dateStr/:workoutId',
-            ),
-            AutoRoute(
-              page: RacePreviewRoute.page,
-              path: 'race-preview/:userId/:raceId',
-            ),
-            AutoRoute(
-              page: RaceCreatorRoute.page,
-              path: 'race-creator/:userId/:dateStr/:raceId',
-            ),
-            AutoRoute(
-              page: HealthMeasurementsRoute.page,
-              path: 'health-measurements',
-            ),
-            AutoRoute(
-              page: BloodTestCreatorRoute.page,
-              path: 'blood-test-creator/:userId/:bloodTestId',
-            ),
-            AutoRoute(
-              page: BloodTestPreviewRoute.page,
-              path: 'blood-test-preview/:userId/:bloodTestId',
-            ),
-            AutoRoute(
-              page: ActivityStatusCreatorRoute.page,
-              path: 'activity-status-creator/:userId/:activityType/:activityId',
-            ),
-            AutoRoute(
-              page: ChatRoute.page,
-              path: 'chat/:chatId',
-            ),
-            AutoRoute(
-              page: ClientRoute.page,
-              path: 'client/:clientId',
-              children: [
-                RedirectRoute(path: '', redirectTo: 'calendar'),
-                AutoRoute(
-                  page: ClientCalendarRoute.page,
-                  path: 'calendar',
+                  page: BloodTestCreatorRoute.page,
+                  path: 'blood-test-creator/:userId/:bloodTestId',
                 ),
                 AutoRoute(
-                  page: ClientStatsRoute.page,
-                  path: 'statistics',
+                  page: BloodTestPreviewRoute.page,
+                  path: 'blood-test-preview/:userId/:bloodTestId',
                 ),
                 AutoRoute(
-                  page: ClientRacesRoute.page,
-                  path: 'races',
+                  page: ActivityStatusCreatorRoute.page,
+                  path:
+                      'activity-status-creator/:userId/:activityType/:activityId',
                 ),
                 AutoRoute(
-                  page: ClientBloodTestsRoute.page,
-                  path: 'blood-tests',
+                  page: ChatRoute.page,
+                  path: 'chat/:chatId',
+                ),
+                AutoRoute(
+                  page: ClientRoute.page,
+                  path: 'client/:clientId',
+                  children: [
+                    RedirectRoute(path: '', redirectTo: 'calendar'),
+                    AutoRoute(
+                      page: ClientCalendarRoute.page,
+                      path: 'calendar',
+                    ),
+                    AutoRoute(
+                      page: ClientStatsRoute.page,
+                      path: 'statistics',
+                    ),
+                    AutoRoute(
+                      page: ClientRacesRoute.page,
+                      path: 'races',
+                    ),
+                    AutoRoute(
+                      page: ClientBloodTestsRoute.page,
+                      path: 'blood-tests',
+                    ),
+                  ],
                 ),
               ],
             ),

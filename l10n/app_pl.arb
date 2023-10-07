@@ -1248,6 +1248,7 @@
     "description": "Message of successfully undid sent message"
   },
   "@__________COMMON__________": {},
+  "youAreOffline": "Jesteś offline",
   "name": "Imię",
   "surname": "Nazwisko",
   "email": "Email",

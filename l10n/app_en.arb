@@ -352,6 +352,7 @@
   "undoRequestConfirmationDialogMessage": "Are you sure you want to undo a request sent to ",
   "successfullyUndidRequest": "Successfully undid sent request",
   "@__________COMMON__________": {},
+  "youAreOffline": "You're offline",
   "name": "Name",
   "surname": "Surname",
   "email": "Email",
