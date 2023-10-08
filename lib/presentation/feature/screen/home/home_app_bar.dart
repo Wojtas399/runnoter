@@ -61,7 +61,9 @@ class HomeMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   String? _getAppBarTitle(BuildContext context) {
     final router = GetIt.I.get<AppRouter>();
-    final homeRoute = router.root.innerRouterOf(HomeBaseRoute.name);
+    final homeRoute = router.root
+        .innerRouterOf(AppBaseRoute.name)
+        ?.innerRouterOf(HomeBaseRoute.name);
     return homeRoute?.innerRouterOf(HomeRoute.name)?.current.title(context);
   }
 }

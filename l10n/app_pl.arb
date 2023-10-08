@@ -1248,7 +1248,6 @@
     "description": "Message of successfully undid sent message"
   },
   "@__________COMMON__________": {},
-  "youAreOffline": "Jesteś offline",
   "name": "Imię",
   "surname": "Nazwisko",
   "email": "Email",
@@ -1288,6 +1287,8 @@
   "addHealthMeasurement": "Dodaj pomiar",
   "addBloodTest": "Dodaj badanie",
   "addRace": "Dodaj wyścig",
+  "youAreOffline": "Jesteś offline",
+  "noInternetConnection": "Brak połączenia internetowego",
   "sentRequests": "Wysłane prośby",
   "receivedRequests": "Otrzymane prośby",
   "noSentRequests": "Brak wysłanych próśb",
