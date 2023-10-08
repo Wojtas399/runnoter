@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/additional_model/cubit_status.dart';
+import '../../../../dependency_injection.dart';
 import '../../../../domain/cubit/clients/clients_cubit.dart';
+import '../../../../domain/service/connectivity_service.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
@@ -28,10 +29,11 @@ class ClientsScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => ClientsCubit()..initialize(),
       child: _CubitListener(
-        child: BlocSelector<ClientsCubit, ClientsState, CubitStatus>(
-          selector: (ClientsState state) => state.status,
-          builder: (_, CubitStatus cubitStatus) {
-            return cubitStatus is CubitStatusNoInternetConnection
+        child: StreamBuilder(
+          stream: getIt<ConnectivityService>().connectivityStatus$,
+          builder: (_, AsyncSnapshot<bool> asyncSnapshot) {
+            final bool? isInternetConnection = asyncSnapshot.data;
+            return isInternetConnection == false
                 ? const _NoInternetConnectionInfo()
                 : const _Content();
           },
