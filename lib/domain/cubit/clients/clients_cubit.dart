@@ -12,7 +12,6 @@ import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
-import '../../service/connectivity_service.dart';
 import '../../use_case/delete_chat_use_case.dart';
 import '../../use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import '../../use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
@@ -22,7 +21,6 @@ part 'clients_state.dart';
 
 class ClientsCubit
     extends CubitWithStatus<ClientsState, ClientsCubitInfo, ClientsCubitError> {
-  final ConnectivityService _connectivityService;
   final AuthService _authService;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
@@ -37,8 +35,7 @@ class ClientsCubit
   ClientsCubit({
     ClientsState initialState =
         const ClientsState(status: CubitStatusInitial()),
-  })  : _connectivityService = getIt<ConnectivityService>(),
-        _authService = getIt<AuthService>(),
+  })  : _authService = getIt<AuthService>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
         _getSentCoachingRequestsWithReceiverInfoUseCase =
@@ -56,31 +53,25 @@ class ClientsCubit
   }
 
   void initialize() {
-    _listener ??= _connectivityService.connectivityStatus$
+    _listener ??= _authService.loggedUserId$
         .switchMap(
-          (bool hasDeviceInternetConnection) => hasDeviceInternetConnection
-              ? _authService.loggedUserId$.switchMap(
-                  (String? loggedUserId) => loggedUserId == null
-                      ? Stream.value(state.copyWith())
-                      : Rx.combineLatest3(
-                          _getSentRequests(loggedUserId),
-                          _getReceivedRequests(loggedUserId),
-                          _getClients(loggedUserId),
-                          (
-                            List<CoachingRequestWithPerson> sentRequests,
-                            List<CoachingRequestWithPerson> receivedRequests,
-                            List<Person> clients,
-                          ) =>
-                              state.copyWith(
-                            sentRequests: sentRequests,
-                            receivedRequests: receivedRequests,
-                            clients: clients,
-                          ),
-                        ),
-                )
-              : Stream.value(state.copyWith(
-                  status: const CubitStatusNoInternetConnection(),
-                )),
+          (String? loggedUserId) => loggedUserId == null
+              ? Stream.value(state.copyWith())
+              : Rx.combineLatest3(
+                  _getSentRequests(loggedUserId),
+                  _getReceivedRequests(loggedUserId),
+                  _getClients(loggedUserId),
+                  (
+                    List<CoachingRequestWithPerson> sentRequests,
+                    List<CoachingRequestWithPerson> receivedRequests,
+                    List<Person> clients,
+                  ) =>
+                      state.copyWith(
+                    sentRequests: sentRequests,
+                    receivedRequests: receivedRequests,
+                    clients: clients,
+                  ),
+                ),
         )
         .listen(emit);
   }

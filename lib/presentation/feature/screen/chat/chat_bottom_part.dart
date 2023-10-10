@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../dependency_injection.dart';
 import '../../../../domain/cubit/chat/chat_cubit.dart';
-import '../../../../domain/service/connectivity_service.dart';
+import '../../../../domain/cubit/internet_connection_cubit.dart';
 import '../../../component/dialog/actions_dialog_component.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/image_service.dart';
@@ -168,41 +167,37 @@ class _MessageInput extends StatelessWidget {
       ),
     );
     const double contentPadding = kIsWeb ? 16 : 8;
+    final bool? isInternetConnection = context.select(
+      (InternetConnectionCubit cubit) => cubit.state,
+    );
 
-    return StreamBuilder(
-      stream: getIt<ConnectivityService>().connectivityStatus$,
-      builder: (context, AsyncSnapshot<bool> snapshot) {
-        final bool? isThereInternetConnection = snapshot.data;
-
-        return ConstrainedBox(
-          constraints: const BoxConstraints(maxHeight: 200),
-          child: TextField(
-            decoration: InputDecoration(
-              border: border,
-              focusedBorder: border,
-              enabledBorder: border,
-              disabledBorder: border,
-              errorBorder: border,
-              hintText: Str.of(context).chatWriteMessage,
-              contentPadding: const EdgeInsets.fromLTRB(
-                kIsWeb ? 8 : 0,
-                contentPadding,
-                contentPadding,
-                contentPadding,
-              ),
-              counterText: '',
-            ),
-            enabled: isThereInternetConnection == false ? false : !isDisabled,
-            maxLength: 500,
-            maxLines: null,
-            textInputAction: TextInputAction.send,
-            controller: messageController,
-            onChanged: context.read<ChatCubit>().messageChanged,
-            onTapOutside: (_) => unfocusInputs(),
-            onSubmitted: (_) => onSubmitted(),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 200),
+      child: TextField(
+        decoration: InputDecoration(
+          border: border,
+          focusedBorder: border,
+          enabledBorder: border,
+          disabledBorder: border,
+          errorBorder: border,
+          hintText: Str.of(context).chatWriteMessage,
+          contentPadding: const EdgeInsets.fromLTRB(
+            kIsWeb ? 8 : 0,
+            contentPadding,
+            contentPadding,
+            contentPadding,
           ),
-        );
-      },
+          counterText: '',
+        ),
+        enabled: isInternetConnection == false ? false : !isDisabled,
+        maxLength: 500,
+        maxLines: null,
+        textInputAction: TextInputAction.send,
+        controller: messageController,
+        onChanged: context.read<ChatCubit>().messageChanged,
+        onTapOutside: (_) => unfocusInputs(),
+        onSubmitted: (_) => onSubmitted(),
+      ),
     );
   }
 }
@@ -215,34 +210,29 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool? isInternetConnection = context.select(
+      (InternetConnectionCubit cubit) => cubit.state,
+    );
     final bool canSubmit = context.select(
       (ChatCubit cubit) => cubit.state.canSubmitMessage,
     );
 
-    return StreamBuilder(
-      stream: getIt<ConnectivityService>().connectivityStatus$,
-      builder: (_, AsyncSnapshot<bool> snapshot) {
-        final bool? isThereInternetConnection = snapshot.data;
-
-        return FilledButton(
-          style: FilledButton.styleFrom(
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(kIsWeb ? 16 : 8),
-          ),
-          onPressed:
-              isThereInternetConnection == false || isLoading || !canSubmit
-                  ? null
-                  : onPressed,
-          child: isLoading
-              ? Container(
-                  width: 24,
-                  height: 24,
-                  padding: const EdgeInsets.all(2),
-                  child: const CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.send),
-        );
-      },
+    return FilledButton(
+      style: FilledButton.styleFrom(
+        shape: const CircleBorder(),
+        padding: const EdgeInsets.all(kIsWeb ? 16 : 8),
+      ),
+      onPressed: isInternetConnection == false || isLoading || !canSubmit
+          ? null
+          : onPressed,
+      child: isLoading
+          ? Container(
+              width: 24,
+              height: 24,
+              padding: const EdgeInsets.all(2),
+              child: const CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.send),
     );
   }
 }

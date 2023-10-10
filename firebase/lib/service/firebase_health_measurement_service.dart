@@ -10,10 +10,18 @@ class FirebaseHealthMeasurementService {
     required String userId,
     required DateTime date,
   }) async {
-    final measurementId = mapDateTimeToString(date);
-    final snapshot =
-        await getHealthMeasurementsRef(userId).doc(measurementId).get();
-    return snapshot.data();
+    try {
+      final measurementId = mapDateTimeToString(date);
+      final snapshot =
+          await getHealthMeasurementsRef(userId).doc(measurementId).get();
+      return snapshot.data();
+    } catch (exception) {
+      if (exception.toString().contains('unavailable')) {
+        return null;
+      } else {
+        rethrow;
+      }
+    }
   }
 
   Future<List<HealthMeasurementDto>?> loadMeasurementsByDateRange({

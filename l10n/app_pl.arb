@@ -1287,6 +1287,8 @@
   "addHealthMeasurement": "Dodaj pomiar",
   "addBloodTest": "Dodaj badanie",
   "addRace": "Dodaj wyścig",
+  "youAreOffline": "Jesteś offline",
+  "noInternetConnection": "Brak połączenia internetowego",
   "sentRequests": "Wysłane prośby",
   "receivedRequests": "Otrzymane prośby",
   "noSentRequests": "Brak wysłanych próśb",

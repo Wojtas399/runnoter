@@ -1,11 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../dependency_injection.dart';
 import '../../../../domain/cubit/chat/chat_cubit.dart';
-import '../../../../domain/service/connectivity_service.dart';
+import '../../../../domain/cubit/internet_connection_cubit.dart';
 import '../../../component/body/big_body_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/nullable_text_component.dart';
@@ -79,35 +80,67 @@ class _RecipientFullName extends StatelessWidget {
   }
 }
 
-class _InternetConnectionStatus extends StatelessWidget {
+class _InternetConnectionStatus extends StatefulWidget {
   const _InternetConnectionStatus();
 
   @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: getIt<ConnectivityService>().connectivityStatus$,
-      builder: (context, AsyncSnapshot<bool> asyncSnapshot) {
-        final bool? isInternetConnection = asyncSnapshot.data;
+  State<StatefulWidget> createState() => _InternetConnectionStatusState();
+}
 
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          height: isInternetConnection == false ? 40 : 0,
-          child: Container(
-            width: double.infinity,
-            color: Theme.of(context).colorScheme.error,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                BodyMedium(
-                  Str.of(context).noInternetConnectionDialogTitle,
-                  color: Theme.of(context).canvasColor,
-                ),
-              ],
-            ),
-          ),
-        );
+class _InternetConnectionStatusState extends State<_InternetConnectionStatus>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animController;
+  late final Animation<double> _sizeAnimation;
+  StreamSubscription<bool?>? _internetConnectionListener;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _sizeAnimation = CurvedAnimation(
+      parent: _animController,
+      curve: Curves.easeInOut,
+    );
+    _internetConnectionListener =
+        context.read<InternetConnectionCubit>().stream.listen(
+      (bool? isInternetConnection) {
+        if (isInternetConnection == false) {
+          _animController.forward();
+        } else if (isInternetConnection == true) {
+          _animController.reverse();
+        }
       },
+    );
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    _internetConnectionListener?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizeTransition(
+      sizeFactor: _sizeAnimation,
+      child: Container(
+        width: double.infinity,
+        color: Theme.of(context).colorScheme.error,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BodyMedium(
+              Str.of(context).noInternetConnectionDialogTitle,
+              color: Theme.of(context).canvasColor,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

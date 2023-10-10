@@ -34,7 +34,10 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
   }
 
   void _onRacesChanged(final List<Race>? races) {
-    if (races == null) return;
+    if (races == null) {
+      emit([]);
+      return;
+    }
     final groupedAndSortedRaces = _groupRaces(races);
     groupedAndSortedRaces.sort((g1, g2) => g2.year < g1.year ? -1 : 1);
     for (final racesFromYear in groupedAndSortedRaces) {
