@@ -11,8 +11,10 @@ import '../../../../domain/additional_model/settings.dart' as settings;
 import '../../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../../domain/cubit/home/home_cubit.dart';
+import '../../../../domain/cubit/internet_connection_cubit.dart';
 import '../../../../domain/cubit/notifications/notifications_cubit.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
+import '../../../component/empty_content_info_component.dart';
 import '../../../config/navigation/router.dart';
 import '../../../feature/dialog/required_data_completion/required_data_completion_dialog.dart';
 import '../../../formatter/person_formatter.dart';
@@ -32,6 +34,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (_) => InternetConnectionCubit()..initialize()),
         BlocProvider(create: (_) => HomeCubit()..initialize()),
         BlocProvider(
           create: (_) => CalendarCubit()..initialize(DateRangeType.week),
@@ -45,12 +48,62 @@ class HomeScreen extends StatelessWidget {
       ],
       child: MultiBlocListener(
         listeners: const [
+          _InternetConnectionCubitListener(),
           _HomeCubitListener(),
           _NotificationsCubitListener(),
         ],
         child: const HomeContent(),
       ),
     );
+  }
+}
+
+class _InternetConnectionCubitListener extends SingleChildStatefulWidget {
+  const _InternetConnectionCubitListener();
+
+  @override
+  State<StatefulWidget> createState() =>
+      _InternetConnectionCubitListenerState();
+}
+
+class _InternetConnectionCubitListenerState
+    extends SingleChildState<_InternetConnectionCubitListener> {
+  OverlayEntry? _overlayEntry;
+
+  @override
+  void dispose() {
+    removeHighlightOverlay();
+    super.dispose();
+  }
+
+  @override
+  Widget buildWithChild(BuildContext context, Widget? child) {
+    return BlocListener<InternetConnectionCubit, bool?>(
+      listener: (_, bool? isInternetConnection) {
+        if (isInternetConnection == false) {
+          _overlayEntry = OverlayEntry(
+            builder: (BuildContext context) => Container(
+              color: Colors.black.withOpacity(0.4),
+              child: AlertDialog(
+                content: EmptyContentInfo(
+                  icon: Icons.wifi_off,
+                  title: Str.of(context).youAreOffline,
+                ),
+              ),
+            ),
+          );
+          Overlay.of(context, debugRequiredFor: widget).insert(_overlayEntry!);
+        } else if (isInternetConnection == true) {
+          removeHighlightOverlay();
+        }
+      },
+      child: child,
+    );
+  }
+
+  void removeHighlightOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
   }
 }
 

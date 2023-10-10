@@ -1,5 +1,4 @@
 export 'activity_status_creator/activity_status_creator_screen.dart';
-export 'app_base.dart';
 export 'blood_test_creator/blood_test_creator_screen.dart';
 export 'blood_test_preview/blood_test_preview_screen.dart';
 export 'blood_tests/blood_tests_screen.dart';
