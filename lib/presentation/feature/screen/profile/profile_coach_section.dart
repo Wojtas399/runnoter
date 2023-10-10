@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../dependency_injection.dart';
+import '../../../../domain/cubit/internet_connection_cubit.dart';
 import '../../../../domain/cubit/notifications/notifications_cubit.dart';
 import '../../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
-import '../../../../domain/service/connectivity_service.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/gap/gap_components.dart';
+import '../../../component/loading_info_component.dart';
 import '../../../component/nullable_text_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/router.dart';
@@ -41,21 +41,21 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: getIt<ConnectivityService>().connectivityStatus$,
-      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.data == false) {
-          return EmptyContentInfo(
-            icon: Icons.wifi_off,
-            subtitle: Str.of(context).noInternetConnection,
-          );
-        }
-        final bool doesCoachExist = context.select(
-          (ProfileCoachCubit cubit) => cubit.state.doesCoachExist,
-        );
-        return doesCoachExist ? const _Coach() : const ProfileNoCoachContent();
-      },
+    final bool? isInternetConnection = context.select(
+      (InternetConnectionCubit cubit) => cubit.state,
     );
+    final bool doesCoachExist = context.select(
+      (ProfileCoachCubit cubit) => cubit.state.doesCoachExist,
+    );
+
+    return switch (isInternetConnection) {
+      null => const LoadingInfo(),
+      false => EmptyContentInfo(
+          icon: Icons.wifi_off,
+          subtitle: Str.of(context).noInternetConnection,
+        ),
+      true => doesCoachExist ? const _Coach() : const ProfileNoCoachContent(),
+    };
   }
 }
 
