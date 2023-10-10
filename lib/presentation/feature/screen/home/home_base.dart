@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -45,21 +46,24 @@ class _InternetConnectionCubitListenerState
   Widget build(BuildContext context) {
     return BlocListener<InternetConnectionCubit, bool?>(
       listener: (_, bool? isInternetConnection) {
-        if (isInternetConnection == false) {
-          _overlayEntry = OverlayEntry(
-            builder: (BuildContext context) => Container(
-              color: Colors.black.withOpacity(0.4),
-              child: AlertDialog(
-                content: EmptyContentInfo(
-                  icon: Icons.wifi_off,
-                  title: Str.of(context).youAreOffline,
+        if (kIsWeb) {
+          if (isInternetConnection == false) {
+            _overlayEntry = OverlayEntry(
+              builder: (BuildContext context) => Container(
+                color: Colors.black.withOpacity(0.4),
+                child: AlertDialog(
+                  content: EmptyContentInfo(
+                    icon: Icons.wifi_off,
+                    title: Str.of(context).youAreOffline,
+                  ),
                 ),
               ),
-            ),
-          );
-          Overlay.of(context, debugRequiredFor: widget).insert(_overlayEntry!);
-        } else if (isInternetConnection == true) {
-          removeHighlightOverlay();
+            );
+            Overlay.of(context, debugRequiredFor: widget)
+                .insert(_overlayEntry!);
+          } else if (isInternetConnection == true) {
+            removeHighlightOverlay();
+          }
         }
       },
       child: widget.child,
