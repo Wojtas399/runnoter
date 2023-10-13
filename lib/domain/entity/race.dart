@@ -1,4 +1,4 @@
-import 'activity.dart';
+import '../../data/entity/activity.dart';
 
 class Race extends Activity {
   final String place;

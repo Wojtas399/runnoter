@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
+import '../../../data/entity/activity.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
 import '../../cubit/date_range_manager_cubit.dart';
-import '../../entity/activity.dart';
 import '../../entity/race.dart';
 import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';

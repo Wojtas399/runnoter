@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/entity/activity.dart';
+import '../../data/entity/activity.dart';
 import '../../domain/entity/race.dart';
 import '../../domain/entity/workout.dart';
 import '../formatter/activity_status_formatter.dart';

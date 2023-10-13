@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../../../data/entity/activity.dart';
 import '../../../../domain/additional_model/week_day.dart';
-import '../../../../domain/entity/activity.dart';
 import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
 import '../../../component/gap/gap_components.dart';
