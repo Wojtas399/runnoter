@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/blood_test.dart';
+import '../entity/blood_test.dart';
 import 'blood_parameter_result_mapper.dart';
 
 BloodTest mapBloodTestFromDto(

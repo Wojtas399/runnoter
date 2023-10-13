@@ -4,8 +4,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/entity/blood_test.dart';
 import 'package:runnoter/domain/cubit/blood_tests_cubit.dart';
-import 'package:runnoter/domain/entity/blood_test.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
 
 import '../../creators/blood_test_creator.dart';

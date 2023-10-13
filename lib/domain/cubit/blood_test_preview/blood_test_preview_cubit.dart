@@ -4,8 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
+import '../../../data/entity/blood_test.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/blood_parameter.dart';
 import '../../entity/user.dart';

@@ -1,5 +1,5 @@
-import '../additional_model/blood_parameter.dart';
-import 'entity.dart';
+import '../../domain/additional_model/blood_parameter.dart';
+import '../../domain/entity/entity.dart';
 
 class BloodTest extends Entity {
   final String userId;
@@ -14,10 +14,5 @@ class BloodTest extends Entity {
   }) : assert(parameterResults.length > 0);
 
   @override
-  List<Object?> get props => [
-        id,
-        userId,
-        date,
-        parameterResults,
-      ];
+  List<Object?> get props => [id, userId, date, parameterResults];
 }

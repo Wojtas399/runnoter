@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
+import '../../../data/entity/blood_test.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/blood_parameter.dart';
 import '../../additional_model/cubit_state.dart';
