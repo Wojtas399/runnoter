@@ -10,8 +10,8 @@ import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
+import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/domain/cubit/day_preview/day_preview_cubit.dart';
-import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/health_measurement_creator.dart';

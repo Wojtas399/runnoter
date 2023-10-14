@@ -10,9 +10,9 @@ import '../../data/entity/race.dart';
 import '../../data/entity/workout.dart';
 import '../../data/interface/repository/health_measurement_repository.dart';
 import '../../data/interface/repository/race_repository.dart';
+import '../../data/interface/repository/workout_repository.dart';
 import '../../dependency_injection.dart';
 import '../additional_model/calendar_user_data.dart';
-import '../repository/workout_repository.dart';
 
 class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
   final String userId;

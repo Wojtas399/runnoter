@@ -10,8 +10,8 @@ import '../../../data/entity/race.dart';
 import '../../../data/entity/workout.dart';
 import '../../../data/interface/repository/health_measurement_repository.dart';
 import '../../../data/interface/repository/race_repository.dart';
+import '../../../data/interface/repository/workout_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../repository/workout_repository.dart';
 import '../../service/auth_service.dart';
 
 part 'day_preview_state.dart';

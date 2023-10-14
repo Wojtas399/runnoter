@@ -11,11 +11,11 @@ import '../../../../data/interface/repository/health_measurement_repository.dart
 import '../../../../data/interface/repository/person_repository.dart';
 import '../../../../data/interface/repository/race_repository.dart';
 import '../../../../data/interface/repository/user_repository.dart';
+import '../../../../data/interface/repository/workout_repository.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/cubit_state.dart';
 import '../../../additional_model/cubit_with_status.dart';
 import '../../../additional_model/custom_exception.dart';
-import '../../../repository/workout_repository.dart';
 import '../../../service/coaching_request_service.dart';
 
 part 'profile_identities_state.dart';
