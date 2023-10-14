@@ -1,4 +1,4 @@
-import '../../domain/additional_model/blood_parameter.dart';
+import '../additional_model/blood_parameter.dart';
 import 'entity.dart';
 
 class BloodTest extends Entity {

@@ -4,16 +4,10 @@ class BloodParameterResult extends Equatable {
   final BloodParameter parameter;
   final double value;
 
-  const BloodParameterResult({
-    required this.parameter,
-    required this.value,
-  });
+  const BloodParameterResult({required this.parameter, required this.value});
 
   @override
-  List<Object?> get props => [
-        parameter,
-        value,
-      ];
+  List<Object?> get props => [parameter, value];
 }
 
 enum BloodParameter {
@@ -277,10 +271,7 @@ enum BloodParameter {
   });
 }
 
-enum BloodParameterType {
-  basic,
-  additional,
-}
+enum BloodParameterType { basic, additional }
 
 enum BloodParameterUnit {
   thousandsPerCubicMilliliter,
@@ -310,9 +301,7 @@ sealed class BloodParameterNorm extends Equatable {
 class BloodParameterNormGeneral extends BloodParameterNorm {
   final Range range;
 
-  const BloodParameterNormGeneral({
-    required this.range,
-  });
+  const BloodParameterNormGeneral({required this.range});
 
   @override
   List<Object?> get props => [range];
@@ -335,10 +324,8 @@ class Range extends Equatable {
   final double? min;
   final double max;
 
-  const Range({
-    this.min,
-    required this.max,
-  }) : assert((min == null) || (min < max));
+  const Range({this.min, required this.max})
+      : assert((min == null) || (min < max));
 
   @override
   List<Object?> get props => [min, max];

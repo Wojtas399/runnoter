@@ -1,8 +1,8 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/additional_model/blood_parameter.dart';
 import 'package:runnoter/data/entity/blood_test.dart';
 import 'package:runnoter/data/mapper/blood_test_mapper.dart';
-import 'package:runnoter/domain/additional_model/blood_parameter.dart';
 
 void main() {
   const String readingsId = 'r1';
