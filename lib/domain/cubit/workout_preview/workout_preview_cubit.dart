@@ -4,10 +4,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/additional_model/activity_status.dart';
+import '../../../data/additional_model/workout_stage.dart';
 import '../../../data/entity/workout.dart';
 import '../../../data/interface/repository/workout_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/workout_stage.dart';
 
 part 'workout_preview_state.dart';
 

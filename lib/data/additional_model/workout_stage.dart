@@ -15,10 +15,7 @@ sealed class DistanceWorkoutStage extends WorkoutStage {
         assert(maxHeartRate > 0);
 
   @override
-  List<Object?> get props => [
-        distanceInKm,
-        maxHeartRate,
-      ];
+  List<Object?> get props => [distanceInKm, maxHeartRate];
 }
 
 sealed class SeriesWorkoutStage extends WorkoutStage {

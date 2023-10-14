@@ -1,4 +1,4 @@
-import '../../domain/additional_model/workout_stage.dart';
+import '../additional_model/workout_stage.dart';
 import 'activity.dart';
 
 class Workout extends Activity {

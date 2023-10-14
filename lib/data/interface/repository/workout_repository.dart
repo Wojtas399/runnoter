@@ -1,5 +1,5 @@
-import '../../../domain/additional_model/workout_stage.dart';
 import '../../additional_model/activity_status.dart';
+import '../../additional_model/workout_stage.dart';
 import '../../entity/workout.dart';
 
 abstract class WorkoutRepository {

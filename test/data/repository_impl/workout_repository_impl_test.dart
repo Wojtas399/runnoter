@@ -7,9 +7,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/data/additional_model/custom_exception.dart';
+import 'package:runnoter/data/additional_model/workout_stage.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
-import 'package:runnoter/domain/additional_model/workout_stage.dart';
 
 import '../../creators/workout_creator.dart';
 import '../../creators/workout_dto_creator.dart';

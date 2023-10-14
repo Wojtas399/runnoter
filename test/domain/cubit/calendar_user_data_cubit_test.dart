@@ -6,13 +6,13 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/data/additional_model/calendar_user_data.dart';
+import 'package:runnoter/data/additional_model/workout_stage.dart';
 import 'package:runnoter/data/entity/health_measurement.dart';
 import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
-import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/calendar_user_data_cubit.dart';
 
 import '../../creators/activity_status_creator.dart';

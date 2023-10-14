@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/workout_stage.dart';
+import 'package:runnoter/data/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 
 void main() {

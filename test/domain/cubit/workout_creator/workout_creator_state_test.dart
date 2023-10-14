@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/additional_model/workout_stage.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/workout_creator/workout_creator_cubit.dart';
 
 import '../../../creators/workout_creator.dart';

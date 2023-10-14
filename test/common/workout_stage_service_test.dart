@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/common/workout_stage_service.dart';
-import 'package:runnoter/domain/additional_model/workout_stage.dart';
+import 'package:runnoter/data/additional_model/workout_stage.dart';
 
 void main() {
   test(
