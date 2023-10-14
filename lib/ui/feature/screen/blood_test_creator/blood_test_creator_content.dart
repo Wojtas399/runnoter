@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/additional_model/blood_parameter.dart';
 import '../../../../data/entity/user.dart';
-import '../../../../domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import '../../../component/blood_parameter_results_list_component.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/date_selector_component.dart';
@@ -13,6 +12,7 @@ import '../../../component/loading_info_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../service/dialog_service.dart';
 import 'blood_test_creator_app_bar.dart';
+import 'cubit/blood_test_creator_cubit.dart';
 
 class BloodTestCreatorContent extends StatelessWidget {
   const BloodTestCreatorContent({super.key});
