@@ -1,4 +1,4 @@
-import '../../../domain/additional_model/auth_provider.dart';
+import '../../additional_model/auth_provider.dart';
 
 abstract class AuthService {
   Stream<String?> get loggedUserId$;

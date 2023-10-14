@@ -1,6 +1,6 @@
+import '../../../data/additional_model/auth_provider.dart';
 import '../../../data/interface/service/auth_service.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/auth_provider.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
