@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/cubit/client/client_cubit.dart';
+import 'package:runnoter/ui/feature/screen/client/cubit/client_cubit.dart';
 
 void main() {
   late ClientState state;

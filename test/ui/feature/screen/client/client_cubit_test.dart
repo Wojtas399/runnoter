@@ -8,13 +8,13 @@ import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
-import 'package:runnoter/domain/cubit/client/client_cubit.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
+import 'package:runnoter/ui/feature/screen/client/cubit/client_cubit.dart';
 
-import '../../../creators/person_creator.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
+import '../../../../creators/person_creator.dart';
+import '../../../../mock/domain/repository/mock_person_repository.dart';
+import '../../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
 
 void main() {
   final authService = MockAuthService();
