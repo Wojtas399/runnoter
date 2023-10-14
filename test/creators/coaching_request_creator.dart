@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/additional_model/coaching_request.dart';
+import 'package:runnoter/data/additional_model/coaching_request.dart';
 
 CoachingRequest createCoachingRequest({
   String id = '',

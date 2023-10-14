@@ -1,4 +1,4 @@
-import '../../../domain/additional_model/coaching_request.dart';
+import '../../additional_model/coaching_request.dart';
 
 abstract interface class CoachingRequestService {
   Stream<List<CoachingRequest>> getCoachingRequestsBySenderId({

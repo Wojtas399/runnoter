@@ -18,11 +18,5 @@ class CoachingRequest extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        id,
-        senderId,
-        receiverId,
-        direction,
-        isAccepted,
-      ];
+  List<Object?> get props => [id, senderId, receiverId, direction, isAccepted];
 }

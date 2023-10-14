@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/additional_model/coaching_request.dart';
 import 'package:runnoter/data/mapper/coaching_request_mapper.dart';
-import 'package:runnoter/domain/additional_model/coaching_request.dart';
 
 void main() {
   const String coachingRequestId = 'i1';

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../data/additional_model/coaching_request.dart';
 import '../../../../data/entity/person.dart';
-import '../../../../domain/additional_model/coaching_request.dart';
 import '../../../../domain/additional_model/coaching_request_with_person.dart';
 import '../../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../component/gap/gap_components.dart';
