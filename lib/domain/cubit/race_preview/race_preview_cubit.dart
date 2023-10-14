@@ -4,9 +4,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/entity/race.dart';
+import '../../../data/interface/repository/race_repository.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
-import '../../repository/race_repository.dart';
 
 part 'race_preview_state.dart';
 

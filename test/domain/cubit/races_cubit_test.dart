@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/entity/race.dart';
+import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/domain/cubit/races_cubit.dart';
-import 'package:runnoter/domain/repository/race_repository.dart';
 
 import '../../creators/race_creator.dart';
 import '../../mock/domain/repository/mock_race_repository.dart';
