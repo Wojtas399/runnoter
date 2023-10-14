@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
+import '../../../data/entity/chat.dart';
 import '../../../dependency_injection.dart';
-import '../../entity/chat.dart';
 import '../../entity/message.dart';
 import '../../entity/message_image.dart';
 import '../../entity/person.dart';

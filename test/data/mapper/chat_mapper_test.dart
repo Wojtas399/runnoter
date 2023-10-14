@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/entity/chat.dart';
 import 'package:runnoter/data/mapper/chat_mapper.dart';
-import 'package:runnoter/domain/entity/chat.dart';
 
 void main() {
   const String id = 'c1';

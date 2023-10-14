@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/entity/chat.dart';
+import 'package:runnoter/data/entity/chat.dart';
 import 'package:runnoter/domain/repository/chat_repository.dart';
 
 class MockChatRepository extends Mock implements ChatRepository {
