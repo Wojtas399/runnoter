@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/additional_model/activity_status.dart';
+import '../additional_model/activity_status.dart';
 import 'mood_rate_mapper.dart';
 import 'pace_mapper.dart';
 

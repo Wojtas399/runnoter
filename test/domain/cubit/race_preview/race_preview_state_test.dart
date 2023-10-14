@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/activity_status.dart';
+import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/domain/cubit/race_preview/race_preview_cubit.dart';
 
 void main() {

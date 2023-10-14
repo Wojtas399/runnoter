@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/additional_model/activity_status.dart';
+import '../../../../data/additional_model/activity_status.dart';
 import '../../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../../../domain/cubit/workout_preview/workout_preview_cubit.dart';
 import '../../../component/big_button_component.dart';

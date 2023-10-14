@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 
-import '../../domain/additional_model/activity_status.dart';
+import '../additional_model/activity_status.dart';
 
 MoodRate mapMoodRateFromFirebase(firebase.MoodRate firebaseMoodRate) {
   switch (firebaseMoodRate) {

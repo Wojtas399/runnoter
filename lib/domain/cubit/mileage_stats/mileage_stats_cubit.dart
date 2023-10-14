@@ -5,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
+import '../../../data/additional_model/activity_status.dart';
 import '../../../data/entity/activity.dart';
 import '../../../data/entity/race.dart';
 import '../../../data/entity/workout.dart';
 import '../../../data/interface/repository/race_repository.dart';
 import '../../../data/interface/repository/workout_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/activity_status.dart';
 import '../../cubit/date_range_manager_cubit.dart';
 
 part 'mileage_stats_state.dart';

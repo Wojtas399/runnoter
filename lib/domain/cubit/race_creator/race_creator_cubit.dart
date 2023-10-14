@@ -1,7 +1,7 @@
+import '../../../data/additional_model/activity_status.dart';
 import '../../../data/entity/race.dart';
 import '../../../data/interface/repository/race_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/activity_status.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';

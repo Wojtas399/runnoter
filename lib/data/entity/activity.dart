@@ -1,4 +1,4 @@
-import '../../domain/additional_model/activity_status.dart';
+import '../additional_model/activity_status.dart';
 import 'entity.dart';
 
 abstract class Activity extends Entity {

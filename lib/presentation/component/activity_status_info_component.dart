@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/additional_model/activity_status.dart';
+import '../../data/additional_model/activity_status.dart';
 import '../extension/context_extensions.dart';
 import '../extension/double_extensions.dart';
 import '../formatter/activity_status_formatter.dart';
