@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/additional_model/blood_parameter.dart';
 import '../../../../data/entity/user.dart';
-import '../../../../domain/cubit/blood_test_preview/blood_test_preview_cubit.dart';
 import '../../../component/blood_parameter_results_list_component.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
@@ -13,6 +12,7 @@ import '../../../component/text/title_text_components.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import 'blood_test_preview_actions.dart';
+import 'cubit/blood_test_preview_cubit.dart';
 
 class BloodTestPreviewContent extends StatelessWidget {
   const BloodTestPreviewContent({super.key});

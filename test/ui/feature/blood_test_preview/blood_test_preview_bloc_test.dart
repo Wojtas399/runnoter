@@ -9,7 +9,7 @@ import 'package:runnoter/data/entity/blood_test.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/blood_test_repository.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
-import 'package:runnoter/domain/cubit/blood_test_preview/blood_test_preview_cubit.dart';
+import 'package:runnoter/ui/feature/screen/blood_test_preview/cubit/blood_test_preview_cubit.dart';
 
 import '../../../creators/blood_test_creator.dart';
 import '../../../creators/user_creator.dart';
