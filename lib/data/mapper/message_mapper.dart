@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/message.dart';
+import '../entity/message.dart';
 import 'message_status_mapper.dart';
 
 Message mapMessageFromDto(MessageDto messageDto) => Message(

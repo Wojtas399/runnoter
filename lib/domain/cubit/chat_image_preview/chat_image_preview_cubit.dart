@@ -4,8 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../data/entity/message.dart';
 import '../../../dependency_injection.dart';
-import '../../entity/message.dart';
 import '../../entity/message_image.dart';
 import '../../extensions/message_images_extensions.dart';
 import '../../repository/message_image_repository.dart';
