@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../entity/health_measurement.dart';
+import '../../data/entity/health_measurement.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
 

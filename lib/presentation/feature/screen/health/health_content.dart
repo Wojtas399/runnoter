@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../data/entity/health_measurement.dart';
 import '../../../../domain/cubit/today_measurement_cubit.dart';
-import '../../../../domain/entity/health_measurement.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/body/big_body_component.dart';
 import '../../../component/card_body_component.dart';

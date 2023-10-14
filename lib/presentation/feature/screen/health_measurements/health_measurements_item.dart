@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../data/entity/health_measurement.dart';
 import '../../../../domain/cubit/health_measurements_cubit.dart';
-import '../../../../domain/entity/health_measurement.dart';
 import '../../../component/edit_delete_popup_menu_component.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../extension/context_extensions.dart';

@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/date_service.dart';
+import '../../data/entity/health_measurement.dart';
 import '../../dependency_injection.dart';
-import '../entity/health_measurement.dart';
 import '../repository/health_measurement_repository.dart';
 import '../service/auth_service.dart';
 

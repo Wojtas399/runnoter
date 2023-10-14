@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/workout_stage_service.dart';
+import '../../data/entity/health_measurement.dart';
 import '../../dependency_injection.dart';
 import '../additional_model/calendar_user_data.dart';
-import '../entity/health_measurement.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
 import '../repository/health_measurement_repository.dart';

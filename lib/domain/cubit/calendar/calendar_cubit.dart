@@ -8,9 +8,9 @@ import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../../domain/additional_model/calendar_user_data.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';
-import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
+import '../../../data/entity/health_measurement.dart';
 import '../../additional_model/week_day.dart';
 
 part 'calendar_state.dart';

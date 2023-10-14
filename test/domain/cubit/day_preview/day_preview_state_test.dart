@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/entity/health_measurement.dart';
 import 'package:runnoter/domain/cubit/day_preview/day_preview_cubit.dart';
-import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 
