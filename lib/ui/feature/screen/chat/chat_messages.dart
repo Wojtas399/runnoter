@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
-import '../../../../domain/cubit/chat/chat_cubit.dart';
+import 'cubit/chat_cubit.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/loading_info_component.dart';

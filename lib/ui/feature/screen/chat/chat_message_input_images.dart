@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/cubit/chat/chat_cubit.dart';
+import 'cubit/chat_cubit.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 
 class ChatMessageInputImages extends StatelessWidget {

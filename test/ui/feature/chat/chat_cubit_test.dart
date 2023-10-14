@@ -15,7 +15,7 @@ import 'package:runnoter/data/interface/repository/message_image_repository.dart
 import 'package:runnoter/data/interface/repository/message_repository.dart';
 import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
-import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
+import 'package:runnoter/ui/feature/screen/chat/cubit/chat_cubit.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../creators/chat_creator.dart';

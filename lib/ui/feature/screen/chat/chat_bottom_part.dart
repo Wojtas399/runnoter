@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../domain/cubit/chat/chat_cubit.dart';
+import 'cubit/chat_cubit.dart';
 import '../../../../domain/cubit/internet_connection_cubit.dart';
 import '../../../component/dialog/actions_dialog_component.dart';
 import '../../../service/dialog_service.dart';
