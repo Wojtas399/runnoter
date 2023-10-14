@@ -1,12 +1,12 @@
-import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../data/additional_model/activity_status.dart';
-import '../../../data/entity/race.dart';
-import '../../../data/entity/workout.dart';
-import '../../../data/interface/repository/race_repository.dart';
-import '../../../data/interface/repository/workout_repository.dart';
-import '../../../dependency_injection.dart';
-import '../../additional_model/cubit_state.dart';
-import '../../additional_model/cubit_with_status.dart';
+import '../../../../../data/additional_model/activity_status.dart';
+import '../../../../../data/entity/race.dart';
+import '../../../../../data/entity/workout.dart';
+import '../../../../../data/interface/repository/race_repository.dart';
+import '../../../../../data/interface/repository/workout_repository.dart';
+import '../../../../../dependency_injection.dart';
+import '../../../../../domain/additional_model/cubit_state.dart';
+import '../../../../../domain/additional_model/cubit_status.dart';
+import '../../../../../domain/additional_model/cubit_with_status.dart';
 
 part 'activity_status_creator_state.dart';
 

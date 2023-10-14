@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/additional_model/activity_status.dart';
-import '../../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../../component/duration_input_component.dart';
 import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
@@ -14,6 +13,7 @@ import '../../../formatter/distance_unit_formatter.dart';
 import '../../../formatter/mood_rate_formatter.dart';
 import '../../../service/utils.dart';
 import 'activity_status_creator_avg_pace.dart';
+import 'cubit/activity_status_creator_cubit.dart';
 
 class ActivityStatusCreatorParamsForm extends StatelessWidget {
   const ActivityStatusCreatorParamsForm({super.key});
