@@ -1,5 +1,5 @@
 import '../../domain/additional_model/blood_parameter.dart';
-import '../../domain/entity/entity.dart';
+import 'entity.dart';
 
 class BloodTest extends Entity {
   final String userId;

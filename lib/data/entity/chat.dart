@@ -1,4 +1,4 @@
-import '../../domain/entity/entity.dart';
+import 'entity.dart';
 
 class Chat extends Entity {
   final String user1Id;

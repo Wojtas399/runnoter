@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/entity/entity.dart';
 import 'package:runnoter/domain/additional_model/state_repository.dart';
-import 'package:runnoter/domain/entity/entity.dart';
 
 class TestModel extends Entity {
   final String name;

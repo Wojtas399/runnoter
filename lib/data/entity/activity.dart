@@ -1,5 +1,5 @@
 import '../../domain/additional_model/activity_status.dart';
-import '../../domain/entity/entity.dart';
+import 'entity.dart';
 
 abstract class Activity extends Entity {
   final String userId;
