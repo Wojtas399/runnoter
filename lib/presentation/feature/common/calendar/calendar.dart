@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/additional_model/calendar_user_data.dart';
+import '../../../../data/additional_model/calendar_user_data.dart';
 import '../../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';

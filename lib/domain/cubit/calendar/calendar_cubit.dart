@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
-import '../../../../domain/additional_model/calendar_user_data.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';
+import '../../../data/additional_model/calendar_user_data.dart';
 import '../../../data/entity/health_measurement.dart';
 import '../../../data/entity/race.dart';
 import '../../../data/entity/workout.dart';
