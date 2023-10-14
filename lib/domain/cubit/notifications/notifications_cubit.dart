@@ -6,10 +6,10 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../data/entity/person.dart';
 import '../../../data/entity/user.dart';
+import '../../../data/interface/repository/chat_repository.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/coaching_request_with_person.dart';
-import '../../repository/chat_repository.dart';
 import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
 import '../../repository/user_repository.dart';

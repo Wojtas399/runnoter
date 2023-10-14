@@ -1,4 +1,4 @@
-import '../../data/entity/chat.dart';
+import '../../entity/chat.dart';
 
 abstract interface class ChatRepository {
   Stream<Chat?> getChatById({required String chatId});

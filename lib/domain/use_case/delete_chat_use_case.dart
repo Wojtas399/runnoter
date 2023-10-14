@@ -1,5 +1,5 @@
+import '../../data/interface/repository/chat_repository.dart';
 import '../../dependency_injection.dart';
-import '../repository/chat_repository.dart';
 import '../repository/message_image_repository.dart';
 import '../repository/message_repository.dart';
 
