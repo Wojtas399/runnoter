@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../../domain/cubit/client/client_cubit.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../component/date_range_header_component.dart';
@@ -14,6 +13,7 @@ import '../../../extension/context_extensions.dart';
 import '../../../feature/dialog/person_details/person_details_dialog.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
+import '../../common/calendar/cubit/calendar_cubit.dart';
 
 class ClientMobileAppBar extends StatelessWidget
     implements PreferredSizeWidget {

@@ -8,7 +8,6 @@ import '../../../../data/additional_model/settings.dart' as settings;
 import '../../../../dependency_injection.dart';
 import '../../../../domain/additional_model/coaching_request_with_person.dart';
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../../domain/cubit/home/home_cubit.dart';
 import '../../../../domain/cubit/notifications/notifications_cubit.dart';
@@ -22,6 +21,7 @@ import '../../../service/language_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/pace_unit_service.dart';
 import '../../../service/theme_service.dart';
+import '../../common/calendar/cubit/calendar_cubit.dart';
 import 'home_content.dart';
 
 @RoutePage()

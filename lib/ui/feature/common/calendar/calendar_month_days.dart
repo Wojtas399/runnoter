@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../data/entity/race.dart';
 import '../../../../data/entity/workout.dart';
 import '../../../../domain/additional_model/week_day.dart';
-import '../../../../domain/cubit/calendar/calendar_cubit.dart';
+import 'cubit/calendar_cubit.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../formatter/activity_status_formatter.dart';
 
