@@ -7,8 +7,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/person_repository.dart';
+import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/domain/cubit/client/client_cubit.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
 
 import '../../../creators/person_creator.dart';

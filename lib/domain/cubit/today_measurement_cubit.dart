@@ -6,8 +6,8 @@ import 'package:rxdart/rxdart.dart';
 import '../../common/date_service.dart';
 import '../../data/entity/health_measurement.dart';
 import '../../data/interface/repository/health_measurement_repository.dart';
+import '../../data/interface/service/auth_service.dart';
 import '../../dependency_injection.dart';
-import '../service/auth_service.dart';
 
 class TodayMeasurementCubit extends Cubit<HealthMeasurement?> {
   final AuthService _authService;

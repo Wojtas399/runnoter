@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 
+import '../../data/interface/service/auth_service.dart';
 import '../../dependency_injection.dart';
-import '../../domain/service/auth_service.dart';
 import 'navigation/router.dart';
 
 class AuthGuard extends AutoRouteGuard {

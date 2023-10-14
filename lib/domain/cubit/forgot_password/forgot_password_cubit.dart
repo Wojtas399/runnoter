@@ -1,5 +1,5 @@
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/service/auth_service.dart';
+import '../../../data/interface/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';

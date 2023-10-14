@@ -4,9 +4,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../domain/service/auth_service.dart';
 import '../../../../data/entity/user.dart';
 import '../../../../data/interface/repository/user_repository.dart';
+import '../../../../data/interface/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/settings.dart';
 

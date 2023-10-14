@@ -11,8 +11,8 @@ import '../../../data/entity/workout.dart';
 import '../../../data/interface/repository/health_measurement_repository.dart';
 import '../../../data/interface/repository/race_repository.dart';
 import '../../../data/interface/repository/workout_repository.dart';
+import '../../../data/interface/service/auth_service.dart';
 import '../../../dependency_injection.dart';
-import '../../service/auth_service.dart';
 
 part 'day_preview_state.dart';
 
