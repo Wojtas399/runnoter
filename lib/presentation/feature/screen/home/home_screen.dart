@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../../../../data/additional_model/settings.dart' as settings;
 import '../../../../dependency_injection.dart';
 import '../../../../domain/additional_model/coaching_request_with_person.dart';
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/additional_model/settings.dart' as settings;
 import '../../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../../domain/cubit/home/home_cubit.dart';

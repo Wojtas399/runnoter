@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/additional_model/cubit_status.dart';
+import '../../../data/additional_model/settings.dart';
 import '../../../data/entity/user.dart';
 import '../../../data/interface/repository/user_repository.dart';
 import '../../../data/interface/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
-import '../../additional_model/settings.dart';
 
 part 'home_state.dart';
 

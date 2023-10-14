@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/settings.dart';
+import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/presentation/service/distance_unit_service.dart';
 
 void main() {

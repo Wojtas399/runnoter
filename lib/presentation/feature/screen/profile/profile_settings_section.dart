@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/additional_model/settings.dart' as settings;
+import '../../../../data/additional_model/settings.dart' as settings;
 import '../../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/title_text_components.dart';

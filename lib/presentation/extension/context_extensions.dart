@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/additional_model/activity_status.dart';
-import '../../domain/additional_model/settings.dart';
+import '../../data/additional_model/settings.dart';
 import '../service/distance_unit_service.dart';
 import '../service/language_service.dart';
 import '../service/pace_unit_service.dart';

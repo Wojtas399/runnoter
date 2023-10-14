@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/additional_model/activity_status.dart';
-import '../../../../domain/additional_model/settings.dart';
+import '../../../../data/additional_model/settings.dart';
 import '../../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/label_text_components.dart';

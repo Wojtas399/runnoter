@@ -1,5 +1,5 @@
+import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
-import 'package:runnoter/domain/additional_model/settings.dart';
 
 import 'settings_creator.dart';
 

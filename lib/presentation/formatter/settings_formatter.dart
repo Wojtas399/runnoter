@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/additional_model/settings.dart';
+import '../../data/additional_model/settings.dart';
 
 extension ThemeModeFormatter on ThemeMode {
   String toUIFormat(BuildContext context) {

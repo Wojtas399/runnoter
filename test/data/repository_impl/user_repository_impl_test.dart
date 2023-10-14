@@ -2,9 +2,9 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
-import 'package:runnoter/domain/additional_model/settings.dart';
 
 import '../../creators/activities_settings_dto.dart';
 import '../../creators/appearance_settings_dto_creator.dart';
