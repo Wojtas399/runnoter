@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/entity/workout.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../common/date_service.dart';
+import '../../../data/entity/workout.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
 import '../../additional_model/cubit_state.dart';

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../data/entity/workout.dart';
 import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/cubit/workout_creator/workout_creator_cubit.dart';
-import '../../../../domain/entity/workout.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/date_selector_component.dart';

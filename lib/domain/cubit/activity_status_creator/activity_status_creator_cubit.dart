@@ -1,10 +1,10 @@
 import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../data/entity/race.dart';
+import '../../../data/entity/workout.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
-import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 

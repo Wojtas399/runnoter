@@ -7,10 +7,10 @@ import 'package:rxdart/rxdart.dart';
 import '../../../common/date_service.dart';
 import '../../../data/entity/activity.dart';
 import '../../../data/entity/race.dart';
+import '../../../data/entity/workout.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
 import '../../cubit/date_range_manager_cubit.dart';
-import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 

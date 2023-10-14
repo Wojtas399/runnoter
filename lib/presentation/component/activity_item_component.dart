@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../data/entity/activity.dart';
 import '../../data/entity/race.dart';
-import '../../domain/entity/workout.dart';
+import '../../data/entity/workout.dart';
 import '../formatter/activity_status_formatter.dart';
 import '../formatter/list_of_workout_stages_formatter.dart';
 import 'text/body_text_components.dart';

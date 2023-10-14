@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../data/entity/health_measurement.dart';
 import '../../data/entity/race.dart';
-import '../entity/workout.dart';
+import '../../data/entity/workout.dart';
 
 class WeekDay extends Equatable {
   final DateTime date;

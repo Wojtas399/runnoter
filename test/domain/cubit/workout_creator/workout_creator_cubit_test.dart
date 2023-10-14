@@ -3,12 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
+import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/workout_creator/workout_creator_cubit.dart';
-import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 
 import '../../../creators/workout_creator.dart';
