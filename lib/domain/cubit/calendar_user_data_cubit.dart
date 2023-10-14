@@ -8,9 +8,9 @@ import '../../common/workout_stage_service.dart';
 import '../../data/entity/health_measurement.dart';
 import '../../data/entity/race.dart';
 import '../../data/entity/workout.dart';
+import '../../data/interface/repository/health_measurement_repository.dart';
 import '../../dependency_injection.dart';
 import '../additional_model/calendar_user_data.dart';
-import '../repository/health_measurement_repository.dart';
 import '../repository/race_repository.dart';
 import '../repository/workout_repository.dart';
 

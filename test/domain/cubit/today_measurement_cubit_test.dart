@@ -6,8 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/entity/health_measurement.dart';
+import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/cubit/today_measurement_cubit.dart';
-import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../creators/health_measurement_creator.dart';
