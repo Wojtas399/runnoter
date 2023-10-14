@@ -4,9 +4,9 @@ import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/entity/chat.dart';
 import 'package:runnoter/data/repository_impl/chat_repository_impl.dart';
-import 'package:runnoter/domain/additional_model/custom_exception.dart';
 
 import '../../creators/chat_creator.dart';
 import '../../creators/chat_dto_creator.dart';

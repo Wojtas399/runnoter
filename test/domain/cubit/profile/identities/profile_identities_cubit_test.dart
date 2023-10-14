@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/blood_test_repository.dart';
 import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
@@ -12,7 +13,6 @@ import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/interface/service/coaching_request_service.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/profile/identities/profile_identities_cubit.dart';
 
 import '../../../../creators/user_creator.dart';

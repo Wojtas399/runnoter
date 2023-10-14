@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/additional_model/blood_parameter.dart';
+import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/entity/blood_test.dart';
 import 'package:runnoter/data/repository_impl/blood_test_repository_impl.dart';
-import 'package:runnoter/domain/additional_model/custom_exception.dart';
 
 import '../../creators/blood_test_creator.dart';
 import '../../creators/blood_test_dto_creator.dart';
