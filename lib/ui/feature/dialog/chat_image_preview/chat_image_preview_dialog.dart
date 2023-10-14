@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/entity/message_image.dart';
-import '../../../../domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
+import 'cubit/chat_image_preview_cubit.dart';
 import '../../../component/loading_info_component.dart';
 import 'chat_image_preview_all_images.dart';
 import 'chat_image_preview_gallery.dart';

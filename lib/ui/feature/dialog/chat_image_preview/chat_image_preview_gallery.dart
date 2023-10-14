@@ -6,7 +6,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import '../../../../data/entity/message_image.dart';
-import '../../../../domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
+import 'cubit/chat_image_preview_cubit.dart';
 
 class ChatImagePreviewSelectedImage extends StatefulWidget {
   const ChatImagePreviewSelectedImage({super.key});
