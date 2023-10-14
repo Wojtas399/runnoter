@@ -7,9 +7,9 @@ import 'package:rxdart/rxdart.dart';
 import '../../../data/entity/message.dart';
 import '../../../data/entity/message_image.dart';
 import '../../../data/interface/repository/message_image_repository.dart';
+import '../../../data/interface/repository/message_repository.dart';
 import '../../../dependency_injection.dart';
 import '../../extensions/message_images_extensions.dart';
-import '../../repository/message_repository.dart';
 
 part 'chat_image_preview_state.dart';
 

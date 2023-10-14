@@ -7,8 +7,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/entity/message.dart';
 import 'package:runnoter/data/entity/message_image.dart';
 import 'package:runnoter/data/interface/repository/message_image_repository.dart';
+import 'package:runnoter/data/interface/repository/message_repository.dart';
 import 'package:runnoter/domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
-import 'package:runnoter/domain/repository/message_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../creators/message_creator.dart';

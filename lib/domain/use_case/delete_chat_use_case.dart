@@ -1,7 +1,7 @@
 import '../../data/interface/repository/chat_repository.dart';
 import '../../data/interface/repository/message_image_repository.dart';
+import '../../data/interface/repository/message_repository.dart';
 import '../../dependency_injection.dart';
-import '../repository/message_repository.dart';
 
 class DeleteChatUseCase {
   final ChatRepository _chatRepository;

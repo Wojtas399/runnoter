@@ -1,4 +1,4 @@
-import '../../data/entity/message.dart';
+import '../../entity/message.dart';
 
 abstract interface class MessageRepository {
   Future<Message?> loadMessageById({required String messageId});

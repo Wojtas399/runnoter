@@ -12,9 +12,9 @@ import '../../../data/entity/message_image.dart';
 import '../../../data/entity/person.dart';
 import '../../../data/interface/repository/chat_repository.dart';
 import '../../../data/interface/repository/message_image_repository.dart';
+import '../../../data/interface/repository/message_repository.dart';
 import '../../../dependency_injection.dart';
 import '../../extensions/message_images_extensions.dart';
-import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 
