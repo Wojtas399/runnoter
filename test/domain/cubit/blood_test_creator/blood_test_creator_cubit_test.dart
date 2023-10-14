@@ -4,11 +4,11 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/entity/blood_test.dart';
 import 'package:runnoter/data/entity/user.dart';
+import 'package:runnoter/data/interface/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
-import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 
 import '../../../creators/blood_test_creator.dart';

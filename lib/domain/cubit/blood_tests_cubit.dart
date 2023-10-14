@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../data/entity/blood_test.dart';
+import '../../data/interface/repository/blood_test_repository.dart';
 import '../../dependency_injection.dart';
 import '../additional_model/elements_from_year.dart';
-import '../repository/blood_test_repository.dart';
 
 class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
   final String userId;

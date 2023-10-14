@@ -2,6 +2,7 @@ import 'package:firebase/firebase.dart';
 import 'package:get_it/get_it.dart';
 
 import 'common/date_service.dart';
+import 'data/interface/repository/blood_test_repository.dart';
 import 'data/repository_impl/blood_test_repository_impl.dart';
 import 'data/repository_impl/chat_repository_impl.dart';
 import 'data/repository_impl/health_measurement_repository_impl.dart';
@@ -14,7 +15,6 @@ import 'data/repository_impl/workout_repository_impl.dart';
 import 'data/service_impl/auth_service_impl.dart';
 import 'data/service_impl/coaching_request_service_impl.dart';
 import 'domain/cubit/date_range_manager_cubit.dart';
-import 'domain/repository/blood_test_repository.dart';
 import 'domain/repository/chat_repository.dart';
 import 'domain/repository/health_measurement_repository.dart';
 import 'domain/repository/message_image_repository.dart';
