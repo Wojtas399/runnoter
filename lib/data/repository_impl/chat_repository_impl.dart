@@ -5,7 +5,7 @@ import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
-import '../../domain/additional_model/state_repository.dart';
+import '../additional_model/state_repository.dart';
 import '../entity/chat.dart';
 import '../interface/repository/chat_repository.dart';
 import '../mapper/chat_mapper.dart';

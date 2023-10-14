@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
-import '../../domain/additional_model/state_repository.dart';
+import '../additional_model/state_repository.dart';
 import '../entity/person.dart';
 import '../entity/user.dart';
 import '../interface/repository/person_repository.dart';
