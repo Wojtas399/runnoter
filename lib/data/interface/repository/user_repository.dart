@@ -1,5 +1,5 @@
-import '../../data/entity/user.dart';
-import '../additional_model/settings.dart';
+import '../../../domain/additional_model/settings.dart';
+import '../../entity/user.dart';
 
 abstract class UserRepository {
   Stream<User?> getUserById({required String userId});

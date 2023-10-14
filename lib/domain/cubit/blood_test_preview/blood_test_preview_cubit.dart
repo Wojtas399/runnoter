@@ -7,9 +7,9 @@ import 'package:rxdart/rxdart.dart';
 import '../../../data/entity/blood_test.dart';
 import '../../../data/entity/user.dart';
 import '../../../data/interface/repository/blood_test_repository.dart';
+import '../../../data/interface/repository/user_repository.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/blood_parameter.dart';
-import '../../repository/user_repository.dart';
 
 part 'blood_test_preview_state.dart';
 
