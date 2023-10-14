@@ -13,8 +13,8 @@ import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/data/interface/repository/chat_repository.dart';
 import 'package:runnoter/data/interface/repository/message_image_repository.dart';
 import 'package:runnoter/data/interface/repository/message_repository.dart';
+import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
-import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:rxdart/rxdart.dart';
 

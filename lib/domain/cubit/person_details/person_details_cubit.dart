@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/entity/person.dart';
+import '../../../data/interface/repository/person_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../repository/person_repository.dart';
 import 'person_details_state.dart';
 
 class PersonDetailsCubit extends Cubit<PersonDetailsState> {

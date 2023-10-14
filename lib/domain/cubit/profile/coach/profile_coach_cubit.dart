@@ -4,13 +4,13 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../data/entity/person.dart';
 import '../../../../data/entity/user.dart';
+import '../../../../data/interface/repository/person_repository.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/coaching_request.dart';
 import '../../../additional_model/coaching_request_with_person.dart';
 import '../../../additional_model/cubit_state.dart';
 import '../../../additional_model/cubit_status.dart';
 import '../../../additional_model/cubit_with_status.dart';
-import '../../../repository/person_repository.dart';
 import '../../../repository/user_repository.dart';
 import '../../../service/auth_service.dart';
 import '../../../service/coaching_request_service.dart';
