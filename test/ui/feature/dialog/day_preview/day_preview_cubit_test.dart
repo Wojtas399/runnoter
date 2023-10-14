@@ -12,16 +12,16 @@ import 'package:runnoter/data/interface/repository/health_measurement_repository
 import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
-import 'package:runnoter/domain/cubit/day_preview/day_preview_cubit.dart';
+import 'package:runnoter/ui/feature/dialog/day_preview/cubit/day_preview_cubit.dart';
 
-import '../../../creators/health_measurement_creator.dart';
-import '../../../creators/race_creator.dart';
-import '../../../creators/workout_creator.dart';
-import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
-import '../../../mock/domain/repository/mock_race_repository.dart';
-import '../../../mock/domain/repository/mock_workout_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../creators/health_measurement_creator.dart';
+import '../../../../creators/race_creator.dart';
+import '../../../../creators/workout_creator.dart';
+import '../../../../mock/common/mock_date_service.dart';
+import '../../../../mock/domain/repository/mock_health_measurement_repository.dart';
+import '../../../../mock/domain/repository/mock_race_repository.dart';
+import '../../../../mock/domain/repository/mock_workout_repository.dart';
+import '../../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

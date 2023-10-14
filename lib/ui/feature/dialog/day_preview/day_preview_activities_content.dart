@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/race.dart';
 import '../../../../data/entity/workout.dart';
-import '../../../../domain/cubit/day_preview/day_preview_cubit.dart';
+import 'cubit/day_preview_cubit.dart';
 import '../../../component/activity_item_component.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/loading_info_component.dart';

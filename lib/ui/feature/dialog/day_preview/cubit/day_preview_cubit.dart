@@ -4,15 +4,15 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../common/date_service.dart';
-import '../../../data/entity/health_measurement.dart';
-import '../../../data/entity/race.dart';
-import '../../../data/entity/workout.dart';
-import '../../../data/interface/repository/health_measurement_repository.dart';
-import '../../../data/interface/repository/race_repository.dart';
-import '../../../data/interface/repository/workout_repository.dart';
-import '../../../data/interface/service/auth_service.dart';
-import '../../../dependency_injection.dart';
+import '../../../../../common/date_service.dart';
+import '../../../../../data/entity/health_measurement.dart';
+import '../../../../../data/entity/race.dart';
+import '../../../../../data/entity/workout.dart';
+import '../../../../../data/interface/repository/health_measurement_repository.dart';
+import '../../../../../data/interface/repository/race_repository.dart';
+import '../../../../../data/interface/repository/workout_repository.dart';
+import '../../../../../data/interface/service/auth_service.dart';
+import '../../../../../dependency_injection.dart';
 
 part 'day_preview_state.dart';
 
