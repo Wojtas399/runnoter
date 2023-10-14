@@ -7,12 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 import 'dependency_injection.dart';
-import 'presentation/config/navigation/router.dart';
-import 'presentation/config/theme.dart';
-import 'presentation/service/distance_unit_service.dart';
-import 'presentation/service/language_service.dart';
-import 'presentation/service/pace_unit_service.dart';
-import 'presentation/service/theme_service.dart';
+import 'ui/config/navigation/router.dart';
+import 'ui/config/theme.dart';
+import 'ui/service/distance_unit_service.dart';
+import 'ui/service/language_service.dart';
+import 'ui/service/pace_unit_service.dart';
+import 'ui/service/theme_service.dart';
 
 class App extends StatelessWidget {
   const App({super.key});

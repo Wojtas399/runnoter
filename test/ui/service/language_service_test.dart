@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:runnoter/presentation/service/language_service.dart';
+import 'package:runnoter/ui/service/language_service.dart';
 
 void main() {
   LanguageService createLanguageService() => LanguageService();

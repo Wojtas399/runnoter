@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/additional_model/blood_parameter.dart';
 import 'package:runnoter/data/entity/user.dart';
-import 'package:runnoter/presentation/service/blood_parameter_service.dart';
+import 'package:runnoter/ui/service/blood_parameter_service.dart';
 
 void main() {
   test(

@@ -30,7 +30,7 @@ import 'domain/use_case/delete_chat_use_case.dart';
 import 'domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import 'domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'domain/use_case/load_chat_id_use_case.dart';
-import 'presentation/config/navigation/router.dart';
+import 'ui/config/navigation/router.dart';
 
 final getIt = GetIt.I;
 

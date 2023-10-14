@@ -1,6 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:runnoter/presentation/service/theme_service.dart';
+import 'package:runnoter/ui/service/theme_service.dart';
 
 void main() {
   ThemeService createThemeService() => ThemeService();
