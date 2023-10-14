@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../data/entity/person.dart';
 import '../../../dependency_injection.dart';
-import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 import '../../use_case/load_chat_id_use_case.dart';

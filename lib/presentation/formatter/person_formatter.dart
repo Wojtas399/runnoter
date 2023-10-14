@@ -1,4 +1,4 @@
-import '../../domain/entity/person.dart';
+import '../../data/entity/person.dart';
 
 extension PersonFormatter on Person {
   String toFullName() => '$name $surname';

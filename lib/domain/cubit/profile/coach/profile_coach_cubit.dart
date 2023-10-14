@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../data/entity/person.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/coaching_request.dart';
 import '../../../additional_model/coaching_request_with_person.dart';
 import '../../../additional_model/cubit_state.dart';
 import '../../../additional_model/cubit_status.dart';
 import '../../../additional_model/cubit_with_status.dart';
-import '../../../entity/person.dart';
 import '../../../entity/user.dart';
 import '../../../repository/person_repository.dart';
 import '../../../repository/user_repository.dart';

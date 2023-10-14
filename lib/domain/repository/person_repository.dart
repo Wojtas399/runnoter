@@ -1,4 +1,4 @@
-import '../entity/person.dart';
+import '../../data/entity/person.dart';
 import '../entity/user.dart';
 
 abstract interface class PersonRepository {

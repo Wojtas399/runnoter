@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../data/entity/person.dart';
 import '../../../dependency_injection.dart';
-import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
 import 'person_details_state.dart';
 

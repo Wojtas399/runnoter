@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/clients/clients_cubit.dart';
-import 'package:runnoter/domain/entity/person.dart';
 
 import '../../../creators/person_creator.dart';
 

@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/entity/person.dart';
+import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 Person createPerson({

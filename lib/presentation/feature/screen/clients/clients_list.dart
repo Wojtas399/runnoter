@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../data/entity/person.dart';
 import '../../../../domain/cubit/clients/clients_cubit.dart';
 import '../../../../domain/cubit/notifications/notifications_cubit.dart';
-import '../../../../domain/entity/person.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';

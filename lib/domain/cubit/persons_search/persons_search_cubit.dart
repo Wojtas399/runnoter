@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../data/entity/person.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/custom_exception.dart';
-import '../../entity/person.dart';
 import '../../entity/user.dart';
 import '../../repository/person_repository.dart';
 import '../../repository/user_repository.dart';

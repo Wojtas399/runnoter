@@ -2,8 +2,8 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/data/repository_impl/person_repository_impl.dart';
-import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 import '../../creators/person_creator.dart';
