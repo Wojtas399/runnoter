@@ -2,11 +2,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/race_creator/race_creator_cubit.dart';
-import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 
 import '../../../creators/race_creator.dart';

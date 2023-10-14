@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/race.dart';
+import '../entity/race.dart';
 import 'activity_status_mapper.dart';
 
 Race mapRaceFromDto(RaceDto raceDto) => Race(

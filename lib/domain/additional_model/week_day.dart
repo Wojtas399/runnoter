@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../data/entity/health_measurement.dart';
-import '../entity/race.dart';
+import '../../data/entity/race.dart';
 import '../entity/workout.dart';
 
 class WeekDay extends Equatable {

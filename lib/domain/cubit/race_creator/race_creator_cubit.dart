@@ -1,10 +1,10 @@
+import '../../../data/entity/race.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/custom_exception.dart';
-import '../../entity/race.dart';
 import '../../repository/race_repository.dart';
 
 part 'race_creator_state.dart';

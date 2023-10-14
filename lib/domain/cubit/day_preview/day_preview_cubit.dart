@@ -6,8 +6,8 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
 import '../../../data/entity/health_measurement.dart';
+import '../../../data/entity/race.dart';
 import '../../../dependency_injection.dart';
-import '../../entity/race.dart';
 import '../../entity/workout.dart';
 import '../../repository/health_measurement_repository.dart';
 import '../../repository/race_repository.dart';
