@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/entity/message_image.dart';
+import 'package:runnoter/data/entity/message_image.dart';
 import 'package:runnoter/domain/repository/message_image_repository.dart';
 
 class MockMessageImageRepository extends Mock

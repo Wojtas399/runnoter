@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import '../entity/message_image.dart';
+import '../../data/entity/message_image.dart';
 
 abstract interface class MessageImageRepository {
   Stream<List<MessageImage>> getImagesByMessageId({required String messageId});

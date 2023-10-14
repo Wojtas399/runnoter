@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/message_image.dart';
+import '../entity/message_image.dart';
 
 MessageImage mapMessageImageFromDto({
   required final MessageImageDto messageImageDto,

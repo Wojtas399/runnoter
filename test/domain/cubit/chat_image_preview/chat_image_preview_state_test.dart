@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/entity/message_image.dart';
 import 'package:runnoter/domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
-import 'package:runnoter/domain/entity/message_image.dart';
 
 import '../../../creators/message_image_creator.dart';
 

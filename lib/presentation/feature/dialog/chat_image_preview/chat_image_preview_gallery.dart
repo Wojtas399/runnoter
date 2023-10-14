@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import '../../../../data/entity/message_image.dart';
 import '../../../../domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
-import '../../../../domain/entity/message_image.dart';
 
 class ChatImagePreviewSelectedImage extends StatefulWidget {
   const ChatImagePreviewSelectedImage({super.key});

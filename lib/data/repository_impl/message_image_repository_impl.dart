@@ -7,8 +7,8 @@ import 'package:rxdart/rxdart.dart';
 import '../../dependency_injection.dart';
 import '../../domain/additional_model/custom_exception.dart';
 import '../../domain/additional_model/state_repository.dart';
-import '../../domain/entity/message_image.dart';
 import '../../domain/repository/message_image_repository.dart';
+import '../entity/message_image.dart';
 import '../mapper/message_image_mapper.dart';
 
 class MessageImageRepositoryImpl extends StateRepository<MessageImage>
