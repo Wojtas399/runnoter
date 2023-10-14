@@ -1,10 +1,10 @@
 import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../data/entity/user.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/custom_exception.dart';
-import '../../entity/user.dart';
 import '../../repository/user_repository.dart';
 
 part 'sign_in_state.dart';

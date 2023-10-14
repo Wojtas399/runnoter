@@ -1,5 +1,5 @@
 import '../../domain/entity/entity.dart';
-import '../../domain/entity/user.dart';
+import 'user.dart';
 
 class Person extends Entity {
   final AccountType accountType;

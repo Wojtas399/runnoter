@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../data/entity/user.dart';
 import '../../../../domain/additional_model/blood_parameter.dart';
 import '../../../../domain/cubit/blood_test_preview/blood_test_preview_cubit.dart';
-import '../../../../domain/entity/user.dart';
 import '../../../component/blood_parameter_results_list_component.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';

@@ -3,9 +3,9 @@ import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
-import '../../domain/entity/user.dart';
 import '../../domain/repository/person_repository.dart';
 import '../entity/person.dart';
+import '../entity/user.dart';
 import '../mapper/account_type_mapper.dart';
 import '../mapper/person_mapper.dart';
 

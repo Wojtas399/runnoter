@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/domain/use_case/add_user_data_use_case.dart';
 
 class MockAddUserDataUseCase extends Mock implements AddUserDataUseCase {

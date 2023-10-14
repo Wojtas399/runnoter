@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/profile/identities/profile_identities_cubit.dart';
-import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late ProfileIdentitiesState state;

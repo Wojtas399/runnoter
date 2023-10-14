@@ -1,9 +1,9 @@
+import '../../../data/entity/user.dart';
 import '../../../dependency_injection.dart';
 import '../../../presentation/service/validation_service.dart' as validator;
-import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
-import '../../entity/user.dart';
 import '../../service/auth_service.dart';
 import '../../use_case/add_user_data_use_case.dart';
 

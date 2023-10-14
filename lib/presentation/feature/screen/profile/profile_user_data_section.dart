@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+import '../../../../data/entity/user.dart';
 import '../../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
-import '../../../../domain/entity/user.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../component/value_with_label_and_icon_component.dart';

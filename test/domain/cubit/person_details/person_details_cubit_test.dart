@@ -5,9 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/entity/person.dart';
+import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/domain/cubit/person_details/person_details_cubit.dart';
 import 'package:runnoter/domain/cubit/person_details/person_details_state.dart';
-import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 
 import '../../../creators/person_creator.dart';

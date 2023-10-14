@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/entity/blood_test.dart';
+import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
-import 'package:runnoter/domain/entity/user.dart';
 
 import '../../../creators/blood_test_creator.dart';
 

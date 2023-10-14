@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 
-import '../../domain/entity/user.dart';
+import '../entity/user.dart';
 
 AccountType mapAccountTypeFromDto(firebase.AccountType dtoAccountType) =>
     switch (dtoAccountType) {

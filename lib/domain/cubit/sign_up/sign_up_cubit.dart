@@ -1,6 +1,6 @@
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/entity/user.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../data/entity/user.dart';
 import '../../../dependency_injection.dart';
 import '../../../presentation/service/validation_service.dart' as validator;
 import '../../additional_model/cubit_state.dart';

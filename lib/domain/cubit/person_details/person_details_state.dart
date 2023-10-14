@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../entity/user.dart';
+import '../../../data/entity/user.dart';
 
 class PersonDetailsState extends Equatable {
   final Gender? gender;

@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../data/entity/person.dart';
+import '../../../data/entity/user.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/coaching_request_with_person.dart';
-import '../../entity/user.dart';
 import '../../repository/chat_repository.dart';
 import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';

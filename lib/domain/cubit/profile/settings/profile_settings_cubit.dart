@@ -6,9 +6,9 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
+import '../../../../data/entity/user.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/settings.dart';
-import '../../../entity/user.dart';
 
 part 'profile_settings_state.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/entity/user.dart';
+import '../../data/entity/user.dart';
 
 extension AccountTypeFormatter on AccountType {
   String toUIFormat(BuildContext context) => switch (this) {

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/required_data_completion/required_data_completion_cubit.dart';
-import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late RequiredDataCompletionState state;

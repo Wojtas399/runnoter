@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/domain/cubit/person_details/person_details_state.dart';
-import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late PersonDetailsState state;

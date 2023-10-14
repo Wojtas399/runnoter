@@ -1,6 +1,6 @@
+import '../../data/entity/user.dart';
 import '../../dependency_injection.dart';
 import '../additional_model/settings.dart';
-import '../entity/user.dart';
 import '../repository/user_repository.dart';
 
 class AddUserDataUseCase {

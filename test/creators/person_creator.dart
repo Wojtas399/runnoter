@@ -1,5 +1,5 @@
 import 'package:runnoter/data/entity/person.dart';
-import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/data/entity/user.dart';
 
 Person createPerson({
   String id = '',

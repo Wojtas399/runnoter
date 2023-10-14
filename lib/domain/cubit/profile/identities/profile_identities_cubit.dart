@@ -4,9 +4,9 @@ import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../../domain/additional_model/cubit_status.dart';
-import '../../../../../domain/entity/user.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
+import '../../../../data/entity/user.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/cubit_state.dart';
 import '../../../additional_model/cubit_with_status.dart';

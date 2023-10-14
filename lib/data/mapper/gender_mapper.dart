@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 
-import '../../domain/entity/user.dart';
+import '../entity/user.dart';
 
 Gender mapGenderFromDto(firebase.Gender dtoGender) => switch (dtoGender) {
       firebase.Gender.male => Gender.male,
