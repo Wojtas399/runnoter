@@ -7,10 +7,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
-import 'package:runnoter/domain/cubit/workout_preview/workout_preview_cubit.dart';
+import 'package:runnoter/ui/feature/screen/workout_preview/cubit/workout_preview_cubit.dart';
 
-import '../../../creators/workout_creator.dart';
-import '../../../mock/domain/repository/mock_workout_repository.dart';
+import '../../../../creators/workout_creator.dart';
+import '../../../../mock/domain/repository/mock_workout_repository.dart';
 
 void main() {
   final workoutRepository = MockWorkoutRepository();
