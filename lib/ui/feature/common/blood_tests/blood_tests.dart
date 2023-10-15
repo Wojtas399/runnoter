@@ -14,7 +14,7 @@ import '../../../config/navigation/router.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/navigator_service.dart';
-import '../../screen/blood_tests/blood_tests_cubit.dart';
+import 'blood_tests_cubit.dart';
 
 class BloodTests extends StatelessWidget {
   final String userId;

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/race.dart';
-import '../../../../domain/cubit/races_cubit.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/empty_content_info_component.dart';
@@ -17,6 +16,7 @@ import '../../../extension/context_extensions.dart';
 import '../../../formatter/activity_status_formatter.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/navigator_service.dart';
+import 'races_cubit.dart';
 
 class Races extends StatelessWidget {
   final String userId;

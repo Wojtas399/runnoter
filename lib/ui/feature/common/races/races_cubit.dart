@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/entity/race.dart';
-import '../../data/interface/repository/race_repository.dart';
-import '../../dependency_injection.dart';
-import '../additional_model/elements_from_year.dart';
+import '../../../../data/entity/race.dart';
+import '../../../../data/interface/repository/race_repository.dart';
+import '../../../../dependency_injection.dart';
+import '../../../../domain/additional_model/elements_from_year.dart';
 
 class RacesCubit extends Cubit<List<RacesFromYear>?> {
   final String userId;
