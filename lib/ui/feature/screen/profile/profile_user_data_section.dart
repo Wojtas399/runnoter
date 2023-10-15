@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../../data/entity/user.dart';
-import '../../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../component/value_with_label_and_icon_component.dart';
@@ -13,6 +12,7 @@ import '../../../formatter/date_formatter.dart';
 import '../../../formatter/gender_formatter.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/validation_service.dart';
+import 'cubit/identities/profile_identities_cubit.dart';
 import 'profile_date_of_birth_dialog.dart';
 import 'profile_email_dialog.dart';
 import 'profile_gender_dialog.dart';

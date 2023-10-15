@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/user.dart';
-import '../../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../service/navigator_service.dart';
+import 'cubit/identities/profile_identities_cubit.dart';
 
 class ProfileGenderDialog extends StatelessWidget {
   const ProfileGenderDialog({super.key});

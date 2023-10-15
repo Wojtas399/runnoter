@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/additional_model/settings.dart';
-import '../../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../formatter/settings_formatter.dart';
 import '../../../service/navigator_service.dart';
+import 'cubit/settings/profile_settings_cubit.dart';
 
 class ProfileLanguageDialog extends StatelessWidget {
   const ProfileLanguageDialog({super.key});

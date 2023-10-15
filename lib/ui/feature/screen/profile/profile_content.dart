@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/responsive_layout_component.dart';
+import 'cubit/identities/profile_identities_cubit.dart';
 import 'profile_coach_section.dart';
 import 'profile_settings_section.dart';
 import 'profile_user_data_section.dart';

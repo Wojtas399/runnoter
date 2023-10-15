@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/cubit/internet_connection_cubit.dart';
 import '../../../../domain/cubit/notifications/notifications_cubit.dart';
-import '../../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/loading_info_component.dart';
@@ -14,6 +13,7 @@ import '../../../config/navigation/router.dart';
 import '../../../feature/dialog/person_details/person_details_dialog.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
+import 'cubit/coach/profile_coach_cubit.dart';
 import 'profile_no_coach_content.dart';
 
 class ProfileCoachSection extends StatelessWidget {

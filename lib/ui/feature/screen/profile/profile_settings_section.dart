@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/additional_model/settings.dart' as settings;
-import '../../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../component/value_with_label_and_icon_component.dart';
@@ -11,6 +10,7 @@ import '../../../formatter/distance_unit_formatter.dart';
 import '../../../formatter/pace_unit_formatter.dart';
 import '../../../formatter/settings_formatter.dart';
 import '../../../service/dialog_service.dart';
+import 'cubit/settings/profile_settings_cubit.dart';
 import 'profile_distance_unit_dialog.dart';
 import 'profile_language_dialog.dart';
 import 'profile_pace_unit_dialog.dart';
