@@ -5,11 +5,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/domain/cubit/required_data_completion/required_data_completion_cubit.dart';
 import 'package:runnoter/domain/use_case/add_user_data_use_case.dart';
+import 'package:runnoter/ui/feature/dialog/required_data_completion/cubit/required_data_completion_cubit.dart';
 
-import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/use_case/mock_add_user_data_use_case.dart';
+import '../../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../mock/domain/use_case/mock_add_user_data_use_case.dart';
 
 void main() {
   final authService = MockAuthService();
