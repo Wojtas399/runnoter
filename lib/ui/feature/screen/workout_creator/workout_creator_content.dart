@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/workout.dart';
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/cubit/workout_creator/workout_creator_cubit.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/date_selector_component.dart';
@@ -14,6 +13,7 @@ import '../../../component/loading_info_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/utils.dart';
+import 'cubit/workout_creator_cubit.dart';
 import 'workout_creator_workout_stages.dart';
 
 class WorkoutCreatorContent extends StatelessWidget {

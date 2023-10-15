@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/additional_model/workout_stage.dart';
-import '../../../../domain/cubit/workout_creator/workout_creator_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/label_text_components.dart';
 import '../../../feature/dialog/workout_stage_creator/workout_stage_creator_dialog.dart';
 import '../../../service/dialog_service.dart';
+import 'cubit/workout_creator_cubit.dart';
 import 'workout_creator_workout_stage_item.dart';
 
 class WorkoutCreatorWorkoutStages extends StatelessWidget {
