@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../data/entity/health_measurement.dart';
-import '../../data/interface/repository/health_measurement_repository.dart';
-import '../../data/interface/service/auth_service.dart';
-import '../../dependency_injection.dart';
+import '../../../../data/entity/health_measurement.dart';
+import '../../../../data/interface/repository/health_measurement_repository.dart';
+import '../../../../data/interface/service/auth_service.dart';
+import '../../../../dependency_injection.dart';
 
 class HealthMeasurementsCubit extends Cubit<List<HealthMeasurement>?> {
   final AuthService _authService;

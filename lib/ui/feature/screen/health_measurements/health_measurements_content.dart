@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/health_measurement.dart';
-import '../../../../domain/cubit/health_measurements_cubit.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/text/label_text_components.dart';
 import '../../../feature/dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../../service/dialog_service.dart';
+import 'health_measurements_cubit.dart';
 import 'health_measurements_item.dart';
 
 class HealthMeasurementsContent extends StatelessWidget {
