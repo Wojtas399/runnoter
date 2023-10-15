@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/cubit/sign_in/sign_in_cubit.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../config/navigation/router.dart';
 import '../../../feature/dialog/email_verification/email_verification_dialog.dart';
 import '../../../feature/dialog/required_data_completion/required_data_completion_dialog.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
+import 'cubit/sign_in_cubit.dart';
 import 'sign_in_content.dart';
 
 @RoutePage()
