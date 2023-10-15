@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/blood_test.dart';
-import '../../../../domain/cubit/blood_tests_cubit.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/empty_content_info_component.dart';
@@ -15,6 +14,7 @@ import '../../../config/navigation/router.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/navigator_service.dart';
+import '../../screen/blood_tests/blood_tests_cubit.dart';
 
 class BloodTests extends StatelessWidget {
   final String userId;
