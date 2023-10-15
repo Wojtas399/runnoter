@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/additional_model/activity_status.dart';
-import 'package:runnoter/domain/cubit/race_preview/race_preview_cubit.dart';
+import 'package:runnoter/ui/feature/screen/race_preview/cubit/race_preview_cubit.dart';
 
 void main() {
   late RacePreviewState state;
