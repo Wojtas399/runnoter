@@ -7,13 +7,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../data/entity/message_image.dart';
-import '../../../../domain/cubit/chat_gallery_cubit.dart';
 import '../../../component/animated_refresh_indicator.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../service/dialog_service.dart';
 import '../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
+import 'chat_gallery_cubit.dart';
 
 class ChatGallery extends StatelessWidget {
   final String chatId;

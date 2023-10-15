@@ -8,12 +8,12 @@ import 'package:runnoter/data/entity/message.dart';
 import 'package:runnoter/data/entity/message_image.dart';
 import 'package:runnoter/data/interface/repository/message_image_repository.dart';
 import 'package:runnoter/data/interface/repository/message_repository.dart';
-import 'package:runnoter/domain/cubit/chat_gallery_cubit.dart';
+import 'package:runnoter/ui/feature/common/chat_gallery/chat_gallery_cubit.dart';
 
-import '../../creators/message_creator.dart';
-import '../../creators/message_image_creator.dart';
-import '../../mock/domain/repository/mock_message_image_repository.dart';
-import '../../mock/domain/repository/mock_message_repository.dart';
+import '../../../creators/message_creator.dart';
+import '../../../creators/message_image_creator.dart';
+import '../../../mock/domain/repository/mock_message_image_repository.dart';
+import '../../../mock/domain/repository/mock_message_repository.dart';
 
 void main() {
   final messageImageRepository = MockMessageImageRepository();
