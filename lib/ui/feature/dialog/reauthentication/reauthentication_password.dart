@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/cubit/reauthentication/reauthentication_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/password_text_field_component.dart';
 import '../../../service/utils.dart';
+import 'cubit/reauthentication_cubit.dart';
 
 class ReauthenticationPassword extends StatelessWidget {
   const ReauthenticationPassword({super.key});
