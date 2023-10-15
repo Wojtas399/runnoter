@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/decimal_text_input_formatter.dart';
 import '../../../formatter/distance_unit_formatter.dart';
 import '../../../service/utils.dart';
+import 'cubit/workout_stage_creator_cubit.dart';
 
 class WorkoutStageCreatorDistanceStageForm extends StatelessWidget {
   const WorkoutStageCreatorDistanceStageForm({super.key});
