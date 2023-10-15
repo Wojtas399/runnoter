@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/cubit/persons_search/persons_search_cubit.dart';
 import '../../../service/utils.dart';
+import 'cubit/persons_search_cubit.dart';
 
 class PersonsSearchInput extends StatefulWidget {
   const PersonsSearchInput({super.key});
