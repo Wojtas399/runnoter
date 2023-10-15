@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
+import 'cubit/health_measurement_creator_cubit.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';

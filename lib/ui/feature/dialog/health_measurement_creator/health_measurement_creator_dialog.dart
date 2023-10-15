@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
+import 'cubit/health_measurement_creator_cubit.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';

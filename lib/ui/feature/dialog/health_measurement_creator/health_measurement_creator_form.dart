@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
+import 'cubit/health_measurement_creator_cubit.dart';
 import '../../../component/date_selector_component.dart';
 import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
