@@ -7,11 +7,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/person_repository.dart';
-import 'package:runnoter/domain/cubit/person_details/person_details_cubit.dart';
-import 'package:runnoter/domain/cubit/person_details/person_details_state.dart';
+import 'package:runnoter/ui/feature/dialog/person_details/cubit/person_details_cubit.dart';
 
-import '../../../creators/person_creator.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
+import '../../../../creators/person_creator.dart';
+import '../../../../mock/domain/repository/mock_person_repository.dart';
 
 void main() {
   final personRepository = MockPersonRepository();
