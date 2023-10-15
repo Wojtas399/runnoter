@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/additional_model/custom_exception.dart';
-import '../../data/interface/service/auth_service.dart';
-import '../../dependency_injection.dart';
+import '../../../../data/additional_model/custom_exception.dart';
+import '../../../../data/interface/service/auth_service.dart';
+import '../../../../dependency_injection.dart';
 
 class EmailVerificationCubit extends Cubit<EmailVerificationState> {
   final AuthService _authService;

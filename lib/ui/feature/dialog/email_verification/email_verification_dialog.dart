@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/cubit/email_verification_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
@@ -11,6 +10,7 @@ import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/router.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
+import 'email_verification_cubit.dart';
 
 class EmailVerificationDialog extends StatelessWidget {
   const EmailVerificationDialog({super.key});
