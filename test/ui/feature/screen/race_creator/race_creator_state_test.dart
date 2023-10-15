@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/domain/cubit/race_creator/race_creator_cubit.dart';
+import 'package:runnoter/ui/feature/screen/race_creator/cubit/race_creator_cubit.dart';
 
-import '../../../creators/race_creator.dart';
+import '../../../../creators/race_creator.dart';
 
 void main() {
   late RaceCreatorState state;

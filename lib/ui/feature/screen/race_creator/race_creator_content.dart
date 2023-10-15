@@ -4,13 +4,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/race.dart';
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/cubit/race_creator/race_creator_cubit.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../service/dialog_service.dart';
+import 'cubit/race_creator_cubit.dart';
 import 'race_creator_form.dart';
 
 class RaceCreatorContent extends StatelessWidget {

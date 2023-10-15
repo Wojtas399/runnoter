@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../../domain/cubit/race_creator/race_creator_cubit.dart';
 import '../../../component/duration_input_component.dart';
 import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
@@ -13,6 +12,7 @@ import '../../../formatter/decimal_text_input_formatter.dart';
 import '../../../formatter/distance_unit_formatter.dart';
 import '../../../formatter/string_formatter.dart';
 import '../../../service/utils.dart';
+import 'cubit/race_creator_cubit.dart';
 import 'race_creator_date.dart';
 
 class RaceCreatorForm extends StatelessWidget {
