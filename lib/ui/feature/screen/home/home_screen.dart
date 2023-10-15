@@ -9,7 +9,7 @@ import '../../../../dependency_injection.dart';
 import '../../../../domain/additional_model/coaching_request_with_person.dart';
 import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';
-import '../../../../domain/cubit/home/home_cubit.dart';
+import 'cubit/home_cubit.dart';
 import '../../../../domain/cubit/notifications/notifications_cubit.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../config/navigation/router.dart';
