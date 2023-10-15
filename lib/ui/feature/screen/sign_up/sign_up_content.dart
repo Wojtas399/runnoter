@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/cubit/sign_up/sign_up_cubit.dart';
 import '../../../component/app_bar_with_logo.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/body/small_body_component.dart';
@@ -11,6 +10,7 @@ import '../../../component/padding/paddings_24.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/headline_text_components.dart';
 import '../../../service/navigator_service.dart';
+import 'cubit/sign_up_cubit.dart';
 import 'sign_up_form.dart';
 
 class SignUpContent extends StatelessWidget {

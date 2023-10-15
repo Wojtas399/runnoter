@@ -1,12 +1,12 @@
-import '../../../../domain/additional_model/cubit_status.dart';
-import '../../../data/additional_model/custom_exception.dart';
-import '../../../data/entity/user.dart';
-import '../../../data/interface/service/auth_service.dart';
-import '../../../dependency_injection.dart';
-import '../../../ui/service/validation_service.dart' as validator;
-import '../../additional_model/cubit_state.dart';
-import '../../additional_model/cubit_with_status.dart';
-import '../../use_case/add_user_data_use_case.dart';
+import '../../../../../data/additional_model/custom_exception.dart';
+import '../../../../../data/entity/user.dart';
+import '../../../../../data/interface/service/auth_service.dart';
+import '../../../../../dependency_injection.dart';
+import '../../../../../domain/additional_model/cubit_state.dart';
+import '../../../../../domain/additional_model/cubit_status.dart';
+import '../../../../../domain/additional_model/cubit_with_status.dart';
+import '../../../../../domain/use_case/add_user_data_use_case.dart';
+import '../../../../../ui/service/validation_service.dart' as validator;
 
 part 'sign_up_state.dart';
 

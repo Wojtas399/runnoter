@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/user.dart';
-import '../../../../domain/cubit/sign_up/sign_up_cubit.dart';
 import '../../../component/date_of_birth_picker_component.dart';
 import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/password_text_field_component.dart';
 import '../../../component/two_options_component.dart';
 import '../../../service/utils.dart';
+import 'cubit/sign_up_cubit.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({super.key});
