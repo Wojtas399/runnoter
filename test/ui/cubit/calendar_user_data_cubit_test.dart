@@ -13,7 +13,7 @@ import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
-import 'package:runnoter/domain/cubit/calendar_user_data_cubit.dart';
+import 'package:runnoter/ui/cubit/calendar_user_data_cubit.dart';
 
 import '../../creators/activity_status_creator.dart';
 import '../../creators/health_measurement_creator.dart';

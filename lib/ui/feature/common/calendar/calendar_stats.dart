@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/shimmer/shimmer_container.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/label_text_components.dart';
+import '../../../cubit/calendar_user_data_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../extension/double_extensions.dart';
 import '../../../formatter/distance_unit_formatter.dart';
