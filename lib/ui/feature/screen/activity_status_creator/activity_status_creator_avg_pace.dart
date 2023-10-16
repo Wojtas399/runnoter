@@ -8,12 +8,12 @@ import '../../../../data/additional_model/settings.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/label_text_components.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/decimal_text_input_formatter.dart';
 import '../../../formatter/minutes_or_seconds_input_formatter.dart';
 import '../../../formatter/pace_unit_formatter.dart';
 import '../../../service/pace_unit_service.dart';
-import 'cubit/activity_status_creator_cubit.dart';
 
 class ActivityStatusCreatorAvgPace extends StatelessWidget {
   const ActivityStatusCreatorAvgPace({super.key});

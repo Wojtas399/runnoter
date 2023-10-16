@@ -5,9 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../component/page_not_found_component.dart';
+import '../../../cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../../service/dialog_service.dart';
 import 'activity_status_creator_content.dart';
-import 'cubit/activity_status_creator_cubit.dart';
 
 @RoutePage()
 class ActivityStatusCreatorScreen extends StatelessWidget {

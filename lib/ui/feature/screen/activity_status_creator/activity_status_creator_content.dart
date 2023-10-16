@@ -8,10 +8,10 @@ import '../../../component/body/medium_body_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/padding/paddings_24.dart';
+import '../../../cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../../formatter/activity_status_formatter.dart';
 import '../../../service/dialog_service.dart';
 import 'activity_status_creator_params_form.dart';
-import 'cubit/activity_status_creator_cubit.dart';
 
 class ActivityStatusCreatorContent extends StatelessWidget {
   const ActivityStatusCreatorContent({super.key});
