@@ -5,13 +5,13 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../../../data/entity/activity.dart';
 import '../../../../data/entity/race.dart';
 import '../../../../data/entity/workout.dart';
-import '../../../../domain/additional_model/week_day.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/health_measurement_info_component.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/label_text_components.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/activity_status_formatter.dart';
 import '../../../formatter/date_formatter.dart';
