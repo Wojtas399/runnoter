@@ -24,13 +24,13 @@ import 'data/repository_impl/user_repository_impl.dart';
 import 'data/repository_impl/workout_repository_impl.dart';
 import 'data/service_impl/auth_service_impl.dart';
 import 'data/service_impl/coaching_request_service_impl.dart';
-import 'domain/cubit/date_range_manager_cubit.dart';
 import 'domain/use_case/add_user_data_use_case.dart';
 import 'domain/use_case/delete_chat_use_case.dart';
 import 'domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import 'domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'domain/use_case/load_chat_id_use_case.dart';
 import 'ui/config/navigation/router.dart';
+import 'ui/cubit/date_range_manager_cubit.dart';
 
 final getIt = GetIt.I;
 

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/additional_model/calendar_user_data.dart';
-import 'cubit/calendar_cubit.dart';
 import '../../../../domain/cubit/calendar_user_data_cubit.dart';
-import '../../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../component/body/big_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/date_range_header_component.dart';
@@ -14,6 +12,7 @@ import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/shimmer/shimmer.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/date_range_manager_cubit.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
@@ -22,6 +21,7 @@ import '../../dialog/day_preview/day_preview_dialog_actions.dart';
 import 'calendar_month.dart';
 import 'calendar_stats.dart';
 import 'calendar_week.dart';
+import 'cubit/calendar_cubit.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;

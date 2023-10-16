@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/cubit/date_range_manager_cubit.dart';
+import 'package:runnoter/ui/cubit/date_range_manager_cubit.dart';
 
 import '../../mock/common/mock_date_service.dart';
 

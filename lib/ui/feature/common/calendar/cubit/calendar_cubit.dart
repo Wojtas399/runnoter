@@ -11,7 +11,7 @@ import '../../../../../data/entity/race.dart';
 import '../../../../../data/entity/workout.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../../../domain/additional_model/week_day.dart';
-import '../../../../../domain/cubit/date_range_manager_cubit.dart';
+import '../../../../cubit/date_range_manager_cubit.dart';
 
 part 'calendar_state.dart';
 

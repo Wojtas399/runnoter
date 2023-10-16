@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/cubit/date_range_manager_cubit.dart';
-import 'package:runnoter/domain/cubit/health_stats/health_stats_cubit.dart';
+import 'package:runnoter/ui/cubit/date_range_manager_cubit.dart';
+import 'package:runnoter/ui/cubit/health_stats/health_stats_cubit.dart';
 
 void main() {
   late HealthStatsState state;

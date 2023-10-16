@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../client/cubit/client_cubit.dart';
-import '../../../../domain/cubit/health_stats/health_stats_cubit.dart';
 import '../../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
+import '../../../cubit/health_stats/health_stats_cubit.dart';
+import '../client/cubit/client_cubit.dart';
 import 'client_stats_content.dart';
 
 @RoutePage()

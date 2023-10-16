@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/cubit/date_range_manager_cubit.dart';
+import 'package:runnoter/ui/cubit/date_range_manager_cubit.dart';
 
 class MockDateRangeManagerCubit extends Mock implements DateRangeManagerCubit {
   void mockStream({

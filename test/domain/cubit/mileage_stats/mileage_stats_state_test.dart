@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/cubit/date_range_manager_cubit.dart';
 import 'package:runnoter/domain/cubit/mileage_stats/mileage_stats_cubit.dart';
+import 'package:runnoter/ui/cubit/date_range_manager_cubit.dart';
 
 void main() {
   late MileageStatsState state;
