@@ -9,11 +9,11 @@ import 'package:runnoter/data/additional_model/workout_stage.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/ui/feature/screen/workout_creator/cubit/workout_creator_cubit.dart';
+import 'package:runnoter/ui/cubit/workout_creator/workout_creator_cubit.dart';
 
-import '../../../../creators/workout_creator.dart';
-import '../../../../mock/common/mock_date_service.dart';
-import '../../../../mock/domain/repository/mock_workout_repository.dart';
+import '../../../creators/workout_creator.dart';
+import '../../../mock/common/mock_date_service.dart';
+import '../../../mock/domain/repository/mock_workout_repository.dart';
 
 void main() {
   final workoutRepository = MockWorkoutRepository();

@@ -3,10 +3,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/additional_model/workout_stage.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/ui/feature/screen/workout_creator/cubit/workout_creator_cubit.dart';
+import 'package:runnoter/ui/cubit/workout_creator/workout_creator_cubit.dart';
 
-import '../../../../creators/workout_creator.dart';
-import '../../../../mock/common/mock_date_service.dart';
+import '../../../creators/workout_creator.dart';
+import '../../../mock/common/mock_date_service.dart';
 
 void main() {
   final dateService = MockDateService();

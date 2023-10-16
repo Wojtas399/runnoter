@@ -11,9 +11,9 @@ import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/workout_creator/workout_creator_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/utils.dart';
-import 'cubit/workout_creator_cubit.dart';
 import 'workout_creator_workout_stages.dart';
 
 class WorkoutCreatorContent extends StatelessWidget {
