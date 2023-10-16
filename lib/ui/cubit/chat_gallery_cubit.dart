@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data/entity/message.dart';
-import '../../../../data/entity/message_image.dart';
-import '../../../../data/interface/repository/message_image_repository.dart';
-import '../../../../data/interface/repository/message_repository.dart';
-import '../../../../dependency_injection.dart';
-import '../../../../domain/extensions/message_images_extensions.dart';
+import '../../data/entity/message.dart';
+import '../../data/entity/message_image.dart';
+import '../../data/interface/repository/message_image_repository.dart';
+import '../../data/interface/repository/message_repository.dart';
+import '../../dependency_injection.dart';
+import '../../domain/extensions/message_images_extensions.dart';
 
 class ChatGalleryCubit extends Cubit<List<MessageImage>?> {
   final String chatId;
