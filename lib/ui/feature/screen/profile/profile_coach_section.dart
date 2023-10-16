@@ -10,10 +10,10 @@ import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/router.dart';
 import '../../../cubit/internet_connection_cubit.dart';
 import '../../../cubit/notifications/notifications_cubit.dart';
+import '../../../cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../feature/dialog/person_details/person_details_dialog.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/coach/profile_coach_cubit.dart';
 import 'profile_no_coach_content.dart';
 
 class ProfileCoachSection extends StatelessWidget {

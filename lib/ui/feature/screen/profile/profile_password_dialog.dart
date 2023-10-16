@@ -8,11 +8,11 @@ import '../../../component/padding/paddings_24.dart';
 import '../../../component/password_text_field_component.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/label_text_components.dart';
+import '../../../cubit/profile/identities/profile_identities_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../../../service/validation_service.dart';
-import 'cubit/identities/profile_identities_cubit.dart';
 
 class ProfilePasswordDialog extends StatefulWidget {
   const ProfilePasswordDialog({super.key});

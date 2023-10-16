@@ -9,11 +9,11 @@ import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/label_text_components.dart';
+import '../../../cubit/profile/identities/profile_identities_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../../../service/validation_service.dart';
-import 'cubit/identities/profile_identities_cubit.dart';
 
 class ProfileEmailDialog extends StatefulWidget {
   const ProfileEmailDialog({super.key});

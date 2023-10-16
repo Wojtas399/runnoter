@@ -5,12 +5,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
-import 'package:runnoter/ui/feature/screen/profile/cubit/settings/profile_settings_cubit.dart';
+import 'package:runnoter/ui/cubit/profile/settings/profile_settings_cubit.dart';
 
-import '../../../../../creators/settings_creator.dart';
-import '../../../../../creators/user_creator.dart';
-import '../../../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../creators/settings_creator.dart';
+import '../../../../creators/user_creator.dart';
+import '../../../../mock/domain/repository/mock_user_repository.dart';
+import '../../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

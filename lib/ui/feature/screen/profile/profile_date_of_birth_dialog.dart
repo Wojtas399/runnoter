@@ -6,8 +6,8 @@ import '../../../component/date_of_birth_picker_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/label_text_components.dart';
+import '../../../cubit/profile/identities/profile_identities_cubit.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/identities/profile_identities_cubit.dart';
 
 class ProfileDateOfBirthDialog extends StatefulWidget {
   const ProfileDateOfBirthDialog({super.key});

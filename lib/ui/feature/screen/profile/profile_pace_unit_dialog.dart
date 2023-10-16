@@ -6,9 +6,9 @@ import '../../../../data/additional_model/settings.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/body_text_components.dart';
+import '../../../cubit/profile/settings/profile_settings_cubit.dart';
 import '../../../formatter/pace_unit_formatter.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/settings/profile_settings_cubit.dart';
 
 class ProfilePaceUnitDialog extends StatelessWidget {
   const ProfilePaceUnitDialog({super.key});

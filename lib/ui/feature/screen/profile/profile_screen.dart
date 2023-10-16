@@ -6,11 +6,11 @@ import 'package:provider/single_child_widget.dart';
 
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/profile/coach/profile_coach_cubit.dart';
+import '../../../cubit/profile/identities/profile_identities_cubit.dart';
+import '../../../cubit/profile/settings/profile_settings_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/coach/profile_coach_cubit.dart';
-import 'cubit/identities/profile_identities_cubit.dart';
-import 'cubit/settings/profile_settings_cubit.dart';
 import 'profile_content.dart';
 
 @RoutePage()

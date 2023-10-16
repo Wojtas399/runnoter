@@ -13,17 +13,17 @@ import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/interface/service/coaching_request_service.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/ui/feature/screen/profile/cubit/identities/profile_identities_cubit.dart';
+import 'package:runnoter/ui/cubit/profile/identities/profile_identities_cubit.dart';
 
-import '../../../../../creators/user_creator.dart';
-import '../../../../../mock/domain/repository/mock_blood_test_repository.dart';
-import '../../../../../mock/domain/repository/mock_health_measurement_repository.dart';
-import '../../../../../mock/domain/repository/mock_person_repository.dart';
-import '../../../../../mock/domain/repository/mock_race_repository.dart';
-import '../../../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../../../mock/domain/repository/mock_workout_repository.dart';
-import '../../../../../mock/domain/service/mock_auth_service.dart';
-import '../../../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../../creators/user_creator.dart';
+import '../../../../mock/domain/repository/mock_blood_test_repository.dart';
+import '../../../../mock/domain/repository/mock_health_measurement_repository.dart';
+import '../../../../mock/domain/repository/mock_person_repository.dart';
+import '../../../../mock/domain/repository/mock_race_repository.dart';
+import '../../../../mock/domain/repository/mock_user_repository.dart';
+import '../../../../mock/domain/repository/mock_workout_repository.dart';
+import '../../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();

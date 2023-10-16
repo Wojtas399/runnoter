@@ -9,10 +9,10 @@ import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../feature/dialog/persons_search/persons_search_dialog.dart';
 import '../../../formatter/person_formatter.dart';
 import '../../../service/dialog_service.dart';
-import 'cubit/coach/profile_coach_cubit.dart';
 
 class ProfileNoCoachContent extends StatelessWidget {
   const ProfileNoCoachContent({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/additional_model/settings.dart';
-import 'package:runnoter/ui/feature/screen/profile/cubit/settings/profile_settings_cubit.dart';
+import 'package:runnoter/ui/cubit/profile/settings/profile_settings_cubit.dart';
 
 void main() {
   late ProfileSettingsState state;
