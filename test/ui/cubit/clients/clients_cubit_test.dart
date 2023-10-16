@@ -17,13 +17,13 @@ import 'package:runnoter/ui/cubit/clients/clients_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 
 import '../../../creators/person_creator.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_coaching_request_service.dart';
-import '../../../mock/domain/use_case/mock_delete_chat_use_case.dart';
-import '../../../mock/domain/use_case/mock_get_received_coaching_requests_with_sender_info_use_case.dart';
-import '../../../mock/domain/use_case/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
-import '../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
+import '../../../mock/data/repository/mock_person_repository.dart';
+import '../../../mock/data/service/mock_auth_service.dart';
+import '../../../mock/data/service/mock_coaching_request_service.dart';
+import '../../../mock/domain/mock_delete_chat_use_case.dart';
+import '../../../mock/domain/mock_get_received_coaching_requests_with_sender_info_use_case.dart';
+import '../../../mock/domain/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
+import '../../../mock/domain/mock_load_chat_id_use_case.dart';
 
 void main() {
   final authService = MockAuthService();

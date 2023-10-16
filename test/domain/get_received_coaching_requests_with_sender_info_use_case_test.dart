@@ -9,10 +9,10 @@ import 'package:runnoter/data/model/person.dart';
 import 'package:runnoter/domain/model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 
-import '../../creators/coaching_request_creator.dart';
-import '../../creators/person_creator.dart';
-import '../../mock/domain/repository/mock_person_repository.dart';
-import '../../mock/domain/service/mock_coaching_request_service.dart';
+import '../creators/coaching_request_creator.dart';
+import '../creators/person_creator.dart';
+import '../mock/data/repository/mock_person_repository.dart';
+import '../mock/data/service/mock_coaching_request_service.dart';
 
 void main() {
   final coachingRequestService = MockCoachingRequestService();

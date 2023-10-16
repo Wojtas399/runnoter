@@ -5,7 +5,7 @@ import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/model/user.dart';
 import 'package:runnoter/domain/use_case/add_user_data_use_case.dart';
 
-import '../../mock/domain/repository/mock_user_repository.dart';
+import '../mock/data/repository/mock_user_repository.dart';
 
 void main() {
   final userRepository = MockUserRepository();

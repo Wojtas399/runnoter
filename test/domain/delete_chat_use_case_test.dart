@@ -6,9 +6,9 @@ import 'package:runnoter/data/interface/repository/message_image_repository.dart
 import 'package:runnoter/data/interface/repository/message_repository.dart';
 import 'package:runnoter/domain/use_case/delete_chat_use_case.dart';
 
-import '../../mock/domain/repository/mock_chat_repository.dart';
-import '../../mock/domain/repository/mock_message_image_repository.dart';
-import '../../mock/domain/repository/mock_message_repository.dart';
+import '../mock/data/repository/mock_chat_repository.dart';
+import '../mock/data/repository/mock_message_image_repository.dart';
+import '../mock/data/repository/mock_message_repository.dart';
 
 void main() {
   final chatRepository = MockChatRepository();

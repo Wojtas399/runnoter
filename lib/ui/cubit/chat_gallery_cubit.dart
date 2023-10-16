@@ -7,7 +7,7 @@ import '../../data/interface/repository/message_repository.dart';
 import '../../data/model/message.dart';
 import '../../data/model/message_image.dart';
 import '../../dependency_injection.dart';
-import '../extensions/message_images_extensions.dart';
+import '../extension/message_images_extensions.dart';
 
 class ChatGalleryCubit extends Cubit<List<MessageImage>?> {
   final String chatId;

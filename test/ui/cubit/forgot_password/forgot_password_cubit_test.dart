@@ -7,7 +7,7 @@ import 'package:runnoter/data/model/custom_exception.dart';
 import 'package:runnoter/ui/cubit/forgot_password/forgot_password_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../../mock/data/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

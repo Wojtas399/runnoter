@@ -22,11 +22,11 @@ import '../../../creators/chat_creator.dart';
 import '../../../creators/message_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/repository/mock_chat_repository.dart';
-import '../../../mock/domain/repository/mock_message_image_repository.dart';
-import '../../../mock/domain/repository/mock_message_repository.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../../mock/data/repository/mock_chat_repository.dart';
+import '../../../mock/data/repository/mock_message_image_repository.dart';
+import '../../../mock/data/repository/mock_message_repository.dart';
+import '../../../mock/data/repository/mock_person_repository.dart';
+import '../../../mock/data/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

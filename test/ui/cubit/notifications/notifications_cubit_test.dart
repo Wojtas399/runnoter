@@ -20,13 +20,13 @@ import 'package:rxdart/rxdart.dart';
 import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_chat_repository.dart';
-import '../../../mock/domain/repository/mock_message_repository.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_coaching_request_service.dart';
-import '../../../mock/domain/use_case/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
+import '../../../mock/data/repository/mock_chat_repository.dart';
+import '../../../mock/data/repository/mock_message_repository.dart';
+import '../../../mock/data/repository/mock_person_repository.dart';
+import '../../../mock/data/repository/mock_user_repository.dart';
+import '../../../mock/data/service/mock_auth_service.dart';
+import '../../../mock/data/service/mock_coaching_request_service.dart';
+import '../../../mock/domain/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
 
 void main() {
   final authService = MockAuthService();

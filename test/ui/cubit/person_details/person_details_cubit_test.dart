@@ -10,7 +10,7 @@ import 'package:runnoter/data/model/user.dart';
 import 'package:runnoter/ui/cubit/person_details/person_details_cubit.dart';
 
 import '../../../creators/person_creator.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
+import '../../../mock/data/repository/mock_person_repository.dart';
 
 void main() {
   final personRepository = MockPersonRepository();

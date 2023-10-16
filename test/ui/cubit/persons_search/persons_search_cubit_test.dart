@@ -17,10 +17,10 @@ import 'package:runnoter/ui/model/cubit_status.dart';
 import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../mock/data/repository/mock_person_repository.dart';
+import '../../../mock/data/repository/mock_user_repository.dart';
+import '../../../mock/data/service/mock_auth_service.dart';
+import '../../../mock/data/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();

@@ -9,7 +9,7 @@ import 'package:runnoter/data/model/blood_test.dart';
 import 'package:runnoter/ui/cubit/blood_tests_cubit.dart';
 
 import '../../creators/blood_test_creator.dart';
-import '../../mock/domain/repository/mock_blood_test_repository.dart';
+import '../../mock/data/repository/mock_blood_test_repository.dart';
 
 void main() {
   final bloodTestRepository = MockBloodTestRepository();

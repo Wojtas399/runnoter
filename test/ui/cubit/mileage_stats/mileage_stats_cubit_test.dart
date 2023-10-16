@@ -17,9 +17,9 @@ import '../../../creators/activity_status_creator.dart';
 import '../../../creators/race_creator.dart';
 import '../../../creators/workout_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/cubit/mock_date_range_manager_cubit.dart';
-import '../../../mock/domain/repository/mock_race_repository.dart';
-import '../../../mock/domain/repository/mock_workout_repository.dart';
+import '../../../mock/data/repository/mock_race_repository.dart';
+import '../../../mock/data/repository/mock_workout_repository.dart';
+import '../mock_date_range_manager_cubit.dart';
 
 void main() {
   final workoutRepository = MockWorkoutRepository();

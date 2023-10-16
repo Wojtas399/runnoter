@@ -12,8 +12,8 @@ import 'package:runnoter/ui/cubit/health_stats/health_stats_cubit.dart';
 
 import '../../../creators/health_measurement_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/cubit/mock_date_range_manager_cubit.dart';
-import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
+import '../../../mock/data/repository/mock_health_measurement_repository.dart';
+import '../mock_date_range_manager_cubit.dart';
 
 void main() {
   final dateService = MockDateService();

@@ -16,7 +16,7 @@ import '../../../data/model/chat.dart';
 import '../../../data/model/message.dart';
 import '../../../data/model/message_image.dart';
 import '../../../data/model/person.dart';
-import '../../extensions/message_images_extensions.dart';
+import '../../extension/message_images_extensions.dart';
 
 part 'chat_state.dart';
 

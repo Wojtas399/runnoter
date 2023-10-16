@@ -17,9 +17,9 @@ import '../../creators/activity_status_creator.dart';
 import '../../creators/health_measurement_creator.dart';
 import '../../creators/race_creator.dart';
 import '../../creators/workout_creator.dart';
-import '../../mock/domain/repository/mock_health_measurement_repository.dart';
-import '../../mock/domain/repository/mock_race_repository.dart';
-import '../../mock/domain/repository/mock_workout_repository.dart';
+import '../../mock/data/repository/mock_health_measurement_repository.dart';
+import '../../mock/data/repository/mock_race_repository.dart';
+import '../../mock/data/repository/mock_workout_repository.dart';
 
 void main() {
   final healthMeasurementRepository = MockHealthMeasurementRepository();

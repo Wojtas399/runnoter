@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/interface/repository/chat_repository.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
 
-import '../../mock/domain/repository/mock_chat_repository.dart';
+import '../mock/data/repository/mock_chat_repository.dart';
 
 void main() {
   final chatRepository = MockChatRepository();

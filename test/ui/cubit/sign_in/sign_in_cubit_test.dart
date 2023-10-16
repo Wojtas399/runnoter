@@ -9,8 +9,8 @@ import 'package:runnoter/ui/cubit/sign_in/sign_in_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 
 import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../../mock/data/repository/mock_user_repository.dart';
+import '../../../mock/data/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

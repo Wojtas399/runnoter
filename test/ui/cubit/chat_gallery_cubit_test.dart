@@ -12,8 +12,8 @@ import 'package:runnoter/ui/cubit/chat_gallery_cubit.dart';
 
 import '../../creators/message_creator.dart';
 import '../../creators/message_image_creator.dart';
-import '../../mock/domain/repository/mock_message_image_repository.dart';
-import '../../mock/domain/repository/mock_message_repository.dart';
+import '../../mock/data/repository/mock_message_image_repository.dart';
+import '../../mock/data/repository/mock_message_repository.dart';
 
 void main() {
   final messageImageRepository = MockMessageImageRepository();

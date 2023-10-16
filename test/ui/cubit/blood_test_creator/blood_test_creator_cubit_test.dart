@@ -12,8 +12,8 @@ import 'package:runnoter/ui/model/cubit_status.dart';
 
 import '../../../creators/blood_test_creator.dart';
 import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_blood_test_repository.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
+import '../../../mock/data/repository/mock_blood_test_repository.dart';
+import '../../../mock/data/repository/mock_user_repository.dart';
 
 void main() {
   final userRepository = MockUserRepository();

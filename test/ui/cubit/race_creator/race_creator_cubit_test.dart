@@ -10,7 +10,7 @@ import 'package:runnoter/ui/cubit/race_creator/race_creator_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 
 import '../../../creators/race_creator.dart';
-import '../../../mock/domain/repository/mock_race_repository.dart';
+import '../../../mock/data/repository/mock_race_repository.dart';
 
 void main() {
   final raceRepository = MockRaceRepository();

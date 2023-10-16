@@ -10,7 +10,7 @@ import 'package:runnoter/data/model/workout.dart';
 import 'package:runnoter/ui/cubit/workout_preview/workout_preview_cubit.dart';
 
 import '../../../creators/workout_creator.dart';
-import '../../../mock/domain/repository/mock_workout_repository.dart';
+import '../../../mock/data/repository/mock_workout_repository.dart';
 
 void main() {
   final workoutRepository = MockWorkoutRepository();

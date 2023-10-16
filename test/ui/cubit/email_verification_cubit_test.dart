@@ -6,7 +6,7 @@ import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
 import 'package:runnoter/ui/cubit/email_verification_cubit.dart';
 
-import '../../mock/domain/service/mock_auth_service.dart';
+import '../../mock/data/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
