@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/coaching_request.dart';
+import 'package:runnoter/data/interface/service/coaching_request_service.dart';
 import 'package:runnoter/data/mapper/coaching_request_direction_mapper.dart';
 
 void main() {

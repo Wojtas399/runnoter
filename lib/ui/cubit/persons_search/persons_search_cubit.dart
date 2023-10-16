@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../data/additional_model/coaching_request.dart';
 import '../../../../../data/additional_model/custom_exception.dart';
 import '../../../../../data/entity/person.dart';
 import '../../../../../data/entity/user.dart';

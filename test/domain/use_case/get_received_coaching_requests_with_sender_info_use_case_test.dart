@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/coaching_request.dart';
 import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/interface/service/coaching_request_service.dart';

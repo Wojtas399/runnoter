@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../../data/additional_model/coaching_request.dart';
 import '../../../../../../data/entity/person.dart';
 import '../../../../../../data/entity/user.dart';
 import '../../../../../../data/interface/repository/person_repository.dart';

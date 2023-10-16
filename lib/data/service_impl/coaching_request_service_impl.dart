@@ -1,7 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
-import '../additional_model/coaching_request.dart';
 import '../additional_model/custom_exception.dart';
 import '../interface/service/coaching_request_service.dart';
 import '../mapper/coaching_request_direction_mapper.dart';

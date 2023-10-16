@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../additional_model/coaching_request.dart';
+import '../interface/service/coaching_request_service.dart';
 import 'coaching_request_direction_mapper.dart';
 
 CoachingRequest mapCoachingRequestFromDto(

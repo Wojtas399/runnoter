@@ -4,7 +4,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/coaching_request.dart';
 import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/chat_repository.dart';

@@ -2,8 +2,8 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/coaching_request.dart';
 import 'package:runnoter/data/additional_model/custom_exception.dart';
+import 'package:runnoter/data/interface/service/coaching_request_service.dart';
 import 'package:runnoter/data/service_impl/coaching_request_service_impl.dart';
 
 import '../../creators/user_dto_creator.dart';

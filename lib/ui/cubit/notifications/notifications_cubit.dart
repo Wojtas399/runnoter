@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../data/additional_model/coaching_request.dart';
 import '../../../data/entity/person.dart';
 import '../../../data/entity/user.dart';
 import '../../../data/interface/repository/chat_repository.dart';
