@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../config/navigation/router.dart';
+import '../../../cubit/client/client_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/client_cubit.dart';
 
 class ClientMobileMessageFAB extends StatelessWidget {
   const ClientMobileMessageFAB({super.key});

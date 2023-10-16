@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../cubit/calendar/calendar_cubit.dart';
+import '../../../cubit/client/client_cubit.dart';
 import '../../../cubit/date_range_manager_cubit.dart';
 import 'client_content.dart';
-import 'cubit/client_cubit.dart';
 
 @RoutePage()
 class ClientScreen extends StatelessWidget {

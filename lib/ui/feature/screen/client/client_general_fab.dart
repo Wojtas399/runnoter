@@ -6,8 +6,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../component/material_3_speed_dial_component.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/client/client_cubit.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/client_cubit.dart';
 
 class ClientMobileGeneralFAB extends StatelessWidget {
   final _buttonKey = GlobalKey();
