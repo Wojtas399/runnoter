@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../cubit/reauthentication/reauthentication_cubit.dart';
+import '../../../model/cubit_status.dart';
 import 'reauthentication_password.dart';
 
 class ReauthenticationForm extends StatelessWidget {

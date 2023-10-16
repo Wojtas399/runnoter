@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/ui/cubit/home/home_cubit.dart';
+import 'package:runnoter/ui/model/cubit_status.dart';
 
 void main() {
   late HomeState state;

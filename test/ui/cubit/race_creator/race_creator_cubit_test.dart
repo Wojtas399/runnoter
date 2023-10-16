@@ -6,8 +6,8 @@ import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/ui/cubit/race_creator/race_creator_cubit.dart';
+import 'package:runnoter/ui/model/cubit_status.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';

@@ -9,8 +9,8 @@ import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/interface/service/coaching_request_service.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/ui/cubit/home/home_cubit.dart';
+import 'package:runnoter/ui/model/cubit_status.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../creators/settings_creator.dart';

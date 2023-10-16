@@ -5,9 +5,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/use_case/add_user_data_use_case.dart';
 import 'package:runnoter/ui/cubit/sign_up/sign_up_cubit.dart';
+import 'package:runnoter/ui/model/cubit_status.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/use_case/mock_add_user_data_use_case.dart';

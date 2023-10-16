@@ -9,13 +9,13 @@ import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../data/interface/service/coaching_request_service.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../../../domain/additional_model/coaching_request_with_person.dart';
-import '../../../../../domain/additional_model/cubit_status.dart';
 import '../../../../../domain/additional_model/cubit_with_status.dart';
 import '../../../../../domain/use_case/delete_chat_use_case.dart';
 import '../../../../../domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import '../../../../../domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import '../../../../../domain/use_case/load_chat_id_use_case.dart';
 import '../../model/cubit_state.dart';
+import '../../model/cubit_status.dart';
 
 part 'clients_state.dart';
 

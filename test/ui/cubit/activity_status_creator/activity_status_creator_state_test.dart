@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/ui/cubit/activity_status_creator/activity_status_creator_cubit.dart';
+import 'package:runnoter/ui/model/cubit_status.dart';
 
 void main() {
   late ActivityStatusCreatorState state;

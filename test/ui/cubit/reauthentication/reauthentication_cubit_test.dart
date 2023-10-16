@@ -5,8 +5,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/additional_model/auth_provider.dart';
 import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/ui/cubit/reauthentication/reauthentication_cubit.dart';
+import 'package:runnoter/ui/model/cubit_status.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
 

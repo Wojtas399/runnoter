@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/label_text_components.dart';
 import '../../../cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
+import '../../../model/cubit_status.dart';
 import '../../../service/navigator_service.dart';
 import 'health_measurement_creator_form.dart';
 

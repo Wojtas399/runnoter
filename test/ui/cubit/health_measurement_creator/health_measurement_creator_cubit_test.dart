@@ -6,8 +6,8 @@ import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/entity/health_measurement.dart';
 import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/ui/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
+import 'package:runnoter/ui/model/cubit_status.dart';
 
 import '../../../creators/health_measurement_creator.dart';
 import '../../../mock/common/mock_date_service.dart';

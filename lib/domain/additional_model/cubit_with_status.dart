@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../ui/model/cubit_state.dart';
-import 'cubit_status.dart';
+import '../../ui/model/cubit_status.dart';
 
 abstract class CubitWithStatus<State extends CubitState, Info, Error>
     extends Cubit<State> {

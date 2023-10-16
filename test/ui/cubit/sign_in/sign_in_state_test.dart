@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/ui/cubit/sign_in/sign_in_cubit.dart';
+import 'package:runnoter/ui/model/cubit_status.dart';
 
 void main() {
   late SignInState state;
