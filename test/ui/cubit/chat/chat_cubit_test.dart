@@ -6,7 +6,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/entity/chat.dart';
 import 'package:runnoter/data/entity/message.dart';
 import 'package:runnoter/data/entity/message_image.dart';
 import 'package:runnoter/data/entity/person.dart';
@@ -15,6 +14,7 @@ import 'package:runnoter/data/interface/repository/message_image_repository.dart
 import 'package:runnoter/data/interface/repository/message_repository.dart';
 import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
+import 'package:runnoter/data/model/chat.dart';
 import 'package:runnoter/ui/cubit/chat/chat_cubit.dart';
 import 'package:rxdart/rxdart.dart';
 
