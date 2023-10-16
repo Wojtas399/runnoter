@@ -3,9 +3,9 @@ import 'package:firebase/firebase.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
-import '../additional_model/activity_status.dart';
 import '../additional_model/state_repository.dart';
 import '../additional_model/workout_stage.dart';
+import '../entity/activity.dart';
 import '../entity/workout.dart';
 import '../interface/repository/workout_repository.dart';
 import '../mapper/activity_status_mapper.dart';

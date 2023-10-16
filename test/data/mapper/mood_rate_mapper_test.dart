@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/activity_status.dart';
+import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/mapper/mood_rate_mapper.dart';
 
 void main() {

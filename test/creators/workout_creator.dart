@@ -1,5 +1,5 @@
-import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/data/additional_model/workout_stage.dart';
+import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/entity/workout.dart';
 
 Workout createWorkout({

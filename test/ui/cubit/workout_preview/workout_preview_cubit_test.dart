@@ -4,7 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/activity_status.dart';
+import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/ui/cubit/workout_preview/workout_preview_cubit.dart';

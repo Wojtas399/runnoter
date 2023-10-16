@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../additional_model/activity_status.dart';
+import '../entity/activity.dart';
 
 Pace mapPaceFromFirebase(PaceDto paceDto) {
   return Pace(

@@ -1,5 +1,5 @@
-import '../../../../../data/additional_model/activity_status.dart';
 import '../../../../../data/additional_model/custom_exception.dart';
+import '../../../../../data/entity/activity.dart';
 import '../../../../../data/entity/race.dart';
 import '../../../../../data/interface/repository/race_repository.dart';
 import '../../../../../dependency_injection.dart';

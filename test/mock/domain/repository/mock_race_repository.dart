@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/activity_status.dart';
+import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
 

@@ -1,4 +1,4 @@
-import '../../additional_model/activity_status.dart';
+import '../../entity/activity.dart';
 import '../../entity/race.dart';
 
 abstract interface class RaceRepository {

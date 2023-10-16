@@ -5,9 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/additional_model/workout_stage.dart';
+import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
 

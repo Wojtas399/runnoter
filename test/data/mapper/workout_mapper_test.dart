@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/data/additional_model/workout_stage.dart';
+import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/mapper/workout_mapper.dart';
 

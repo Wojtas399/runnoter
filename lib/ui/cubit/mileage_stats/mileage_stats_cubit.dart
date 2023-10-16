@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
-import '../../../data/additional_model/activity_status.dart';
 import '../../../data/entity/activity.dart';
 import '../../../data/entity/race.dart';
 import '../../../data/entity/workout.dart';

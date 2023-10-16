@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/activity_status.dart';
 import 'package:runnoter/data/additional_model/settings.dart';
+import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/ui/service/pace_unit_service.dart';
 
 void main() {

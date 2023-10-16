@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/activity_status.dart';
+import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/mapper/pace_mapper.dart';
 
 void main() {

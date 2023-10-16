@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../data/additional_model/activity_status.dart';
+import '../../../../data/entity/activity.dart';
 import '../../../component/duration_input_component.dart';
 import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';

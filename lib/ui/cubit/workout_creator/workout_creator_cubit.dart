@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import '../../../../../common/date_service.dart';
-import '../../../../../data/additional_model/activity_status.dart';
 import '../../../../../data/additional_model/custom_exception.dart';
 import '../../../../../data/additional_model/workout_stage.dart';
+import '../../../../../data/entity/activity.dart';
 import '../../../../../data/entity/workout.dart';
 import '../../../../../data/interface/repository/workout_repository.dart';
 import '../../../../../dependency_injection.dart';

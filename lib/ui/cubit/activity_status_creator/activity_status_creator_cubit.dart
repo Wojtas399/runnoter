@@ -1,4 +1,4 @@
-import '../../../../../data/additional_model/activity_status.dart';
+import '../../../../../data/entity/activity.dart';
 import '../../../../../data/entity/race.dart';
 import '../../../../../data/entity/workout.dart';
 import '../../../../../data/interface/repository/race_repository.dart';
