@@ -4,10 +4,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
+import 'package:runnoter/data/model/person.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
 import 'package:runnoter/ui/cubit/client/client_cubit.dart';
 

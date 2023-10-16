@@ -1,5 +1,5 @@
-import '../../entity/person.dart';
 import '../../entity/user.dart';
+import '../../model/person.dart';
 
 abstract interface class PersonRepository {
   Stream<Person?> getPersonById({required String personId});

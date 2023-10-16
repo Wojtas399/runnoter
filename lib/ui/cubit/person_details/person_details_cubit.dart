@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../data/entity/person.dart';
 import '../../../../../data/entity/user.dart';
 import '../../../../../data/interface/repository/person_repository.dart';
 import '../../../../../dependency_injection.dart';
+import '../../../data/model/person.dart';
 
 part 'person_details_state.dart';
 

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../data/entity/person.dart';
+import '../../data/model/person.dart';
 
 class CoachingRequestWithPerson extends Equatable {
   final String id;
