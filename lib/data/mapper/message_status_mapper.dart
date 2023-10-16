@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 
-import '../entity/message.dart';
+import '../model/message.dart';
 
 MessageStatus mapMessageStatusFromDto(
   firebase.MessageStatus dtoMessageStatus,

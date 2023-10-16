@@ -4,11 +4,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../data/entity/message.dart';
 import '../../../../../data/entity/message_image.dart';
 import '../../../../../data/interface/repository/message_image_repository.dart';
 import '../../../../../data/interface/repository/message_repository.dart';
 import '../../../../../dependency_injection.dart';
+import '../../../data/model/message.dart';
 import '../../extensions/message_images_extensions.dart';
 
 part 'chat_image_preview_state.dart';
