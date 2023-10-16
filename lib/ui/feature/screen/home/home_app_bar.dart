@@ -10,9 +10,9 @@ import '../../../component/nullable_text_component.dart';
 import '../../../config/navigation/router.dart';
 import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../cubit/date_range_manager_cubit.dart';
+import '../../../cubit/home/home_cubit.dart';
 import '../../../cubit/notifications/notifications_cubit.dart';
 import '../../../extension/context_extensions.dart';
-import 'cubit/home_cubit.dart';
 
 class HomeMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
   final RouteData currentRoute;

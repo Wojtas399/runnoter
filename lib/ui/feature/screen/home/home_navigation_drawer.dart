@@ -6,8 +6,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../data/entity/user.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/home/home_cubit.dart';
 import '../../../extension/context_extensions.dart';
-import 'cubit/home_cubit.dart';
 import 'home_clients_notifications_badge.dart';
 import 'home_fab.dart';
 

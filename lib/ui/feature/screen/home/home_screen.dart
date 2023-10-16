@@ -12,6 +12,7 @@ import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../config/navigation/router.dart';
 import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../cubit/date_range_manager_cubit.dart';
+import '../../../cubit/home/home_cubit.dart';
 import '../../../cubit/notifications/notifications_cubit.dart';
 import '../../../feature/dialog/required_data_completion/required_data_completion_dialog.dart';
 import '../../../formatter/person_formatter.dart';
@@ -21,7 +22,6 @@ import '../../../service/language_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/pace_unit_service.dart';
 import '../../../service/theme_service.dart';
-import 'cubit/home_cubit.dart';
 import 'home_content.dart';
 
 @RoutePage()
