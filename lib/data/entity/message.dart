@@ -1,4 +1,4 @@
-import 'entity.dart';
+import '../model/entity.dart';
 
 class Message extends Entity {
   final MessageStatus status;

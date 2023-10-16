@@ -1,4 +1,4 @@
-import 'entity.dart';
+import '../model/entity.dart';
 import 'user.dart';
 
 class Person extends Entity {

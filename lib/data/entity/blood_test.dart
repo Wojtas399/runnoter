@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'entity.dart';
+import '../model/entity.dart';
 
 class BloodTest extends Entity {
   final String userId;

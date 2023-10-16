@@ -1,4 +1,4 @@
-import 'entity.dart';
+import '../model/entity.dart';
 
 class Chat extends Entity {
   final String user1Id;
