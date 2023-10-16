@@ -7,10 +7,10 @@ import '../../../../data/entity/user.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/value_with_label_and_icon_component.dart';
+import '../../../cubit/person_details/person_details_cubit.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/gender_formatter.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/person_details_cubit.dart';
 
 enum PersonType { coach, client }
 
