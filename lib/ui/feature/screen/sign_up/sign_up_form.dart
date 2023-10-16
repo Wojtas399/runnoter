@@ -8,8 +8,8 @@ import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/password_text_field_component.dart';
 import '../../../component/two_options_component.dart';
+import '../../../cubit/sign_up/sign_up_cubit.dart';
 import '../../../service/utils.dart';
-import 'cubit/sign_up_cubit.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({super.key});

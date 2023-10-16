@@ -9,8 +9,8 @@ import '../../../component/gap/gap_components.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/headline_text_components.dart';
+import '../../../cubit/sign_up/sign_up_cubit.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/sign_up_cubit.dart';
 import 'sign_up_form.dart';
 
 class SignUpContent extends StatelessWidget {
