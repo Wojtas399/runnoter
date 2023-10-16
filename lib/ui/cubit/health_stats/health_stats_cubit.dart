@@ -5,8 +5,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/date_service.dart';
-import '../../../data/entity/health_measurement.dart';
 import '../../../data/interface/repository/health_measurement_repository.dart';
+import '../../../data/model/health_measurement.dart';
 import '../../../dependency_injection.dart';
 import '../../cubit/date_range_manager_cubit.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../data/entity/health_measurement.dart';
+import '../../../../data/model/health_measurement.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/loading_info_component.dart';

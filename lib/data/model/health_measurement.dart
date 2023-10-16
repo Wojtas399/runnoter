@@ -1,4 +1,4 @@
-import '../model/entity.dart';
+import 'entity.dart';
 
 class HealthMeasurement extends Entity {
   final String userId;

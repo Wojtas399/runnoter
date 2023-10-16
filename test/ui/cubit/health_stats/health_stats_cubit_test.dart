@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/entity/health_measurement.dart';
 import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
+import 'package:runnoter/data/model/health_measurement.dart';
 import 'package:runnoter/ui/cubit/date_range_manager_cubit.dart';
 import 'package:runnoter/ui/cubit/health_stats/health_stats_cubit.dart';
 

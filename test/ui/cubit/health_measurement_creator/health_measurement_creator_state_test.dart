@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/entity/health_measurement.dart';
+import 'package:runnoter/data/model/health_measurement.dart';
 import 'package:runnoter/ui/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 
