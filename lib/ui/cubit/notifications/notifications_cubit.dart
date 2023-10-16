@@ -14,8 +14,8 @@ import '../../../data/interface/repository/user_repository.dart';
 import '../../../data/interface/service/auth_service.dart';
 import '../../../data/interface/service/coaching_request_service.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/coaching_request_with_person.dart';
-import '../../use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
+import '../../../domain/additional_model/coaching_request_with_person.dart';
+import '../../../domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 
 part 'notifications_state.dart';
 

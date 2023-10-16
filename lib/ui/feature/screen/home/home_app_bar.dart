@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../domain/cubit/notifications/notifications_cubit.dart';
+import '../../../cubit/notifications/notifications_cubit.dart';
 import '../../../component/date_range_header_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/nullable_text_component.dart';

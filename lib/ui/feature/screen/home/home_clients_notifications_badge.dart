@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/cubit/notifications/notifications_cubit.dart';
+import '../../../cubit/notifications/notifications_cubit.dart';
 
 class HomeClientsNotificationsBadge extends StatelessWidget {
   final bool showEmptyBadge;

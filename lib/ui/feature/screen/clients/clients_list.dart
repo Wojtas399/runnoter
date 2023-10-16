@@ -3,18 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/person.dart';
-import 'cubit/clients_cubit.dart';
-import '../../../../domain/cubit/notifications/notifications_cubit.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/notifications/notifications_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../extension/widgets_list_extensions.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
+import 'cubit/clients_cubit.dart';
 
 class ClientsList extends StatelessWidget {
   const ClientsList({super.key});
