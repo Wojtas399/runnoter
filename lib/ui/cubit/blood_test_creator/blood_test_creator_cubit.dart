@@ -1,6 +1,5 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../data/additional_model/blood_parameter.dart';
 import '../../../../../data/additional_model/custom_exception.dart';
 import '../../../../../data/entity/blood_test.dart';
 import '../../../../../data/entity/user.dart';

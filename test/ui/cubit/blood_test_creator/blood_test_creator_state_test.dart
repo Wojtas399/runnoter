@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/blood_parameter.dart';
 import 'package:runnoter/data/entity/blood_test.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/ui/cubit/blood_test_creator/blood_test_creator_cubit.dart';
