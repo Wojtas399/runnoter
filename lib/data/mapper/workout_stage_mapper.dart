@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../entity/workout.dart';
+import '../model/workout.dart';
 
 WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) =>
     switch (workoutStageDto) {

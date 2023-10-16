@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../data/entity/workout.dart';
 import '../../data/model/activity.dart';
 import '../../data/model/race.dart';
+import '../../data/model/workout.dart';
 import '../formatter/activity_status_formatter.dart';
 import '../formatter/list_of_workout_stages_formatter.dart';
 import 'text/body_text_components.dart';

@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../entity/workout.dart';
+import '../model/workout.dart';
 import 'activity_status_mapper.dart';
 import 'workout_stage_mapper.dart';
 

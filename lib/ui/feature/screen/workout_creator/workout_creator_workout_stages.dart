@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../data/entity/workout.dart';
+import '../../../../data/model/workout.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/label_text_components.dart';

@@ -5,11 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/data/model/activity.dart';
 import 'package:runnoter/data/model/race.dart';
+import 'package:runnoter/data/model/workout.dart';
 import 'package:runnoter/ui/cubit/date_range_manager_cubit.dart';
 import 'package:runnoter/ui/cubit/mileage_stats/mileage_stats_cubit.dart';
 

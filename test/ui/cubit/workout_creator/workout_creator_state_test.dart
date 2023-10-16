@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/entity/workout.dart';
+import 'package:runnoter/data/model/workout.dart';
 import 'package:runnoter/ui/cubit/workout_creator/workout_creator_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 

@@ -1,8 +1,8 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/mapper/workout_stage_mapper.dart';
+import 'package:runnoter/data/model/workout.dart';
 
 void main() {
   test(

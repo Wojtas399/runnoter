@@ -1,7 +1,7 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/data/model/activity.dart';
+import 'package:runnoter/data/model/workout.dart';
 
 class MockWorkoutRepository extends Mock implements WorkoutRepository {
   MockWorkoutRepository() {

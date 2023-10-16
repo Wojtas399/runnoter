@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data/entity/workout.dart';
+import '../../../../data/model/workout.dart';
 import '../../../component/edit_delete_popup_menu_component.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../cubit/workout_creator/workout_creator_cubit.dart';

@@ -6,12 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/workout_stage_service.dart';
-import '../../data/entity/workout.dart';
 import '../../data/interface/repository/health_measurement_repository.dart';
 import '../../data/interface/repository/race_repository.dart';
 import '../../data/interface/repository/workout_repository.dart';
 import '../../data/model/health_measurement.dart';
 import '../../data/model/race.dart';
+import '../../data/model/workout.dart';
 import '../../dependency_injection.dart';
 
 class CalendarUserDataCubit extends Cubit<CalendarUserData?> {

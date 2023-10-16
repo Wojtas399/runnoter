@@ -1,5 +1,5 @@
-import '../../entity/workout.dart';
 import '../../model/activity.dart';
+import '../../model/workout.dart';
 
 abstract class WorkoutRepository {
   Stream<List<Workout>?> getWorkoutsByDateRange({
