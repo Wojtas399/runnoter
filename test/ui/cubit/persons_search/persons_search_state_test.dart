@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/ui/feature/dialog/persons_search/cubit/persons_search_cubit.dart';
+import 'package:runnoter/ui/cubit/persons_search/persons_search_cubit.dart';
 
-import '../../../../creators/person_creator.dart';
+import '../../../creators/person_creator.dart';
 
 void main() {
   late PersonsSearchState state;

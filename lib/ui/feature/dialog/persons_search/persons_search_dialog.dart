@@ -5,9 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../data/additional_model/coaching_request.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../component/responsive_layout_component.dart';
+import '../../../cubit/persons_search/persons_search_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/persons_search_cubit.dart';
 import 'persons_search_found_perons.dart';
 import 'persons_search_input.dart';
 

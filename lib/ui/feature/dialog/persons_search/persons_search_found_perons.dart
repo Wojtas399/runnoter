@@ -8,10 +8,10 @@ import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
+import '../../../cubit/persons_search/persons_search_cubit.dart';
 import '../../../formatter/gender_formatter.dart';
 import '../../../formatter/person_formatter.dart';
 import '../../../service/dialog_service.dart';
-import 'cubit/persons_search_cubit.dart';
 
 class PersonsSearchFoundPersons extends StatelessWidget {
   const PersonsSearchFoundPersons({super.key});
