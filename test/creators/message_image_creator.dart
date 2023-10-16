@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:runnoter/data/entity/message_image.dart';
+import 'package:runnoter/data/model/message_image.dart';
 
 MessageImage createMessageImage({
   String id = '',

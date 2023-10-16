@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import '../model/entity.dart';
+import 'entity.dart';
 
 class MessageImage extends Entity {
   final String messageId;

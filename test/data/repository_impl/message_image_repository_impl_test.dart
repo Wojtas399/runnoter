@@ -6,8 +6,8 @@ import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/entity/message_image.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
+import 'package:runnoter/data/model/message_image.dart';
 import 'package:runnoter/data/repository_impl/message_image_repository_impl.dart';
 
 import '../../creators/message_dto_creator.dart';

@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 
-import '../../data/entity/message_image.dart';
+import '../../data/model/message_image.dart';
 
 extension MessageImagesExtensions on List<MessageImage> {
   sortByOrder() {

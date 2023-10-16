@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../data/entity/message_image.dart';
+import '../../../../data/model/message_image.dart';
 import '../../../component/animated_refresh_indicator.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/loading_info_component.dart';

@@ -4,10 +4,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/entity/message_image.dart';
 import 'package:runnoter/data/interface/repository/message_image_repository.dart';
 import 'package:runnoter/data/interface/repository/message_repository.dart';
 import 'package:runnoter/data/model/message.dart';
+import 'package:runnoter/data/model/message_image.dart';
 import 'package:runnoter/ui/cubit/chat_image_preview/chat_image_preview_cubit.dart';
 import 'package:rxdart/rxdart.dart';
 
