@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
 import '../../../component/date_range_header_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../cubit/date_range_manager_cubit.dart';
+import '../../../cubit/mileage_stats/mileage_stats_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/distance_unit_formatter.dart';

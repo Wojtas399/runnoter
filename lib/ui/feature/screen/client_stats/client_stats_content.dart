@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
 import '../../../component/body/big_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../cubit/health_stats/health_stats_cubit.dart';
+import '../../../cubit/mileage_stats/mileage_stats_cubit.dart';
 import 'client_stats_health.dart';
 import 'client_stats_mileage.dart';
 

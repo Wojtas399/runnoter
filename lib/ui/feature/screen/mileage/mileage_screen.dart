@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/interface/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
-import '../../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
 import '../../../component/page_not_found_component.dart';
+import '../../../cubit/mileage_stats/mileage_stats_cubit.dart';
 import 'mileage_content.dart';
 
 @RoutePage()
