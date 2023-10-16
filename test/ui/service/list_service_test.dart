@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/service/list_service.dart';
+import 'package:runnoter/ui/service/list_service.dart';
 
 void main() {
   test(

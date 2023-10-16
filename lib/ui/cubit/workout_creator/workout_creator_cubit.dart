@@ -10,7 +10,7 @@ import '../../../../../data/interface/repository/workout_repository.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../../../domain/additional_model/cubit_state.dart';
 import '../../../../../domain/additional_model/cubit_with_status.dart';
-import '../../../../../domain/service/list_service.dart';
+import '../../service/list_service.dart';
 
 part 'workout_creator_state.dart';
 
