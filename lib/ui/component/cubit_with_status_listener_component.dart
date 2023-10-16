@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/additional_model/cubit_state.dart';
 import '../../domain/additional_model/cubit_status.dart';
 import '../config/navigation/router.dart';
+import '../model/cubit_state.dart';
 import '../service/dialog_service.dart';
 import '../service/navigator_service.dart';
 

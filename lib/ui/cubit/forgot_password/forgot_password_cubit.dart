@@ -1,9 +1,9 @@
 import '../../../../../data/additional_model/custom_exception.dart';
 import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../dependency_injection.dart';
-import '../../../../../domain/additional_model/cubit_state.dart';
 import '../../../../../domain/additional_model/cubit_status.dart';
 import '../../../../../domain/additional_model/cubit_with_status.dart';
+import '../../model/cubit_state.dart';
 
 part 'forgot_password_state.dart';
 
