@@ -11,7 +11,7 @@ import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/interface/service/coaching_request_service.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
+import 'package:runnoter/domain/model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/use_case/delete_chat_use_case.dart';
 import 'package:runnoter/domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import 'package:runnoter/domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';

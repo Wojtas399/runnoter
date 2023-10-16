@@ -5,7 +5,7 @@ import '../../data/entity/person.dart';
 import '../../data/interface/repository/person_repository.dart';
 import '../../data/interface/service/coaching_request_service.dart';
 import '../../dependency_injection.dart';
-import '../additional_model/coaching_request_with_person.dart';
+import '../model/coaching_request_with_person.dart';
 
 enum ReceivedCoachingRequestStatuses {
   onlyAccepted,

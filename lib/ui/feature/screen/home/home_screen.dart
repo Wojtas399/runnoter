@@ -6,7 +6,7 @@ import 'package:provider/single_child_widget.dart';
 
 import '../../../../data/additional_model/settings.dart' as settings;
 import '../../../../dependency_injection.dart';
-import '../../../../domain/additional_model/coaching_request_with_person.dart';
+import '../../../../domain/model/coaching_request_with_person.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../config/navigation/router.dart';
 import '../../../cubit/calendar/calendar_cubit.dart';

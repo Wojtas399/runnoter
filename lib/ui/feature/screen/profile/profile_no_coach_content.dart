@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/additional_model/coaching_request.dart';
 import '../../../../data/entity/person.dart';
-import '../../../../domain/additional_model/coaching_request_with_person.dart';
+import '../../../../domain/model/coaching_request_with_person.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/text/body_text_components.dart';
