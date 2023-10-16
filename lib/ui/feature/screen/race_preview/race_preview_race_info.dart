@@ -8,13 +8,13 @@ import '../../../component/content_with_label_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/nullable_text_component.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/race_preview/race_preview_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../extension/double_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/distance_unit_formatter.dart';
 import '../../../formatter/duration_formatter.dart';
 import '../../../formatter/string_formatter.dart';
-import 'cubit/race_preview_cubit.dart';
 import 'race_preview_actions.dart';
 
 class RacePreviewRaceInfo extends StatelessWidget {

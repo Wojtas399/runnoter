@@ -9,9 +9,9 @@ import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../config/navigation/router.dart';
 import '../../../cubit/activity_status_creator/activity_status_creator_cubit.dart';
+import '../../../cubit/race_preview/race_preview_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/race_preview_cubit.dart';
 import 'race_preview_actions.dart';
 import 'race_preview_race_info.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../component/page_not_found_component.dart';
-import 'cubit/race_preview_cubit.dart';
+import '../../../cubit/race_preview/race_preview_cubit.dart';
 import 'race_preview_content.dart';
 
 @RoutePage()
