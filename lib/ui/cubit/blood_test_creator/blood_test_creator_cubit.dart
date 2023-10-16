@@ -1,10 +1,10 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../data/additional_model/custom_exception.dart';
 import '../../../../../data/entity/blood_test.dart';
 import '../../../../../data/entity/user.dart';
 import '../../../../../data/interface/repository/blood_test_repository.dart';
 import '../../../../../data/interface/repository/user_repository.dart';
+import '../../../../../data/model/custom_exception.dart';
 import '../../../../../dependency_injection.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';

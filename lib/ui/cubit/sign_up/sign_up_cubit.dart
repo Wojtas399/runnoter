@@ -1,6 +1,6 @@
-import '../../../../../data/additional_model/custom_exception.dart';
 import '../../../../../data/entity/user.dart';
 import '../../../../../data/interface/service/auth_service.dart';
+import '../../../../../data/model/custom_exception.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../../../domain/use_case/add_user_data_use_case.dart';
 import '../../../../../ui/service/validation_service.dart' as validator;

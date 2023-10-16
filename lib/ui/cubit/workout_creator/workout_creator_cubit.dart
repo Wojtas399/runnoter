@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import '../../../../../common/date_service.dart';
-import '../../../../../data/additional_model/custom_exception.dart';
 import '../../../../../data/entity/activity.dart';
 import '../../../../../data/entity/workout.dart';
 import '../../../../../data/interface/repository/workout_repository.dart';
+import '../../../../../data/model/custom_exception.dart';
 import '../../../../../dependency_injection.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';

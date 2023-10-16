@@ -5,11 +5,11 @@ import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
-import '../additional_model/state_repository.dart';
 import '../entity/chat.dart';
 import '../interface/repository/chat_repository.dart';
 import '../mapper/chat_mapper.dart';
 import '../mapper/custom_exception_mapper.dart';
+import '../model/state_repository.dart';
 
 class ChatRepositoryImpl extends StateRepository<Chat>
     implements ChatRepository {

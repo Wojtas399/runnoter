@@ -3,10 +3,10 @@ import 'package:firebase/firebase.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
-import '../additional_model/state_repository.dart';
 import '../entity/health_measurement.dart';
 import '../interface/repository/health_measurement_repository.dart';
 import '../mapper/health_measurement_mapper.dart';
+import '../model/state_repository.dart';
 
 class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     implements HealthMeasurementRepository {

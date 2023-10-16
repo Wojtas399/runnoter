@@ -2,12 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
-import '../additional_model/state_repository.dart';
 import '../entity/blood_test.dart';
 import '../interface/repository/blood_test_repository.dart';
 import '../mapper/blood_parameter_result_mapper.dart';
 import '../mapper/blood_test_mapper.dart';
 import '../mapper/custom_exception_mapper.dart';
+import '../model/state_repository.dart';
 
 class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     implements BloodTestRepository {

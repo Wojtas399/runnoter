@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/mapper/custom_exception_mapper.dart';
+import 'package:runnoter/data/model/custom_exception.dart';
 
 void main() {
   test(

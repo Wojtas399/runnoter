@@ -1,10 +1,10 @@
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
-import '../additional_model/custom_exception.dart';
 import '../interface/service/coaching_request_service.dart';
 import '../mapper/coaching_request_direction_mapper.dart';
 import '../mapper/coaching_request_mapper.dart';
+import '../model/custom_exception.dart';
 
 class CoachingRequestServiceImpl implements CoachingRequestService {
   final firebase.FirebaseCoachingRequestService _dbCoachingRequestService;

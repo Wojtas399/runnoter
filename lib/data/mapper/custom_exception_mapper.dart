@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../additional_model/custom_exception.dart';
+import '../model/custom_exception.dart';
 
 CustomException mapExceptionFromDb(
   CustomFirebaseException dbException,

@@ -14,7 +14,7 @@ enum AuthExceptionCode {
   invalidEmail,
   wrongPassword,
   userNotFound,
-  emailAlreadyInUse,
+  emailAlreadyInUse
 }
 
 class AuthException extends CustomException<AuthExceptionCode> {
