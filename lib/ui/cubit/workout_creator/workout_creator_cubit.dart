@@ -7,9 +7,9 @@ import '../../../../../data/additional_model/workout_stage.dart';
 import '../../../../../data/entity/workout.dart';
 import '../../../../../data/interface/repository/workout_repository.dart';
 import '../../../../../dependency_injection.dart';
-import '../../../../../domain/additional_model/cubit_with_status.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';
+import '../../model/cubit_with_status.dart';
 import '../../service/list_service.dart';
 
 part 'workout_creator_state.dart';

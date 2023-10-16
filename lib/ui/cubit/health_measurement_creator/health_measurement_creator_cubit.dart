@@ -5,9 +5,9 @@ import '../../../../../data/entity/health_measurement.dart';
 import '../../../../../data/interface/repository/health_measurement_repository.dart';
 import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../dependency_injection.dart';
-import '../../../../../domain/additional_model/cubit_with_status.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';
+import '../../model/cubit_with_status.dart';
 
 part 'health_measurement_creator_state.dart';
 
