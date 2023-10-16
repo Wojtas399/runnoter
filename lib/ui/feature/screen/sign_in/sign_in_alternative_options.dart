@@ -7,8 +7,8 @@ import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/sign_in/sign_in_cubit.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/sign_in_cubit.dart';
 
 class SignInAlternativeOptions extends StatelessWidget {
   const SignInAlternativeOptions({super.key});

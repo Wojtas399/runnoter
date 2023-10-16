@@ -6,9 +6,9 @@ import '../../../component/big_button_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/password_text_field_component.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/sign_in/sign_in_cubit.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
-import 'cubit/sign_in_cubit.dart';
 
 class SignInForm extends StatelessWidget {
   const SignInForm({super.key});

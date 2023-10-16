@@ -6,11 +6,11 @@ import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/ui/feature/screen/sign_in/cubit/sign_in_cubit.dart';
+import 'package:runnoter/ui/cubit/sign_in/sign_in_cubit.dart';
 
-import '../../../../creators/user_creator.dart';
-import '../../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../../mock/domain/service/mock_auth_service.dart';
+import '../../../creators/user_creator.dart';
+import '../../../mock/domain/repository/mock_user_repository.dart';
+import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
