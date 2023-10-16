@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../cubit/date_range_manager_cubit.dart';
-import '../../common/calendar/cubit/calendar_cubit.dart';
 import 'client_content.dart';
 import 'cubit/client_cubit.dart';
 

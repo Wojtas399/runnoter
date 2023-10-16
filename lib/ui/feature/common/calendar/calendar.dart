@@ -11,6 +11,7 @@ import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/shimmer/shimmer.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../cubit/calendar_user_data_cubit.dart';
 import '../../../cubit/date_range_manager_cubit.dart';
 import '../../../formatter/date_formatter.dart';
@@ -21,7 +22,6 @@ import '../../dialog/day_preview/day_preview_dialog_actions.dart';
 import 'calendar_month.dart';
 import 'calendar_stats.dart';
 import 'calendar_week.dart';
-import 'cubit/calendar_cubit.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;

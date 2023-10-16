@@ -10,6 +10,7 @@ import '../../../../domain/additional_model/coaching_request_with_person.dart';
 import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../cubit/date_range_manager_cubit.dart';
 import '../../../cubit/notifications/notifications_cubit.dart';
 import '../../../feature/dialog/required_data_completion/required_data_completion_dialog.dart';
@@ -20,7 +21,6 @@ import '../../../service/language_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/pace_unit_service.dart';
 import '../../../service/theme_service.dart';
-import '../../common/calendar/cubit/calendar_cubit.dart';
 import 'cubit/home_cubit.dart';
 import 'home_content.dart';
 

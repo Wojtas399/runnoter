@@ -7,12 +7,12 @@ import '../../../component/date_range_header_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../cubit/date_range_manager_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../feature/dialog/person_details/person_details_dialog.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import '../../common/calendar/cubit/calendar_cubit.dart';
 import 'cubit/client_cubit.dart';
 
 class ClientMobileAppBar extends StatelessWidget

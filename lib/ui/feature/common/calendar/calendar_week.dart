@@ -5,10 +5,10 @@ import '../../../../data/additional_model/calendar_user_data.dart';
 import '../../../../domain/additional_model/week_day.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/shimmer/shimmer_container.dart';
+import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../cubit/calendar_user_data_cubit.dart';
 import '../../../extension/widgets_list_extensions.dart';
 import 'calendar_week_day_item.dart';
-import 'cubit/calendar_cubit.dart';
 
 class CalendarWeek extends StatelessWidget {
   const CalendarWeek({super.key});
