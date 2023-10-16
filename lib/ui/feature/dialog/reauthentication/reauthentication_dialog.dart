@@ -5,9 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/reauthentication/reauthentication_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/reauthentication_cubit.dart';
 import 'reauthentication_form.dart';
 
 class ReauthenticationBottomSheet extends StatelessWidget {

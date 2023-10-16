@@ -7,7 +7,7 @@ import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/text/body_text_components.dart';
-import 'cubit/reauthentication_cubit.dart';
+import '../../../cubit/reauthentication/reauthentication_cubit.dart';
 import 'reauthentication_password.dart';
 
 class ReauthenticationForm extends StatelessWidget {
