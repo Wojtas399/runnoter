@@ -3,12 +3,12 @@ import 'package:firebase/firebase.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
-import '../entity/race.dart';
 import '../interface/repository/race_repository.dart';
 import '../mapper/activity_status_mapper.dart';
 import '../mapper/custom_exception_mapper.dart';
 import '../mapper/race_mapper.dart';
 import '../model/activity.dart';
+import '../model/race.dart';
 import '../model/state_repository.dart';
 
 class RaceRepositoryImpl extends StateRepository<Race>

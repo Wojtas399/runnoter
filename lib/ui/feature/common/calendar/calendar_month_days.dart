@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data/entity/race.dart';
 import '../../../../data/entity/workout.dart';
+import '../../../../data/model/race.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../cubit/calendar/calendar_cubit.dart';
 import '../../../formatter/activity_status_formatter.dart';

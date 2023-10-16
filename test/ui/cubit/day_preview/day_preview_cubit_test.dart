@@ -5,13 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/model/health_measurement.dart';
+import 'package:runnoter/data/model/race.dart';
 import 'package:runnoter/ui/cubit/day_preview/day_preview_cubit.dart';
 
 import '../../../creators/health_measurement_creator.dart';

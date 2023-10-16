@@ -1,7 +1,7 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/data/model/activity.dart';
+import 'package:runnoter/data/model/race.dart';
 
 class _FakeDuration extends Fake implements Duration {}
 

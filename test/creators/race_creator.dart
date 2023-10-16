@@ -1,5 +1,5 @@
-import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/model/activity.dart';
+import 'package:runnoter/data/model/race.dart';
 
 Race createRace({
   String id = '',

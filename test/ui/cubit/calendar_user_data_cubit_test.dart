@@ -4,13 +4,13 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/entity/workout.dart';
 import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
 import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/data/model/activity.dart';
 import 'package:runnoter/data/model/health_measurement.dart';
+import 'package:runnoter/data/model/race.dart';
 import 'package:runnoter/ui/cubit/calendar_user_data_cubit.dart';
 
 import '../../creators/activity_status_creator.dart';

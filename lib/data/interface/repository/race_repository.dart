@@ -1,5 +1,5 @@
-import '../../entity/race.dart';
 import '../../model/activity.dart';
+import '../../model/race.dart';
 
 abstract interface class RaceRepository {
   Stream<Race?> getRaceById({required String raceId, required String userId});
