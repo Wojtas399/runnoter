@@ -1,4 +1,4 @@
-import 'package:runnoter/data/entity/user.dart';
+import 'package:runnoter/data/model/user.dart';
 
 UserSettings createUserSettings({
   ThemeMode themeMode = ThemeMode.light,

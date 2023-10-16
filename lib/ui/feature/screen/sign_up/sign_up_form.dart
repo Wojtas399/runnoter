@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../data/entity/user.dart';
+import '../../../../data/model/user.dart';
 import '../../../component/date_of_birth_picker_component.dart';
 import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';

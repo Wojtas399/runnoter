@@ -2,11 +2,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/blood_test_repository.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/model/blood_test.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
+import 'package:runnoter/data/model/user.dart';
 import 'package:runnoter/ui/cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 

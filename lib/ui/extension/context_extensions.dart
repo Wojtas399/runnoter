@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/entity/user.dart';
 import '../../data/model/activity.dart';
+import '../../data/model/user.dart';
 import '../service/distance_unit_service.dart';
 import '../service/language_service.dart';
 import '../service/pace_unit_service.dart';

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../model/entity.dart';
+import 'entity.dart';
 
 enum AccountType { coach, runner }
 

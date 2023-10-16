@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../data/entity/user.dart';
+import '../../../../data/model/user.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/label_text_components.dart';
 import '../../../config/navigation/router.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/entity/user.dart';
+import 'package:runnoter/data/model/user.dart';
 import 'package:runnoter/ui/cubit/profile/identities/profile_identities_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 

@@ -1,4 +1,4 @@
-import 'package:runnoter/data/entity/user.dart';
+import 'package:runnoter/data/model/user.dart';
 
 import 'user_settings_creator.dart';
 

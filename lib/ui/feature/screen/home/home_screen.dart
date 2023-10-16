@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/single_child_widget.dart';
 
-import '../../../../data/entity/user.dart' as user;
+import '../../../../data/model/user.dart' as user;
 import '../../../../dependency_injection.dart';
 import '../../../../domain/model/coaching_request_with_person.dart';
 import '../../../component/cubit_with_status_listener_component.dart';

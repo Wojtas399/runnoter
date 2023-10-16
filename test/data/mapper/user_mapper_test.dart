@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/mapper/user_mapper.dart';
+import 'package:runnoter/data/model/user.dart';
 
 void main() {
   const String userId = 'u1';

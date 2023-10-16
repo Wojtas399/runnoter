@@ -1,5 +1,5 @@
-import '../../data/entity/user.dart';
 import '../../data/model/blood_test.dart';
+import '../../data/model/user.dart';
 
 bool isParameterValueWithinNorm({
   required Gender gender,
