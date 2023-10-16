@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/gap/gap_horizontal_components.dart';
-import 'cubit/blood_test_creator_cubit.dart';
+import '../../../cubit/blood_test_creator/blood_test_creator_cubit.dart';
 
 class BloodTestCreatorAppBar extends StatelessWidget
     implements PreferredSizeWidget {

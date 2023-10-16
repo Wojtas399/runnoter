@@ -10,9 +10,9 @@ import '../../../component/date_selector_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import '../../../service/dialog_service.dart';
 import 'blood_test_creator_app_bar.dart';
-import 'cubit/blood_test_creator_cubit.dart';
 
 class BloodTestCreatorContent extends StatelessWidget {
   const BloodTestCreatorContent({super.key});
