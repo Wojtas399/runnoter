@@ -8,9 +8,9 @@ import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/email_verification_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'email_verification_cubit.dart';
 
 class EmailVerificationDialog extends StatelessWidget {
   const EmailVerificationDialog({super.key});
