@@ -1,5 +1,5 @@
-import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/entity/workout.dart';
+import 'package:runnoter/data/model/activity.dart';
 
 Workout createWorkout({
   String id = '',

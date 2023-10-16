@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../../../data/entity/activity.dart';
 import '../../../../data/entity/race.dart';
 import '../../../../data/entity/workout.dart';
+import '../../../../data/model/activity.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/health_measurement_info_component.dart';

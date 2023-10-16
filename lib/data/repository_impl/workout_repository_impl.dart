@@ -3,13 +3,13 @@ import 'package:firebase/firebase.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
-import '../entity/activity.dart';
 import '../entity/workout.dart';
 import '../interface/repository/workout_repository.dart';
 import '../mapper/activity_status_mapper.dart';
 import '../mapper/custom_exception_mapper.dart';
 import '../mapper/workout_mapper.dart';
 import '../mapper/workout_stage_mapper.dart';
+import '../model/activity.dart';
 import '../model/state_repository.dart';
 
 class WorkoutRepositoryImpl extends StateRepository<Workout>

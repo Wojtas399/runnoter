@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/entity/activity.dart';
+import '../../data/model/activity.dart';
 import '../extension/context_extensions.dart';
 import '../service/pace_unit_service.dart';
 import '../service/utils.dart';

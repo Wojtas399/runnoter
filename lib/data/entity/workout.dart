@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'activity.dart';
+import '../model/activity.dart';
 
 class Workout extends Activity {
   final List<WorkoutStage> stages;

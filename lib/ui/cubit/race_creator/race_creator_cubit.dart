@@ -1,8 +1,8 @@
-import '../../../../../data/entity/activity.dart';
 import '../../../../../data/entity/race.dart';
 import '../../../../../data/interface/repository/race_repository.dart';
 import '../../../../../data/model/custom_exception.dart';
 import '../../../../../dependency_injection.dart';
+import '../../../data/model/activity.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';
 import '../../model/cubit_with_status.dart';

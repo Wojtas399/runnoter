@@ -1,8 +1,8 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/entity/race.dart';
 import 'package:runnoter/data/mapper/race_mapper.dart';
+import 'package:runnoter/data/model/activity.dart';
 
 void main() {
   const String id = 'c1';

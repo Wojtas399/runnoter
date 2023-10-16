@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/entity/activity.dart';
+import 'package:runnoter/data/model/activity.dart';
 import 'package:runnoter/ui/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 

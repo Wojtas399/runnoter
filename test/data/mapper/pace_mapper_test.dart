@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/entity/activity.dart';
 import 'package:runnoter/data/mapper/pace_mapper.dart';
+import 'package:runnoter/data/model/activity.dart';
 
 void main() {
   test(

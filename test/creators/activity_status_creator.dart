@@ -1,4 +1,4 @@
-import 'package:runnoter/data/entity/activity.dart';
+import 'package:runnoter/data/model/activity.dart';
 
 ActivityStatusDone createActivityStatusDone({
   double coveredDistanceInKm = 0.0,
