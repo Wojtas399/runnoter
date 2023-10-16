@@ -4,12 +4,12 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:rxdart/rxdart.dart';
 
-import '../../dependency_injection.dart';
-import '../interface/repository/message_repository.dart';
-import '../mapper/message_mapper.dart';
-import '../mapper/message_status_mapper.dart';
-import '../model/message.dart';
-import '../model/state_repository.dart';
+import '../../../dependency_injection.dart';
+import '../../interface/repository/message_repository.dart';
+import '../../mapper/message_mapper.dart';
+import '../../mapper/message_status_mapper.dart';
+import '../../model/message.dart';
+import '../../model/state_repository.dart';
 
 class MessageRepositoryImpl extends StateRepository<Message>
     implements MessageRepository {

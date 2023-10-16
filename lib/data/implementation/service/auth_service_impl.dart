@@ -1,10 +1,10 @@
 import 'package:firebase/firebase.dart' as firebase;
 
-import '../../dependency_injection.dart';
-import '../interface/service/auth_service.dart';
-import '../mapper/auth_provider_mapper.dart';
-import '../mapper/custom_exception_mapper.dart';
-import '../mapper/reauthentication_status_mapper.dart';
+import '../../../dependency_injection.dart';
+import '../../interface/service/auth_service.dart';
+import '../../mapper/auth_provider_mapper.dart';
+import '../../mapper/custom_exception_mapper.dart';
+import '../../mapper/reauthentication_status_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
   final firebase.FirebaseAuthService _firebaseAuthService;

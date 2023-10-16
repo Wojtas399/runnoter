@@ -1,14 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
-import '../../dependency_injection.dart';
-import '../interface/repository/user_repository.dart';
-import '../mapper/account_type_mapper.dart';
-import '../mapper/gender_mapper.dart';
-import '../mapper/user_mapper.dart';
-import '../mapper/user_settings_mapper.dart';
-import '../model/state_repository.dart';
-import '../model/user.dart';
+import '../../../dependency_injection.dart';
+import '../../interface/repository/user_repository.dart';
+import '../../mapper/account_type_mapper.dart';
+import '../../mapper/gender_mapper.dart';
+import '../../mapper/user_mapper.dart';
+import '../../mapper/user_settings_mapper.dart';
+import '../../model/state_repository.dart';
+import '../../model/user.dart';
 
 class UserRepositoryImpl extends StateRepository<User>
     implements UserRepository {

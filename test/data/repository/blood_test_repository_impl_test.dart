@@ -2,9 +2,9 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/implementation/repository/blood_test_repository_impl.dart';
 import 'package:runnoter/data/model/blood_test.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
-import 'package:runnoter/data/repository_impl/blood_test_repository_impl.dart';
 
 import '../../creators/blood_test_creator.dart';
 import '../../creators/blood_test_dto_creator.dart';

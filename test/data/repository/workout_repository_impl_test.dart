@@ -5,10 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
+import 'package:runnoter/data/implementation/repository/workout_repository_impl.dart';
 import 'package:runnoter/data/model/activity.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
 import 'package:runnoter/data/model/workout.dart';
-import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
 
 import '../../creators/workout_creator.dart';
 import '../../creators/workout_dto_creator.dart';

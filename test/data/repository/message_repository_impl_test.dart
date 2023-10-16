@@ -4,8 +4,8 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/data/implementation/repository/message_repository_impl.dart';
 import 'package:runnoter/data/model/message.dart';
-import 'package:runnoter/data/repository_impl/message_repository_impl.dart';
 
 import '../../creators/chat_dto_creator.dart';
 import '../../creators/message_creator.dart';
