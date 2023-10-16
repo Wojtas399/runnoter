@@ -2,7 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/auth_provider.dart';
 import 'package:runnoter/data/additional_model/custom_exception.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/ui/cubit/reauthentication/reauthentication_cubit.dart';

@@ -1,7 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
-import '../additional_model/auth_provider.dart';
 import '../interface/service/auth_service.dart';
 import '../mapper/auth_provider_mapper.dart';
 import '../mapper/custom_exception_mapper.dart';

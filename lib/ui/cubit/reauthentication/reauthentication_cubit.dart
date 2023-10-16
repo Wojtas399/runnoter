@@ -1,4 +1,3 @@
-import '../../../../../data/additional_model/auth_provider.dart';
 import '../../../../../data/additional_model/custom_exception.dart';
 import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../dependency_injection.dart';

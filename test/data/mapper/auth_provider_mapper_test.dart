@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/auth_provider.dart';
+import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/mapper/auth_provider_mapper.dart';
 
 void main() {

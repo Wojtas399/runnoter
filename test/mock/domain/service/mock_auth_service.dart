@@ -1,5 +1,4 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/auth_provider.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 
 class MockAuthService extends Mock implements AuthService {
