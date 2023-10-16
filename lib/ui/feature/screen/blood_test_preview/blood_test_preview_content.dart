@@ -9,10 +9,10 @@ import '../../../component/body/medium_body_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/blood_test_preview/blood_test_preview_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import 'blood_test_preview_actions.dart';
-import 'cubit/blood_test_preview_cubit.dart';
 
 class BloodTestPreviewContent extends StatelessWidget {
   const BloodTestPreviewContent({super.key});

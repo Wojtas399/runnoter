@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../component/page_not_found_component.dart';
+import '../../../cubit/blood_test_preview/blood_test_preview_cubit.dart';
 import 'blood_test_preview_content.dart';
-import 'cubit/blood_test_preview_cubit.dart';
 
 @RoutePage()
 class BloodTestPreviewScreen extends StatelessWidget {

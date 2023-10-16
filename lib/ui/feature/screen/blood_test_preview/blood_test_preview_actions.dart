@@ -4,10 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/edit_delete_popup_menu_component.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/blood_test_preview/blood_test_preview_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/blood_test_preview_cubit.dart';
 
 class BloodTestPreviewActions extends StatelessWidget {
   const BloodTestPreviewActions({super.key});
