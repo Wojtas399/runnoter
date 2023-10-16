@@ -11,10 +11,10 @@ import '../../../component/loading_info_component.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/blood_tests_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/navigator_service.dart';
-import 'blood_tests_cubit.dart';
 
 class BloodTests extends StatelessWidget {
   final String userId;

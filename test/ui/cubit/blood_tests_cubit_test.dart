@@ -6,10 +6,10 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/entity/blood_test.dart';
 import 'package:runnoter/data/interface/repository/blood_test_repository.dart';
-import 'package:runnoter/ui/feature/common/blood_tests/blood_tests_cubit.dart';
+import 'package:runnoter/ui/cubit/blood_tests_cubit.dart';
 
-import '../../../creators/blood_test_creator.dart';
-import '../../../mock/domain/repository/mock_blood_test_repository.dart';
+import '../../creators/blood_test_creator.dart';
+import '../../mock/domain/repository/mock_blood_test_repository.dart';
 
 void main() {
   final bloodTestRepository = MockBloodTestRepository();
