@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/edit_delete_popup_menu_component.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/workout_preview/workout_preview_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/workout_preview_cubit.dart';
 
 class WorkoutPreviewWorkoutActions extends StatelessWidget {
   const WorkoutPreviewWorkoutActions({super.key});

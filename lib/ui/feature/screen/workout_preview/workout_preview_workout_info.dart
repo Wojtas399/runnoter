@@ -9,11 +9,11 @@ import '../../../component/content_with_label_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/nullable_text_component.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/workout_preview/workout_preview_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/list_of_workout_stages_formatter.dart';
 import '../../../formatter/workout_stage_formatter.dart';
-import 'cubit/workout_preview_cubit.dart';
 import 'workout_preview_actions.dart';
 
 class WorkoutPreviewWorkoutInfo extends StatelessWidget {

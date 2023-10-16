@@ -10,9 +10,9 @@ import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../config/navigation/router.dart';
 import '../../../cubit/activity_status_creator/activity_status_creator_cubit.dart';
+import '../../../cubit/workout_preview/workout_preview_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/workout_preview_cubit.dart';
 import 'workout_preview_actions.dart';
 import 'workout_preview_workout_info.dart';
 

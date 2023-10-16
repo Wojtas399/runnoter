@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../component/page_not_found_component.dart';
-import 'cubit/workout_preview_cubit.dart';
+import '../../../cubit/workout_preview/workout_preview_cubit.dart';
 import 'workout_preview_content.dart';
 
 @RoutePage()
