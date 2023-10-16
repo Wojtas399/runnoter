@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../data/additional_model/settings.dart' as settings;
+import '../../../../data/entity/user.dart' as user;
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../component/value_with_label_and_icon_component.dart';
@@ -48,7 +48,7 @@ class _Theme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings.ThemeMode? themeMode = context.select(
+    final user.ThemeMode? themeMode = context.select(
       (ProfileSettingsCubit cubit) => cubit.state.themeMode,
     );
 
@@ -74,7 +74,7 @@ class _Language extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings.Language? language = context.select(
+    final user.Language? language = context.select(
       (ProfileSettingsCubit cubit) => cubit.state.language,
     );
 
@@ -102,7 +102,7 @@ class _DistanceUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings.DistanceUnit? distanceUnit = context.select(
+    final user.DistanceUnit? distanceUnit = context.select(
       (ProfileSettingsCubit cubit) => cubit.state.distanceUnit,
     );
 
@@ -130,7 +130,7 @@ class _PaceUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings.PaceUnit? paceUnit = context.select(
+    final user.PaceUnit? paceUnit = context.select(
       (ProfileSettingsCubit cubit) => cubit.state.paceUnit,
     );
 

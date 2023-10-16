@@ -1,12 +1,12 @@
 import 'package:firebase/firebase.dart' as db;
 
-import '../additional_model/settings.dart';
+import '../entity/user.dart';
 
-Settings mapSettingsFromDto({
+UserSettings mapSettingsFromDto({
   required db.AppearanceSettingsDto appearanceSettingsDto,
   required db.ActivitiesSettingsDto activitiesSettingsDto,
 }) {
-  return Settings(
+  return UserSettings(
     themeMode: mapThemeModeFromDb(appearanceSettingsDto.themeMode),
     language: mapLanguageFromDb(appearanceSettingsDto.language),
     distanceUnit: mapDistanceUnitFromDb(activitiesSettingsDto.distanceUnit),

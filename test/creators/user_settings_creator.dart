@@ -1,12 +1,12 @@
-import 'package:runnoter/data/additional_model/settings.dart';
+import 'package:runnoter/data/entity/user.dart';
 
-Settings createSettings({
+UserSettings createUserSettings({
   ThemeMode themeMode = ThemeMode.light,
   Language language = Language.polish,
   DistanceUnit distanceUnit = DistanceUnit.kilometers,
   PaceUnit paceUnit = PaceUnit.minutesPerKilometer,
 }) {
-  return Settings(
+  return UserSettings(
     themeMode: themeMode,
     language: language,
     distanceUnit: distanceUnit,

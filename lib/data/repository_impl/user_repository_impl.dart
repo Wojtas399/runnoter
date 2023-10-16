@@ -2,15 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
-import '../additional_model/settings.dart' as settings;
-import '../additional_model/settings.dart';
 import '../additional_model/state_repository.dart';
 import '../entity/user.dart';
 import '../interface/repository/user_repository.dart';
 import '../mapper/account_type_mapper.dart';
 import '../mapper/gender_mapper.dart';
-import '../mapper/settings_mapper.dart';
 import '../mapper/user_mapper.dart';
+import '../mapper/user_settings_mapper.dart';
 
 class UserRepositoryImpl extends StateRepository<User>
     implements UserRepository {
@@ -60,11 +58,14 @@ class UserRepositoryImpl extends StateRepository<User>
     if (userDto == null ||
         appearanceSettingsDto == null ||
         activitiesSettingsDto == null) return;
-    final Settings settings = mapSettingsFromDto(
+    final UserSettings userSettings = mapSettingsFromDto(
       appearanceSettingsDto: appearanceSettingsDto,
       activitiesSettingsDto: activitiesSettingsDto,
     );
-    final User addedUser = mapUserFromDto(userDto: userDto, settings: settings);
+    final User addedUser = mapUserFromDto(
+      userDto: userDto,
+      userSettings: userSettings,
+    );
     addEntity(addedUser);
   }
 
@@ -98,7 +99,7 @@ class UserRepositoryImpl extends StateRepository<User>
       if (updatedUserDto == null) return;
       final User updatedUser = mapUserFromDto(
         userDto: updatedUserDto,
-        settings: user.settings,
+        userSettings: user.settings,
       );
       updateEntity(updatedUser);
       return;
@@ -108,10 +109,10 @@ class UserRepositoryImpl extends StateRepository<User>
   @override
   Future<void> updateUserSettings({
     required String userId,
-    settings.ThemeMode? themeMode,
-    settings.Language? language,
-    settings.DistanceUnit? distanceUnit,
-    settings.PaceUnit? paceUnit,
+    ThemeMode? themeMode,
+    Language? language,
+    DistanceUnit? distanceUnit,
+    PaceUnit? paceUnit,
   }) async {
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
@@ -130,7 +131,7 @@ class UserRepositoryImpl extends StateRepository<User>
           newActivitiesSettingsDto == null) {
         return;
       }
-      final settings.Settings updatedSettings = settings.Settings(
+      final UserSettings updatedSettings = UserSettings(
         themeMode: newAppearanceSettingsDto != null
             ? mapThemeModeFromDb(newAppearanceSettingsDto.themeMode)
             : user.settings.themeMode,
@@ -178,13 +179,16 @@ class UserRepositoryImpl extends StateRepository<User>
   Future<User?> _loadUserFromDb(String userId) async {
     final userDto = await _dbUserService.loadUserById(userId: userId);
     if (userDto == null) return null;
-    final Settings settings = await _loadUserSettingsFromDb(userId);
-    final User user = mapUserFromDto(userDto: userDto, settings: settings);
+    final UserSettings userSettings = await _loadUserSettingsFromDb(userId);
+    final User user = mapUserFromDto(
+      userDto: userDto,
+      userSettings: userSettings,
+    );
     addEntity(user);
     return user;
   }
 
-  Future<Settings> _loadUserSettingsFromDb(String userId) async {
+  Future<UserSettings> _loadUserSettingsFromDb(String userId) async {
     final firebase.AppearanceSettingsDto? appearanceSettingsDto =
         await _dbAppearanceSettingsService.loadSettingsByUserId(userId: userId);
     final firebase.ActivitiesSettingsDto? activitiesSettingsDto =
@@ -200,8 +204,8 @@ class UserRepositoryImpl extends StateRepository<User>
 
   Future<firebase.AppearanceSettingsDto?> _updateAppearanceSettings(
     String userId,
-    settings.ThemeMode? themeMode,
-    settings.Language? language,
+    ThemeMode? themeMode,
+    Language? language,
   ) async =>
       await _dbAppearanceSettingsService.updateSettings(
         userId: userId,
@@ -211,8 +215,8 @@ class UserRepositoryImpl extends StateRepository<User>
 
   Future<firebase.ActivitiesSettingsDto?> _updateActivitiesSettings(
     String userId,
-    settings.DistanceUnit? distanceUnit,
-    settings.PaceUnit? paceUnit,
+    DistanceUnit? distanceUnit,
+    PaceUnit? paceUnit,
   ) async =>
       await _dbActivitiesSettingsService.updateSettings(
         userId: userId,

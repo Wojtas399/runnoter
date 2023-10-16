@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/domain/use_case/add_user_data_use_case.dart';
@@ -17,7 +16,7 @@ void main() {
   const String surname = 'Novsky';
   const String email = 'email@example.com';
   final DateTime dateOfBirth = DateTime(2023, 1, 10);
-  const defaultSettings = Settings(
+  const defaultSettings = UserSettings(
     themeMode: ThemeMode.system,
     language: Language.english,
     distanceUnit: DistanceUnit.kilometers,

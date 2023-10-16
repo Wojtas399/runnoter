@@ -2,13 +2,13 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/settings.dart';
+import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/ui/cubit/profile/settings/profile_settings_cubit.dart';
 
-import '../../../../creators/settings_creator.dart';
 import '../../../../creators/user_creator.dart';
+import '../../../../creators/user_settings_creator.dart';
 import '../../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../../mock/domain/service/mock_auth_service.dart';
 
@@ -35,7 +35,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(
         user: createUser(
-          settings: createSettings(
+          settings: createUserSettings(
             themeMode: ThemeMode.dark,
             language: Language.english,
             distanceUnit: DistanceUnit.kilometers,

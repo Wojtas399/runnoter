@@ -1,7 +1,6 @@
-import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
 
-import 'settings_creator.dart';
+import 'user_settings_creator.dart';
 
 User createUser({
   String id = '',
@@ -11,7 +10,7 @@ User createUser({
   String surname = '',
   String email = '',
   DateTime? dateOfBirth,
-  Settings? settings,
+  UserSettings? settings,
   String? coachId,
 }) =>
     User(
@@ -22,6 +21,6 @@ User createUser({
       surname: surname,
       email: email,
       dateOfBirth: dateOfBirth ?? DateTime(2023),
-      settings: settings ?? createSettings(),
+      settings: settings ?? createUserSettings(),
       coachId: coachId,
     );

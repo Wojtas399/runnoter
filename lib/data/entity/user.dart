@@ -1,4 +1,5 @@
-import '../additional_model/settings.dart';
+import 'package:equatable/equatable.dart';
+
 import 'entity.dart';
 
 enum AccountType { coach, runner }
@@ -12,7 +13,7 @@ class User extends Entity {
   final String surname;
   final String email;
   final DateTime dateOfBirth;
-  final Settings settings;
+  final UserSettings settings;
   final String? coachId;
 
   const User({
@@ -38,4 +39,34 @@ class User extends Entity {
         settings,
         coachId,
       ];
+}
+
+class UserSettings extends Equatable {
+  final ThemeMode themeMode;
+  final Language language;
+  final DistanceUnit distanceUnit;
+  final PaceUnit paceUnit;
+
+  const UserSettings({
+    required this.themeMode,
+    required this.language,
+    required this.distanceUnit,
+    required this.paceUnit,
+  });
+
+  @override
+  List<Object> get props => [themeMode, language, distanceUnit, paceUnit];
+}
+
+enum ThemeMode { dark, light, system }
+
+enum Language { polish, english, system }
+
+enum DistanceUnit { kilometers, miles }
+
+enum PaceUnit {
+  minutesPerKilometer,
+  minutesPerMile,
+  kilometersPerHour,
+  milesPerHour
 }

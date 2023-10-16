@@ -2,15 +2,14 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
 
 import '../../creators/activities_settings_dto.dart';
 import '../../creators/appearance_settings_dto_creator.dart';
-import '../../creators/settings_creator.dart';
 import '../../creators/user_creator.dart';
 import '../../creators/user_dto_creator.dart';
+import '../../creators/user_settings_creator.dart';
 import '../../mock/firebase/mock_firebase_activities_settings_service.dart';
 import '../../mock/firebase/mock_firebase_appearance_settings_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
@@ -87,7 +86,7 @@ void main() {
         name: 'name',
         surname: 'surname',
         email: 'email@example.com',
-        settings: createSettings(
+        settings: createUserSettings(
           themeMode: ThemeMode.light,
           language: Language.polish,
           distanceUnit: DistanceUnit.kilometers,
@@ -120,7 +119,7 @@ void main() {
       const String surname = 'surname';
       const String email = 'email@example.com';
       const String coachId = 'c1';
-      const Settings settings = Settings(
+      const UserSettings settings = UserSettings(
         themeMode: ThemeMode.dark,
         language: Language.english,
         distanceUnit: DistanceUnit.miles,
@@ -245,7 +244,7 @@ void main() {
     () async {
       const String newName = 'name';
       const String newSurname = 'surname';
-      final Settings userSettings = createSettings(
+      final UserSettings userSettings = createUserSettings(
         themeMode: ThemeMode.dark,
         language: Language.english,
         distanceUnit: DistanceUnit.miles,
@@ -290,7 +289,7 @@ void main() {
       const String newSurname = 'surname';
       const String newEmail = 'new.email@example.com';
       const String newCoachId = 'c2';
-      final Settings userSettings = createSettings(
+      final UserSettings userSettings = createUserSettings(
         themeMode: ThemeMode.dark,
         language: Language.english,
         distanceUnit: DistanceUnit.miles,
@@ -475,7 +474,7 @@ void main() {
         surname: existingUser.surname,
         email: existingUser.email,
         coachId: existingUser.coachId,
-        settings: createSettings(
+        settings: createUserSettings(
           themeMode: newThemeMode,
           language: newLanguage,
           distanceUnit: newDistanceUnit,

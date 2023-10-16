@@ -3,29 +3,34 @@ part of 'home_cubit.dart';
 class HomeState extends CubitState<HomeState> {
   final AccountType? accountType;
   final String? loggedUserName;
-  final Settings? appSettings;
+  final UserSettings? userSettings;
 
   const HomeState({
     required super.status,
     this.accountType,
     this.loggedUserName,
-    this.appSettings,
+    this.userSettings,
   });
 
   @override
-  List<Object?> get props => [status, accountType, loggedUserName, appSettings];
+  List<Object?> get props => [
+        status,
+        accountType,
+        loggedUserName,
+        userSettings,
+      ];
 
   @override
   HomeState copyWith({
     CubitStatus? status,
     AccountType? accountType,
     String? loggedUserName,
-    Settings? appSettings,
+    UserSettings? userSettings,
   }) =>
       HomeState(
         status: status ?? const CubitStatusComplete(),
         accountType: accountType ?? this.accountType,
         loggedUserName: loggedUserName ?? this.loggedUserName,
-        appSettings: appSettings ?? this.appSettings,
+        userSettings: userSettings ?? this.userSettings,
       );
 }

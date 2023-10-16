@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/single_child_widget.dart';
 
-import '../../../../data/additional_model/settings.dart' as settings;
+import '../../../../data/entity/user.dart' as user;
 import '../../../../dependency_injection.dart';
 import '../../../../domain/model/coaching_request_with_person.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
@@ -80,47 +80,47 @@ class _HomeCubitListener extends SingleChildStatelessWidget {
   void _manageStateChanges(BuildContext context, HomeState state) {
     if (state.status is CubitStatusComplete &&
         state.loggedUserName == null &&
-        state.appSettings == null) {
+        state.userSettings == null) {
       showDialogDependingOnScreenSize(
         const RequiredDataCompletionDialog(),
         barrierDismissible: false,
       );
       return;
     }
-    final settings.Settings? appSettings = state.appSettings;
-    if (appSettings != null) {
-      _manageThemeMode(context, appSettings.themeMode);
-      _manageLanguage(context, appSettings.language);
-      context.read<DistanceUnitService>().changeUnit(appSettings.distanceUnit);
-      context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
+    final user.UserSettings? userSettings = state.userSettings;
+    if (userSettings != null) {
+      _manageThemeMode(context, userSettings.themeMode);
+      _manageLanguage(context, userSettings.language);
+      context.read<DistanceUnitService>().changeUnit(userSettings.distanceUnit);
+      context.read<PaceUnitService>().changeUnit(userSettings.paceUnit);
     }
   }
 
-  void _manageThemeMode(BuildContext context, settings.ThemeMode themeMode) {
+  void _manageThemeMode(BuildContext context, user.ThemeMode themeMode) {
     final ThemeService themeService = context.read<ThemeService>();
     switch (themeMode) {
-      case settings.ThemeMode.dark:
+      case user.ThemeMode.dark:
         themeService.changeTheme(ThemeMode.dark);
         break;
-      case settings.ThemeMode.light:
+      case user.ThemeMode.light:
         themeService.changeTheme(ThemeMode.light);
         break;
-      case settings.ThemeMode.system:
+      case user.ThemeMode.system:
         themeService.changeTheme(ThemeMode.system);
         break;
     }
   }
 
-  void _manageLanguage(BuildContext context, settings.Language language) {
+  void _manageLanguage(BuildContext context, user.Language language) {
     final LanguageService languageService = context.read<LanguageService>();
     switch (language) {
-      case settings.Language.polish:
+      case user.Language.polish:
         languageService.changeLanguage(AppLanguage.polish);
         break;
-      case settings.Language.english:
+      case user.Language.english:
         languageService.changeLanguage(AppLanguage.english);
         break;
-      case settings.Language.system:
+      case user.Language.system:
         languageService.changeLanguage(AppLanguage.system);
         break;
     }

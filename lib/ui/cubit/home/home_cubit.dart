@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../data/additional_model/settings.dart';
 import '../../../../../data/entity/user.dart';
 import '../../../../../data/interface/repository/user_repository.dart';
 import '../../../../../data/interface/service/auth_service.dart';
@@ -43,7 +42,7 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
             status: loggedUser == null ? const CubitStatusNoLoggedUser() : null,
             accountType: loggedUser?.accountType,
             loggedUserName: loggedUser?.name,
-            appSettings: loggedUser?.settings,
+            userSettings: loggedUser?.settings,
           )),
         );
   }

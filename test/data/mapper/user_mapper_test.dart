@@ -1,6 +1,5 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/mapper/user_mapper.dart';
 
@@ -13,7 +12,7 @@ void main() {
   const String email = 'email@example.com';
   final DateTime dateOfBirth = DateTime(2023, 1, 10);
   const String coachId = 'c1';
-  const Settings settings = Settings(
+  const UserSettings settings = UserSettings(
     themeMode: ThemeMode.dark,
     language: Language.english,
     distanceUnit: DistanceUnit.kilometers,
@@ -46,7 +45,10 @@ void main() {
         coachId: coachId,
       );
 
-      final User user = mapUserFromDto(userDto: userDto, settings: settings);
+      final User user = mapUserFromDto(
+        userDto: userDto,
+        userSettings: settings,
+      );
 
       expect(user, expectedUser);
     },

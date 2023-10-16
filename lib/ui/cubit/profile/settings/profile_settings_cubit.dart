@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../../data/additional_model/settings.dart';
 import '../../../../../../data/entity/user.dart';
 import '../../../../../../data/interface/repository/user_repository.dart';
 import '../../../../../../data/interface/service/auth_service.dart';
@@ -15,7 +14,7 @@ part 'profile_settings_state.dart';
 class ProfileSettingsCubit extends Cubit<ProfileSettingsState> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  StreamSubscription<Settings?>? _settingsListener;
+  StreamSubscription<UserSettings?>? _userSettingsListener;
 
   ProfileSettingsCubit({
     ProfileSettingsState initialState = const ProfileSettingsState(),
@@ -25,24 +24,24 @@ class ProfileSettingsCubit extends Cubit<ProfileSettingsState> {
 
   @override
   Future<void> close() {
-    _settingsListener?.cancel();
-    _settingsListener = null;
+    _userSettingsListener?.cancel();
+    _userSettingsListener = null;
     return super.close();
   }
 
   Future<void> initialize() async {
-    _settingsListener ??= _authService.loggedUserId$
+    _userSettingsListener ??= _authService.loggedUserId$
         .whereNotNull()
         .switchMap(
           (loggedUserId) => _userRepository.getUserById(userId: loggedUserId),
         )
         .map((User? user) => user?.settings)
         .listen(
-          (Settings? settings) => emit(state.copyWith(
-            themeMode: settings?.themeMode,
-            language: settings?.language,
-            distanceUnit: settings?.distanceUnit,
-            paceUnit: settings?.paceUnit,
+          (UserSettings? userSettings) => emit(state.copyWith(
+            themeMode: userSettings?.themeMode,
+            language: userSettings?.language,
+            distanceUnit: userSettings?.distanceUnit,
+            paceUnit: userSettings?.paceUnit,
           )),
         );
   }

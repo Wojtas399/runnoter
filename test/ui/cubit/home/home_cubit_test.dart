@@ -4,7 +4,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
@@ -13,8 +12,8 @@ import 'package:runnoter/ui/cubit/home/home_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../creators/settings_creator.dart';
 import '../../../creators/user_creator.dart';
+import '../../../creators/user_settings_creator.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
@@ -46,7 +45,7 @@ void main() {
         id: loggedUserId,
         accountType: AccountType.runner,
         name: 'Jack',
-        settings: createSettings(
+        settings: createUserSettings(
           themeMode: ThemeMode.dark,
           language: Language.polish,
           distanceUnit: DistanceUnit.miles,
@@ -58,7 +57,7 @@ void main() {
         id: loggedUserId,
         accountType: AccountType.runner,
         name: 'James',
-        settings: createSettings(
+        settings: createUserSettings(
           themeMode: ThemeMode.light,
           language: Language.english,
           distanceUnit: DistanceUnit.kilometers,
@@ -70,7 +69,7 @@ void main() {
           BehaviorSubject.seeded(loggedUser);
 
       blocTest(
-        'should listen to logged user data, accepted client requests and '
+        'should listen to logged user data, settings, accepted client requests and '
         'accepted coach request',
         build: () => HomeCubit(),
         setUp: () {
@@ -88,13 +87,13 @@ void main() {
             status: const CubitStatusComplete(),
             accountType: loggedUser.accountType,
             loggedUserName: loggedUser.name,
-            appSettings: loggedUser.settings,
+            userSettings: loggedUser.settings,
           ),
           HomeState(
             status: const CubitStatusComplete(),
             accountType: updatedLoggedUser.accountType,
             loggedUserName: updatedLoggedUser.name,
-            appSettings: updatedLoggedUser.settings,
+            userSettings: updatedLoggedUser.settings,
           ),
         ],
         verify: (_) {

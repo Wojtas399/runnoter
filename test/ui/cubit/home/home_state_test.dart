@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/additional_model/settings.dart';
 import 'package:runnoter/data/entity/user.dart';
 import 'package:runnoter/ui/cubit/home/home_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
@@ -54,21 +53,21 @@ void main() {
   );
 
   test(
-    'copy with appSettings, '
+    'copy with userSettings, '
     'should set new value or should copy current value if new value is null',
     () {
-      const Settings expected = Settings(
+      const UserSettings expected = UserSettings(
         themeMode: ThemeMode.dark,
         language: Language.polish,
         distanceUnit: DistanceUnit.miles,
         paceUnit: PaceUnit.milesPerHour,
       );
 
-      state = state.copyWith(appSettings: expected);
+      state = state.copyWith(userSettings: expected);
       final state2 = state.copyWith();
 
-      expect(state.appSettings, expected);
-      expect(state2.appSettings, expected);
+      expect(state.userSettings, expected);
+      expect(state2.userSettings, expected);
     },
   );
 }
