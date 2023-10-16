@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/workout_stage_service.dart';
-import '../../data/additional_model/workout_stage.dart';
+import '../../data/entity/workout.dart';
 import '../extension/context_extensions.dart';
 import '../extension/double_extensions.dart';
 import 'distance_unit_formatter.dart';

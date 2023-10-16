@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../data/additional_model/workout_stage.dart';
+import '../../../../../data/entity/workout.dart';
 
 part 'workout_stage_creator_distance_form.dart';
 part 'workout_stage_creator_series_form.dart';

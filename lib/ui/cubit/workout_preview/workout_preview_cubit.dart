@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../data/additional_model/workout_stage.dart';
 import '../../../../../data/entity/activity.dart';
 import '../../../../../data/entity/workout.dart';
 import '../../../../../data/interface/repository/workout_repository.dart';

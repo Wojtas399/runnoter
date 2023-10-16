@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../data/additional_model/workout_stage.dart';
+import '../../data/entity/workout.dart';
 import '../extension/context_extensions.dart';
 import '../extension/double_extensions.dart';
 import 'distance_unit_formatter.dart';
