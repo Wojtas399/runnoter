@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../data/entity/blood_test.dart';
+import '../../../../data/model/blood_test.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/empty_content_info_component.dart';

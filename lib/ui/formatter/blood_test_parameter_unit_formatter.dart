@@ -1,4 +1,4 @@
-import '../../data/entity/blood_test.dart';
+import '../../data/model/blood_test.dart';
 
 extension BloodParameterUnitFormatter on BloodParameterUnit {
   String toUIFormat() => switch (this) {

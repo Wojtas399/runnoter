@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 
-import '../entity/blood_test.dart';
+import '../model/blood_test.dart';
 
 BloodParameter mapBloodParameterFromDtoType(
   firebase.BloodParameter dtoParameter,

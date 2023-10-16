@@ -1,4 +1,4 @@
-import 'package:runnoter/data/entity/blood_test.dart';
+import 'package:runnoter/data/model/blood_test.dart';
 
 BloodTest createBloodTest({
   String id = '',

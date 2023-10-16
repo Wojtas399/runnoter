@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../data/entity/blood_test.dart';
+import '../../data/model/blood_test.dart';
 
 extension BloodParameterFormatter on BloodParameter {
   String toName(BuildContext context) {

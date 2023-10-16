@@ -1,4 +1,4 @@
-import '../../entity/blood_test.dart';
+import '../../model/blood_test.dart';
 
 abstract interface class BloodTestRepository {
   Stream<BloodTest?> getTestById({
