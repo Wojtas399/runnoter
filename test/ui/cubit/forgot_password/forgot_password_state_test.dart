@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/ui/feature/screen/forgot_password/cubit/forgot_password_cubit.dart';
+import 'package:runnoter/ui/cubit/forgot_password/forgot_password_cubit.dart';
 
 void main() {
   late ForgotPasswordState state;
