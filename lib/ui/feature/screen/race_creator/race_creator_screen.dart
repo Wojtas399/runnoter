@@ -5,10 +5,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../component/page_not_found_component.dart';
+import '../../../cubit/race_creator/race_creator_cubit.dart';
 import '../../../formatter/string_formatter.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/race_creator_cubit.dart';
 import 'race_creator_content.dart';
 
 @RoutePage()

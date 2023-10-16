@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../component/date_selector_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/title_text_components.dart';
-import 'cubit/race_creator_cubit.dart';
+import '../../../cubit/race_creator/race_creator_cubit.dart';
 
 class RaceCreatorDate extends StatelessWidget {
   const RaceCreatorDate({super.key});

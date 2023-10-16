@@ -9,8 +9,8 @@ import '../../../component/body/medium_body_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
+import '../../../cubit/race_creator/race_creator_cubit.dart';
 import '../../../service/dialog_service.dart';
-import 'cubit/race_creator_cubit.dart';
 import 'race_creator_form.dart';
 
 class RaceCreatorContent extends StatelessWidget {
