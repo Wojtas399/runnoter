@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/health_measurement.dart';
-import 'cubit/day_preview_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/health_measurement_info_component.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/day_preview/day_preview_cubit.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';

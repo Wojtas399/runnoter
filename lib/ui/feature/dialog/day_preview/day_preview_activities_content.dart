@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/race.dart';
 import '../../../../data/entity/workout.dart';
-import 'cubit/day_preview_cubit.dart';
 import '../../../component/activity_item_component.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
+import '../../../cubit/day_preview/day_preview_cubit.dart';
 import '../../../service/navigator_service.dart';
 import 'day_preview_dialog_actions.dart';
 
