@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/interface/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
-import '../../../../domain/cubit/today_measurement_cubit.dart';
 import '../../../component/page_not_found_component.dart';
 import '../../../cubit/health_stats/health_stats_cubit.dart';
+import '../../../cubit/today_measurement_cubit.dart';
 import 'health_content.dart';
 
 @RoutePage()

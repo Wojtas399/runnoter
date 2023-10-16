@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'cubit/clients_cubit.dart';
-import '../../../../domain/cubit/internet_connection_cubit.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
@@ -14,11 +12,13 @@ import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/internet_connection_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import 'clients_list.dart';
 import 'clients_requests.dart';
+import 'cubit/clients_cubit.dart';
 
 @RoutePage()
 class ClientsScreen extends StatelessWidget {

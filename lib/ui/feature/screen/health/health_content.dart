@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/health_measurement.dart';
-import '../../../../domain/cubit/today_measurement_cubit.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/body/big_body_component.dart';
 import '../../../component/card_body_component.dart';
@@ -12,6 +11,7 @@ import '../../../component/health_measurement_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/today_measurement_cubit.dart';
 import '../../../feature/dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';

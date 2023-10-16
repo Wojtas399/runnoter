@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'cubit/chat_cubit.dart';
-import '../../../../domain/cubit/internet_connection_cubit.dart';
 import '../../../component/dialog/actions_dialog_component.dart';
+import '../../../cubit/internet_connection_cubit.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/image_service.dart';
 import '../../../service/utils.dart';
 import 'chat_message_input_images.dart';
+import 'cubit/chat_cubit.dart';
 
 class ChatBottomPart extends StatefulWidget {
   const ChatBottomPart({super.key});
