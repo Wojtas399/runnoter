@@ -16,7 +16,7 @@ import '../../../../../data/interface/repository/message_repository.dart';
 import '../../../../../data/interface/repository/person_repository.dart';
 import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../dependency_injection.dart';
-import '../../../../../domain/extensions/message_images_extensions.dart';
+import '../../extensions/message_images_extensions.dart';
 
 part 'chat_state.dart';
 
