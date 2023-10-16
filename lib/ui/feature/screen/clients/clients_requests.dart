@@ -5,10 +5,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../data/entity/person.dart';
 import '../../../../domain/additional_model/coaching_request_with_person.dart';
-import 'cubit/clients_cubit.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../cubit/clients/clients_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../formatter/gender_formatter.dart';
 import '../../../formatter/person_formatter.dart';

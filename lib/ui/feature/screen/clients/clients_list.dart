@@ -9,12 +9,12 @@ import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/loading_info_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/router.dart';
+import '../../../cubit/clients/clients_cubit.dart';
 import '../../../cubit/notifications/notifications_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../extension/widgets_list_extensions.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/clients_cubit.dart';
 
 class ClientsList extends StatelessWidget {
   const ClientsList({super.key});

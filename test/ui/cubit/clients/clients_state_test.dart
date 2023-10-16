@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/entity/person.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/ui/feature/screen/clients/cubit/clients_cubit.dart';
+import 'package:runnoter/ui/cubit/clients/clients_cubit.dart';
 
-import '../../../../creators/person_creator.dart';
+import '../../../creators/person_creator.dart';
 
 void main() {
   late ClientsState state;
