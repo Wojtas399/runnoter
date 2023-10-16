@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/entity/message.dart';
-import 'package:runnoter/ui/feature/screen/chat/cubit/chat_cubit.dart';
+import 'package:runnoter/ui/cubit/chat/chat_cubit.dart';
 
 void main() {
   late ChatState state;

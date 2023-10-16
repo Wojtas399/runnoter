@@ -5,11 +5,11 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../../../../data/entity/message.dart';
 import '../../../../data/entity/message_image.dart';
-import 'cubit/chat_cubit.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/text/body_text_components.dart';
 import '../../../component/text/label_text_components.dart';
+import '../../../cubit/chat/chat_cubit.dart';
 import '../../../extension/widgets_list_extensions.dart';
 import '../../../feature/dialog/chat_image_preview/chat_image_preview_dialog.dart';
 import '../../../formatter/date_formatter.dart';

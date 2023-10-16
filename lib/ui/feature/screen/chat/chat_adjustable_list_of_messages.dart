@@ -7,8 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../component/animated_refresh_indicator.dart';
+import '../../../cubit/chat/chat_cubit.dart';
 import 'chat_messages.dart';
-import 'cubit/chat_cubit.dart';
 
 class ChatAdjustableListOfMessages extends StatelessWidget {
   const ChatAdjustableListOfMessages({super.key});

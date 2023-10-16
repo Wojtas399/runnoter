@@ -9,13 +9,13 @@ import '../../../component/body/big_body_component.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/nullable_text_component.dart';
 import '../../../component/text/body_text_components.dart';
+import '../../../cubit/chat/chat_cubit.dart';
 import '../../../cubit/internet_connection_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../feature/common/chat_gallery/chat_gallery.dart';
 import 'chat_adjustable_list_of_messages.dart';
 import 'chat_bottom_part.dart';
 import 'chat_typing_indicator.dart';
-import 'cubit/chat_cubit.dart';
 
 class ChatContent extends StatelessWidget {
   const ChatContent({super.key});
