@@ -4,8 +4,8 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../common/date_service.dart';
 import '../../../../../dependency_injection.dart';
+import '../../../common/date_service.dart';
 import '../../../data/model/health_measurement.dart';
 import '../../../data/model/race.dart';
 import '../../../data/model/workout.dart';
