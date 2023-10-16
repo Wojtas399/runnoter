@@ -5,11 +5,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/date_service.dart';
-import '../../../../../data/additional_model/calendar_user_data.dart';
 import '../../../../../data/entity/health_measurement.dart';
 import '../../../../../data/entity/race.dart';
 import '../../../../../data/entity/workout.dart';
 import '../../../../../dependency_injection.dart';
+import '../calendar_user_data_cubit.dart';
 import '../date_range_manager_cubit.dart';
 
 part 'calendar_state.dart';

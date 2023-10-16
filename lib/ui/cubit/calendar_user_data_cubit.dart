@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/workout_stage_service.dart';
-import '../../data/additional_model/calendar_user_data.dart';
 import '../../data/entity/health_measurement.dart';
 import '../../data/entity/race.dart';
 import '../../data/entity/workout.dart';
@@ -128,4 +128,19 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
         state!.races.map((race) => race.coveredDistance).sum;
     return workoutsCoveredDistance + racesCoveredDistance;
   }
+}
+
+class CalendarUserData extends Equatable {
+  final List<HealthMeasurement> healthMeasurements;
+  final List<Workout> workouts;
+  final List<Race> races;
+
+  const CalendarUserData({
+    required this.healthMeasurements,
+    required this.workouts,
+    required this.races,
+  });
+
+  @override
+  List<Object?> get props => [healthMeasurements, workouts, races];
 }
