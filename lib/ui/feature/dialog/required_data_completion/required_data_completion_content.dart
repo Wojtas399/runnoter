@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/responsive_layout_component.dart';
+import '../../../cubit/required_data_completion/required_data_completion_cubit.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/required_data_completion_cubit.dart';
 import 'required_data_completion_form.dart';
 
 class RequiredDataCompletionContent extends StatelessWidget {
