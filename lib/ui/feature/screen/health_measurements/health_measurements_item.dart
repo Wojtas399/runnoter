@@ -5,11 +5,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../data/entity/health_measurement.dart';
 import '../../../component/edit_delete_popup_menu_component.dart';
 import '../../../component/text/body_text_components.dart';
+import '../../../cubit/health_measurements_cubit.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../feature/dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/dialog_service.dart';
-import 'health_measurements_cubit.dart';
 
 class HealthMeasurementsItem extends StatefulWidget {
   final HealthMeasurement measurement;
