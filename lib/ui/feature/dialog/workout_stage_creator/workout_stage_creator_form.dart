@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'cubit/workout_stage_creator_cubit.dart';
+import '../../../cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import 'workout_stage_creator_distance_form.dart';
 import 'workout_stage_creator_series_form.dart';
 

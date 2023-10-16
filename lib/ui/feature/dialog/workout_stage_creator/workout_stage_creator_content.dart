@@ -4,8 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/gap/gap_horizontal_components.dart';
 import '../../../component/responsive_layout_component.dart';
+import '../../../cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/workout_stage_creator_cubit.dart';
 import 'workout_stage_creator_form.dart';
 
 class WorkoutStageCreatorContent extends StatelessWidget {

@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
+import '../../../cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import '../../../service/utils.dart';
-import 'cubit/workout_stage_creator_cubit.dart';
 
 class WorkoutStageCreatorSeriesStageForm extends StatelessWidget {
   const WorkoutStageCreatorSeriesStageForm({super.key});

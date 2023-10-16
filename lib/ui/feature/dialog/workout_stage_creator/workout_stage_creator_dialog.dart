@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/additional_model/workout_stage.dart';
+import '../../../cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import '../../../service/navigator_service.dart';
-import 'cubit/workout_stage_creator_cubit.dart';
 import 'workout_stage_creator_content.dart';
 
 class WorkoutStageCreatorDialog extends StatelessWidget {
