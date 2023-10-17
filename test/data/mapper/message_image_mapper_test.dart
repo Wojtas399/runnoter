@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/message_image_mapper.dart';
-import 'package:runnoter/domain/entity/message_image.dart';
+import 'package:runnoter/data/model/message_image.dart';
 
 void main() {
   const messageImageId = 'i1';

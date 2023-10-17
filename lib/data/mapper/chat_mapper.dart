@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/chat.dart';
+import '../model/chat.dart';
 
 Chat mapChatFromDto(ChatDto chatDto) => Chat(
       id: chatDto.id,

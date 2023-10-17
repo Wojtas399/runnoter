@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/entity/message.dart';
+import 'package:runnoter/data/model/message.dart';
 
 Message createMessage({
   String id = '',

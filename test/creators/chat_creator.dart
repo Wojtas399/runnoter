@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/entity/chat.dart';
+import 'package:runnoter/data/model/chat.dart';
 
 Chat createChat({
   String id = '',

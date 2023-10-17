@@ -1,7 +1,6 @@
+import '../../data/interface/repository/user_repository.dart';
+import '../../data/model/user.dart';
 import '../../dependency_injection.dart';
-import '../additional_model/settings.dart';
-import '../entity/user.dart';
-import '../repository/user_repository.dart';
 
 class AddUserDataUseCase {
   final UserRepository _userRepository;
@@ -17,7 +16,7 @@ class AddUserDataUseCase {
     required String email,
     required DateTime dateOfBirth,
   }) async {
-    const Settings defaultSettings = Settings(
+    const UserSettings defaultUserSettings = UserSettings(
       themeMode: ThemeMode.system,
       language: Language.english,
       distanceUnit: DistanceUnit.kilometers,
@@ -31,7 +30,7 @@ class AddUserDataUseCase {
       surname: surname,
       email: email,
       dateOfBirth: dateOfBirth,
-      settings: defaultSettings,
+      settings: defaultUserSettings,
     );
     await _userRepository.addUser(user: userData);
   }

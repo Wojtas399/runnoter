@@ -1,5 +1,5 @@
-import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/entity/race.dart';
+import 'package:runnoter/data/model/activity.dart';
+import 'package:runnoter/data/model/race.dart';
 
 Race createRace({
   String id = '',

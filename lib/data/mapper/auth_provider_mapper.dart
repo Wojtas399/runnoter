@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/additional_model/auth_provider.dart';
+import '../interface/service/auth_service.dart';
 
 FirebaseAuthProvider mapAuthProviderToDb(AuthProvider authProvider) =>
     switch (authProvider) {

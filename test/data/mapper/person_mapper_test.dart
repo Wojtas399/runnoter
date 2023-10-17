@@ -1,8 +1,8 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/person_mapper.dart';
-import 'package:runnoter/domain/entity/person.dart';
-import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/data/model/person.dart';
+import 'package:runnoter/data/model/user.dart';
 
 import '../../creators/user_dto_creator.dart';
 

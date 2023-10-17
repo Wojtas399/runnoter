@@ -1,11 +1,13 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/additional_model/settings.dart';
-import '../../domain/entity/user.dart';
+import '../model/user.dart';
 import 'account_type_mapper.dart';
 import 'gender_mapper.dart';
 
-User mapUserFromDto({required UserDto userDto, required Settings settings}) =>
+User mapUserFromDto({
+  required UserDto userDto,
+  required UserSettings userSettings,
+}) =>
     User(
       accountType: mapAccountTypeFromDto(userDto.accountType),
       id: userDto.id,
@@ -14,7 +16,7 @@ User mapUserFromDto({required UserDto userDto, required Settings settings}) =>
       surname: userDto.surname,
       email: userDto.email,
       dateOfBirth: userDto.dateOfBirth,
-      settings: settings,
+      settings: userSettings,
       coachId: userDto.coachId,
     );
 

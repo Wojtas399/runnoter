@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/health_measurement.dart';
+import '../model/health_measurement.dart';
 
 HealthMeasurementDto mapHealthMeasurementToDto(
   HealthMeasurement healthMeasurement,

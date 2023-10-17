@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/mapper/reauthentication_status_mapper.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 
 void main() {
   test(
