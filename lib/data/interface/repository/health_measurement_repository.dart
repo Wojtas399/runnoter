@@ -1,6 +1,6 @@
 import '../../model/health_measurement.dart';
 
-abstract class HealthMeasurementRepository {
+abstract interface class HealthMeasurementRepository {
   Stream<HealthMeasurement?> getMeasurementByDate({
     required DateTime date,
     required String userId,
