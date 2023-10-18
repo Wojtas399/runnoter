@@ -554,7 +554,7 @@ void main() {
         activitiesSettingsDto: createActivitiesSettingsDto(),
       );
 
-      final Stream<List<User>?> repoState$ = repository.dataStream$;
+      final Stream<List<User>?> repoState$ = repository.repositoryState$;
       repository.refreshUserById(userId: userId);
 
       expect(

@@ -32,7 +32,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     if (workoutsLoadedFromDb?.isNotEmpty == true) {
       addOrUpdateEntities(workoutsLoadedFromDb!);
     }
-    await for (final workouts in dataStream$) {
+    await for (final workouts in repositoryState$) {
       yield workouts
           ?.where(
             (Workout workout) =>
@@ -52,7 +52,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required String workoutId,
     required String userId,
   }) async* {
-    await for (final workouts in dataStream$) {
+    await for (final workouts in repositoryState$) {
       Workout? workout = workouts?.firstWhereOrNull(
         (workout) => workout.id == workoutId && workout.userId == userId,
       );
@@ -67,7 +67,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required String userId,
   }) async* {
     await _loadWorkoutsByDateFromRemoteDb(userId, date);
-    await for (final workouts in dataStream$) {
+    await for (final workouts in repositoryState$) {
       yield workouts
           ?.where(
             (workout) =>
@@ -81,7 +81,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   @override
   Stream<List<Workout>?> getAllWorkouts({required String userId}) async* {
     await _loadWorkoutsFromRemoteDb(userId);
-    await for (final workouts in dataStream$) {
+    await for (final workouts in repositoryState$) {
       yield workouts?.where((workout) => workout.userId == userId).toList();
     }
   }
@@ -92,7 +92,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required DateTime endDate,
     required String userId,
   }) async {
-    final existingWorkouts = await dataStream$.first;
+    final existingWorkouts = await repositoryState$.first;
     final workoutsLoadedFromDb =
         await _loadWorkoutsByDateRangeFromDb(startDate, endDate, userId);
     final List<Workout> updatedWorkouts = [

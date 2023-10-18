@@ -58,7 +58,7 @@ void main() {
         ),
       );
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           existingChats,
           [...existingChats, expectedChat],
@@ -102,7 +102,7 @@ void main() {
         ),
       );
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           existingChats,
           [...existingChats, ...loadedChats],
@@ -167,7 +167,7 @@ void main() {
 
       expect(chatId, expectedChatId);
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           [...existingChats, loadedChat]
         ]),
@@ -207,7 +207,7 @@ void main() {
 
       expect(chatId, expectedChatId);
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           [addedChat],
         ]),
@@ -286,7 +286,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([existingChats[0], existingChats[1], updatedChat]),
       );
       verify(
@@ -315,7 +315,7 @@ void main() {
       await repository.deleteChat(chatId: chatId);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([existingChats.first, existingChats.last]),
       );
       verify(() => dbChatService.deleteChat(chatId: chatId)).called(1);

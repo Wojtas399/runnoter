@@ -73,7 +73,7 @@ void main() {
 
       expect(message, expectedMessage);
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           [...existingMessages, expectedMessage]
         ]),
@@ -153,7 +153,7 @@ void main() {
         ]),
       );
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           existingMessages,
           [...existingMessages, ...loadedMessages],
@@ -282,7 +282,7 @@ void main() {
       expected$.add(true);
 
       expect(result$, emitsInOrder([false, true]));
-      await repository.dataStream$.first;
+      await repository.repositoryState$.first;
       verify(
         () => dbMessageService.areThereUnreadMessagesInChatSentByUser$(
           chatId: chatId,
@@ -322,7 +322,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           [...existingMessages, ...loadedMessages],
         ]),
@@ -379,7 +379,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           [...existingMessages, addedMessage],
         ]),
@@ -427,7 +427,7 @@ void main() {
       await repository.markMessagesAsRead(messageIds: ['m1', 'm3']);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([
           createMessage(id: 'm1', status: MessageStatus.read),
           existingMessages[1],
@@ -467,7 +467,7 @@ void main() {
       await repository.deleteAllMessagesFromChat(chatId: chatId);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([existingMessages[1], existingMessages.last]),
       );
       verify(

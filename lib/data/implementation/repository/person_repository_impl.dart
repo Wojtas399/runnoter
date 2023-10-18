@@ -18,7 +18,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
 
   @override
   Stream<Person?> getPersonById({required String personId}) {
-    return dataStream$
+    return repositoryState$
         .map(
           (List<Person>? persons) => persons?.firstWhereOrNull(
             (Person p) => p.id == personId,
@@ -33,7 +33,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
   @override
   Stream<List<Person>?> getPersonsByCoachId({required String coachId}) async* {
     await _loadPersonsByCoachIdFromDb(coachId);
-    await for (final persons in dataStream$) {
+    await for (final persons in repositoryState$) {
       yield persons?.where((Person p) => p.coachId == coachId).toList();
     }
   }
@@ -44,7 +44,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
     AccountType? accountType,
   }) async {
     await _searchForPersonsInDb(searchQuery, accountType);
-    final Stream<List<Person>> matchingPersons$ = dataStream$.map(
+    final Stream<List<Person>> matchingPersons$ = repositoryState$.map(
       (List<Person>? persons) => [
         ...?persons?.where(
           (Person person) => _doesPersonMatch(person, searchQuery, accountType),

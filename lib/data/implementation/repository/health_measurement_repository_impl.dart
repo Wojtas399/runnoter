@@ -23,7 +23,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required DateTime date,
     required String userId,
   }) async* {
-    await for (final measurements in dataStream$) {
+    await for (final measurements in repositoryState$) {
       HealthMeasurement? measurement = measurements?.firstWhereOrNull(
         (measurement) =>
             measurement.userId == userId &&
@@ -45,7 +45,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     if (measurementsLoadedFromDb?.isNotEmpty == true) {
       addOrUpdateEntities(measurementsLoadedFromDb!);
     }
-    await for (final measurements in dataStream$) {
+    await for (final measurements in repositoryState$) {
       yield measurements
           ?.where(
             (measurement) =>
@@ -65,7 +65,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required String userId,
   }) async* {
     await _loadAllMeasurementsFromDb(userId);
-    await for (final measurements in dataStream$) {
+    await for (final measurements in repositoryState$) {
       yield measurements
           ?.where((measurement) => measurement.userId == userId)
           .toList();
@@ -78,7 +78,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required DateTime endDate,
     required String userId,
   }) async {
-    final existingMeasurements = await dataStream$.first;
+    final existingMeasurements = await repositoryState$.first;
     final measurementsLoadedFromDb =
         await _loadMeasurementsByDateRangeFromDb(startDate, endDate, userId);
     final List<HealthMeasurement> updatedMeasurements = [
@@ -101,7 +101,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required String userId,
     required DateTime date,
   }) async {
-    final HealthMeasurement? measurement = await dataStream$
+    final HealthMeasurement? measurement = await repositoryState$
         .map(
           (measurements) => measurements?.firstWhereOrNull(
             (measurement) =>
@@ -165,7 +165,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
       userId: userId,
       date: date,
     );
-    final measurementToDelete = await dataStream$
+    final measurementToDelete = await repositoryState$
         .map(
           (measurements) => <HealthMeasurement?>[...?measurements].firstWhere(
             (HealthMeasurement? measurement) =>
@@ -188,7 +188,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     await _dbHealthMeasurementService.deleteAllUserMeasurements(
       userId: userId,
     );
-    final repositoryState = await dataStream$.first;
+    final repositoryState = await repositoryState$.first;
     final List<String> idsOfUserMeasurements = [
       ...?repositoryState
           ?.where((measurement) => measurement.userId == userId)

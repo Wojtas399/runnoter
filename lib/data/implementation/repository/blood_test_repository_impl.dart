@@ -21,7 +21,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     required String bloodTestId,
     required String userId,
   }) async* {
-    await for (final bloodTests in dataStream$) {
+    await for (final bloodTests in repositoryState$) {
       BloodTest? bloodTest = bloodTests?.firstWhereOrNull(
         (BloodTest test) => test.id == bloodTestId && test.userId == userId,
       );
@@ -36,14 +36,14 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     if (testsLoadedFromDb?.isNotEmpty == true) {
       addOrUpdateEntities(testsLoadedFromDb!);
     }
-    await for (final readings in dataStream$) {
+    await for (final readings in repositoryState$) {
       yield readings?.where((bloodTest) => bloodTest.userId == userId).toList();
     }
   }
 
   @override
   Future<void> refreshTestsByUserId({required String userId}) async {
-    final existingTests = await dataStream$.first;
+    final existingTests = await repositoryState$.first;
     final userTestsLoadedFromDb = await _loadTestsByUserIdFromDb(userId);
     final List<BloodTest> updatedTests = [
       ...?existingTests?.where((test) => test.userId != userId),

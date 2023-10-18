@@ -26,7 +26,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required String raceId,
     required String userId,
   }) async* {
-    await for (final races in dataStream$) {
+    await for (final races in repositoryState$) {
       Race? race = races?.firstWhereOrNull(
         (elem) => elem.id == raceId && elem.userId == userId,
       );
@@ -46,7 +46,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     if (racesLoadedFromDb?.isNotEmpty == true) {
       addOrUpdateEntities(racesLoadedFromDb!);
     }
-    await for (final races in dataStream$) {
+    await for (final races in repositoryState$) {
       yield races
           ?.where(
             (race) =>
@@ -67,7 +67,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required String userId,
   }) async* {
     await _loadRacesByDateFromDb(date, userId);
-    await for (final races in dataStream$) {
+    await for (final races in repositoryState$) {
       yield races
           ?.where(
             (race) =>
@@ -84,7 +84,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     if (racesLoadedFromDb?.isNotEmpty == true) {
       addOrUpdateEntities(racesLoadedFromDb!);
     }
-    await for (final races in dataStream$) {
+    await for (final races in repositoryState$) {
       yield races?.where((race) => race.userId == userId).toList();
     }
   }
@@ -95,7 +95,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required DateTime endDate,
     required String userId,
   }) async {
-    final existingRaces = await dataStream$.first;
+    final existingRaces = await repositoryState$.first;
     final racesLoadedFromDb =
         await _loadRacesByDateRangeFromDb(startDate, endDate, userId);
     final List<Race> updatedRaces = [
@@ -115,7 +115,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
 
   @override
   Future<void> refreshRacesByUserId({required String userId}) async {
-    final existingRaces = await dataStream$.first;
+    final existingRaces = await repositoryState$.first;
     final userRacesLoadedFromDb = await _loadRacesByUserIdFromDb(userId);
     final List<Race> updatedRaces = [
       ...?existingRaces?.where((race) => race.userId != userId),

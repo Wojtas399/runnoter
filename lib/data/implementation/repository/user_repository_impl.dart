@@ -26,7 +26,7 @@ class UserRepositoryImpl extends StateRepository<User>
         super(initialData: initialState);
 
   @override
-  Stream<User?> getUserById({required String userId}) => dataStream$
+  Stream<User?> getUserById({required String userId}) => repositoryState$
       .map(
         (List<User>? users) => users?.firstWhereOrNull(
           (User? user) => user?.id == userId,

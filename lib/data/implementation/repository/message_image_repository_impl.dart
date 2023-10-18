@@ -177,14 +177,14 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
   }
 
   Stream<List<MessageImage>> _getImagesByMessageId(String messageId) =>
-      dataStream$.map(
+      repositoryState$.map(
         (images) =>
             images?.where((img) => img.messageId == messageId).toList() ??
             const [],
       );
 
   Stream<List<MessageImage>?> _getImagesFromChat(String chatId) =>
-      dataStream$.asyncMap(
+      repositoryState$.asyncMap(
         (images) async {
           final List<MessageImage> matchedImages = [];
           for (final image in [...?images]) {

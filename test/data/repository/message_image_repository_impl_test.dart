@@ -144,7 +144,7 @@ void main() {
         ]),
       );
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           existingMessageImages,
           [...existingMessageImages, ...loadedMessageImages],
@@ -261,7 +261,7 @@ void main() {
         ]),
       );
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           existingImages,
           [...existingImages, ...loadedImages],
@@ -313,7 +313,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([...existingImages, ...loadedImages]),
       );
       verify(
@@ -469,7 +469,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([expectedAddedMessageImages]),
       );
       verify(
@@ -532,7 +532,7 @@ void main() {
       await repository.deleteAllImagesFromChat(chatId: chatId);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits(existingMessageImages.slice(4)),
       );
       verify(
