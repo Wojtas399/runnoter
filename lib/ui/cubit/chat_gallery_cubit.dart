@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/interface/repository/message_repository.dart';
 import '../../data/model/message.dart';
 import '../../data/model/message_image.dart';
+import '../../data/repository/message/message_repository.dart';
 import '../../data/repository/message_image/message_image_repository.dart';
 import '../../dependency_injection.dart';
 import '../extension/message_images_extensions.dart';

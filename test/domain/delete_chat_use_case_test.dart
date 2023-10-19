@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/message_repository.dart';
 import 'package:runnoter/data/repository/chat/chat_repository.dart';
+import 'package:runnoter/data/repository/message/message_repository.dart';
 import 'package:runnoter/data/repository/message_image/message_image_repository.dart';
 import 'package:runnoter/domain/use_case/delete_chat_use_case.dart';
 
