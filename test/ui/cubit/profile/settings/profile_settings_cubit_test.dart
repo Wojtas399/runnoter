@@ -2,9 +2,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/model/user.dart';
 import 'package:runnoter/data/repository/user/user_repository.dart';
+import 'package:runnoter/data/service/auth/auth_service.dart';
 import 'package:runnoter/ui/cubit/profile/settings/profile_settings_cubit.dart';
 
 import '../../../../creators/user_creator.dart';

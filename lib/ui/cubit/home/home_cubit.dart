@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../data/model/user.dart';
 import '../../../data/repository/user/user_repository.dart';
+import '../../../data/service/auth/auth_service.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';
 import '../../model/cubit_with_status.dart';

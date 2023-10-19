@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../data/interface/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
+import '../../../data/service/auth/auth_service.dart';
 import '../../common_feature/blood_tests/blood_tests.dart';
 import '../../component/page_not_found_component.dart';
 

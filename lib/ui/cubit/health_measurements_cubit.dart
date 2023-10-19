@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../data/interface/service/auth_service.dart';
 import '../../data/model/health_measurement.dart';
 import '../../data/repository/health_measurement/health_measurement_repository.dart';
+import '../../data/service/auth/auth_service.dart';
 import '../../dependency_injection.dart';
 
 class HealthMeasurementsCubit extends Cubit<List<HealthMeasurement>?> {

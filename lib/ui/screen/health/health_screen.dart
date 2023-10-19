@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../data/interface/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
+import '../../../data/service/auth/auth_service.dart';
 import '../../component/page_not_found_component.dart';
 import '../../cubit/health_stats/health_stats_cubit.dart';
 import '../../cubit/today_measurement_cubit.dart';
