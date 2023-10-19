@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../../../../data/interface/service/coaching_request_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../data/service/auth/auth_service.dart';
+import '../../../data/service/coaching_request/coaching_request_service.dart';
 import '../../component/material_3_speed_dial_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';

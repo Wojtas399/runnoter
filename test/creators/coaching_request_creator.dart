@@ -1,4 +1,4 @@
-import 'package:runnoter/data/interface/service/coaching_request_service.dart';
+import 'package:runnoter/data/service/coaching_request/coaching_request_service.dart';
 
 CoachingRequest createCoachingRequest({
   String id = '',

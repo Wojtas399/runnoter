@@ -2,8 +2,6 @@ import 'package:firebase/firebase.dart';
 import 'package:get_it/get_it.dart';
 
 import 'common/date_service.dart';
-import 'data/implementation/service/coaching_request_service_impl.dart';
-import 'data/interface/service/coaching_request_service.dart';
 import 'data/repository/blood_test/blood_test_repository.dart';
 import 'data/repository/blood_test/blood_test_repository_impl.dart';
 import 'data/repository/chat/chat_repository.dart';
@@ -24,6 +22,8 @@ import 'data/repository/workout/workout_repository.dart';
 import 'data/repository/workout/workout_repository_impl.dart';
 import 'data/service/auth/auth_service.dart';
 import 'data/service/auth/auth_service_impl.dart';
+import 'data/service/coaching_request/coaching_request_service.dart';
+import 'data/service/coaching_request/coaching_request_service_impl.dart';
 import 'domain/use_case/add_user_data_use_case.dart';
 import 'domain/use_case/delete_chat_use_case.dart';
 import 'domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';

@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/service/coaching_request_service.dart';
+import 'package:runnoter/data/service/coaching_request/coaching_request_service.dart';
 
 class MockCoachingRequestService extends Mock
     implements CoachingRequestService {

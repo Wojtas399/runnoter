@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../data/interface/service/coaching_request_service.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../../../domain/model/coaching_request_with_person.dart';
 import '../../../../../domain/use_case/delete_chat_use_case.dart';
@@ -12,6 +11,7 @@ import '../../../../../domain/use_case/load_chat_id_use_case.dart';
 import '../../../data/model/person.dart';
 import '../../../data/repository/person/person_repository.dart';
 import '../../../data/service/auth/auth_service.dart';
+import '../../../data/service/coaching_request/coaching_request_service.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';
 import '../../model/cubit_with_status.dart';
