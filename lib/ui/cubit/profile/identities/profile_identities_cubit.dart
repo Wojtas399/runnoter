@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../../data/interface/repository/user_repository.dart';
 import '../../../../../../data/interface/repository/workout_repository.dart';
 import '../../../../../../data/interface/service/auth_service.dart';
 import '../../../../../../data/interface/service/coaching_request_service.dart';
@@ -14,6 +13,7 @@ import '../../../../data/repository/blood_test/blood_test_repository.dart';
 import '../../../../data/repository/health_measurement/health_measurement_repository.dart';
 import '../../../../data/repository/person/person_repository.dart';
 import '../../../../data/repository/race/race_repository.dart';
+import '../../../../data/repository/user/user_repository.dart';
 import '../../../model/cubit_state.dart';
 import '../../../model/cubit_status.dart';
 import '../../../model/cubit_with_status.dart';
