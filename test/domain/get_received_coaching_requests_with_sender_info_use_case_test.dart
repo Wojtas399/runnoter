@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/interface/service/coaching_request_service.dart';
 import 'package:runnoter/data/model/person.dart';
+import 'package:runnoter/data/repository/person/person_repository.dart';
 import 'package:runnoter/domain/model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 

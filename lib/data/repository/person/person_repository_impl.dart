@@ -2,12 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../../dependency_injection.dart';
-import '../../interface/repository/person_repository.dart';
 import '../../mapper/account_type_mapper.dart';
 import '../../mapper/person_mapper.dart';
 import '../../model/person.dart';
 import '../../model/state_repository.dart';
 import '../../model/user.dart';
+import 'person_repository.dart';
 
 class PersonRepositoryImpl extends StateRepository<Person>
     implements PersonRepository {

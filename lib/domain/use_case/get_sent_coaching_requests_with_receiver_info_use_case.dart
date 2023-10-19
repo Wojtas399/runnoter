@@ -1,8 +1,8 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../../data/interface/repository/person_repository.dart';
 import '../../data/interface/service/coaching_request_service.dart';
 import '../../data/model/person.dart';
+import '../../data/repository/person/person_repository.dart';
 import '../../dependency_injection.dart';
 import '../model/coaching_request_with_person.dart';
 

@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../../common/date_service.dart';
-import '../../../../../data/interface/repository/person_repository.dart';
 import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../data/model/chat.dart';
@@ -16,6 +15,7 @@ import '../../../data/model/person.dart';
 import '../../../data/repository/chat/chat_repository.dart';
 import '../../../data/repository/message/message_repository.dart';
 import '../../../data/repository/message_image/message_image_repository.dart';
+import '../../../data/repository/person/person_repository.dart';
 import '../../extension/message_images_extensions.dart';
 
 part 'chat_state.dart';

@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../data/interface/repository/person_repository.dart';
 import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../../../domain/use_case/load_chat_id_use_case.dart';
 import '../../../data/model/person.dart';
+import '../../../data/repository/person/person_repository.dart';
 
 part 'client_state.dart';
 
