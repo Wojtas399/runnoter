@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/chat_repository.dart';
 import 'package:runnoter/data/model/chat.dart';
+import 'package:runnoter/data/repository/chat/chat_repository.dart';
 
 class MockChatRepository extends Mock implements ChatRepository {
   void mockGetChatById({Chat? chat, Stream<Chat?>? chatStream}) {
