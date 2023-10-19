@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import '../../../../../common/date_service.dart';
-import '../../../../../data/interface/repository/workout_repository.dart';
 import '../../../../../data/model/custom_exception.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../data/model/activity.dart';
 import '../../../data/model/workout.dart';
+import '../../../data/repository/workout/workout_repository.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';
 import '../../model/cubit_with_status.dart';
