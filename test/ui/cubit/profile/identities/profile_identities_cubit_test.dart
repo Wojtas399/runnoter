@@ -2,7 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/race_repository.dart';
 import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/interface/repository/workout_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
@@ -12,6 +11,7 @@ import 'package:runnoter/data/model/user.dart';
 import 'package:runnoter/data/repository/blood_test/blood_test_repository.dart';
 import 'package:runnoter/data/repository/health_measurement/health_measurement_repository.dart';
 import 'package:runnoter/data/repository/person/person_repository.dart';
+import 'package:runnoter/data/repository/race/race_repository.dart';
 import 'package:runnoter/ui/cubit/profile/identities/profile_identities_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 
