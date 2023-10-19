@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/health_measurement_repository.dart';
 import 'package:runnoter/data/interface/service/auth_service.dart';
+import 'package:runnoter/data/repository/health_measurement/health_measurement_repository.dart';
 import 'package:runnoter/ui/cubit/health_measurements_cubit.dart';
 
 import '../../creators/health_measurement_creator.dart';
