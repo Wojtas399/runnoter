@@ -16,11 +16,11 @@ void main() {
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'amount of series is higher than 0, '
     'series distance in meters is higher than 0, '
     'walking distance is higher than 0, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
@@ -28,16 +28,16 @@ void main() {
         walkingDistanceInMeters: walkingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'amount of series is higher than 0, '
     'series distance in meters is higher than 0, '
     'break jogging distance is higher than 0, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
@@ -45,28 +45,28 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'amount of series is null, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         seriesDistanceInMeters: seriesDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'amount of series is equal to 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: 0,
@@ -74,14 +74,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'amount of series is lower than 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: -10,
@@ -89,28 +89,28 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'series distance in meters is null, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'series distance in meters is equal to 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: 0,
@@ -118,14 +118,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'series distance in meters is lower than 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: -100,
@@ -133,14 +133,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'walking and jogging distances are 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
@@ -149,14 +149,14 @@ void main() {
         joggingDistanceInMeters: 0,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'walking distance is equal to 0 and jogging distance is higher than 0, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
@@ -165,14 +165,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'walking distance is higher than 0 and jogging distance is equal to 0, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
@@ -181,14 +181,14 @@ void main() {
         joggingDistanceInMeters: 0,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'walking distance is lower than 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
@@ -197,14 +197,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'jogging distance is lower than 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
@@ -213,14 +213,14 @@ void main() {
         joggingDistanceInMeters: -80,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'amount of series is different than original, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
@@ -230,14 +230,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'series distance in meters is different than original, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
@@ -247,14 +247,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'walking distance is different than original, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
@@ -264,14 +264,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'jogging distance is different than original, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
@@ -281,14 +281,14 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters + 20,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'all data are same as original, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
@@ -298,12 +298,12 @@ void main() {
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'copy with amount of series, '
+    'copy with amountOfSeries, '
     'should copy current value if new value is null',
     () {
       const int expected = 10;
@@ -317,7 +317,7 @@ void main() {
   );
 
   test(
-    'copy with series distance in meters, '
+    'copy with seriesDistanceInMeters, '
     'should copy current value if new value is null',
     () {
       const int expected = 100;
@@ -333,7 +333,7 @@ void main() {
   );
 
   test(
-    'copy with walking distance in meters, '
+    'copy with walkingDistanceInMeters, '
     'should copy current value if new value is null',
     () {
       const int expected = 20;
@@ -347,7 +347,7 @@ void main() {
   );
 
   test(
-    'copy with jogging distance in meters, '
+    'copy with joggingDistanceInMeters, '
     'should copy current value if new value is null',
     () {
       const int expected = 80;

@@ -105,7 +105,7 @@ class _SaveButton extends StatelessWidget {
       (WorkoutStageCreatorCubit cubit) => cubit.state.isEditMode,
     );
     final bool isButtonDisabled = context.select(
-      (WorkoutStageCreatorCubit cubit) => cubit.state.isSubmitButtonDisabled,
+      (WorkoutStageCreatorCubit cubit) => !cubit.state.canSubmit,
     );
     final Widget label = Text(
       isEditMode ? Str.of(context).save : Str.of(context).add,

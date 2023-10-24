@@ -12,28 +12,21 @@ class WorkoutStageCreatorDistanceForm extends WorkoutStageCreatorForm {
   });
 
   @override
-  List<Object?> get props => [
-        originalStage,
-        distanceInKm,
-        maxHeartRate,
-      ];
+  List<Object?> get props => [originalStage, distanceInKm, maxHeartRate];
 
   @override
-  bool get isSubmitButtonDisabled =>
-      _areDataIncorrect || _areDataSameAsOriginal;
+  bool get canSubmit =>
+      _areDataCorrect && _areDataDifferentThanOriginalOriginal;
 
-  bool get _areDataSameAsOriginal =>
-      distanceInKm == originalStage?.distanceInKm &&
-      maxHeartRate == originalStage?.maxHeartRate;
+  bool get _areDataDifferentThanOriginalOriginal =>
+      distanceInKm != originalStage?.distanceInKm ||
+      maxHeartRate != originalStage?.maxHeartRate;
 
-  bool get _areDataIncorrect =>
-      _isDistanceInKmIncorrect || _isMaxHeartRateIncorrect;
+  bool get _areDataCorrect => _isDistanceInKmCorrect && _isMaxHeartRateCorrect;
 
-  bool get _isDistanceInKmIncorrect =>
-      distanceInKm == null || distanceInKm! <= 0;
+  bool get _isDistanceInKmCorrect => distanceInKm != null && distanceInKm! > 0;
 
-  bool get _isMaxHeartRateIncorrect =>
-      maxHeartRate == null || maxHeartRate! <= 0;
+  bool get _isMaxHeartRateCorrect => maxHeartRate != null && maxHeartRate! > 0;
 
   @override
   WorkoutStageCreatorDistanceForm copyWith({

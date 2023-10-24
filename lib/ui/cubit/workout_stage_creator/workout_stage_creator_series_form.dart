@@ -25,37 +25,36 @@ class WorkoutStageCreatorSeriesForm extends WorkoutStageCreatorForm {
       ];
 
   @override
-  bool get isSubmitButtonDisabled =>
-      _areDataIncorrect || _areDataSameAsOriginal;
+  bool get canSubmit => _areDataCorrect && _areDataDifferentThanOriginal;
 
-  bool get _areDataIncorrect =>
-      _isAmountOfSeriesIncorrect ||
-      _isSeriesDistanceInMetersIncorrect ||
-      _isBreakDistanceIncorrect;
+  bool get _areDataCorrect =>
+      _isAmountOfSeriesCorrect &&
+      _isSeriesDistanceInMetersCorrect &&
+      _isBreakDistanceCorrect;
 
-  bool get _areDataSameAsOriginal =>
-      amountOfSeries == originalStage?.amountOfSeries &&
-      seriesDistanceInMeters == originalStage?.seriesDistanceInMeters &&
-      walkingDistanceInMeters == originalStage?.walkingDistanceInMeters &&
-      joggingDistanceInMeters == originalStage?.joggingDistanceInMeters;
+  bool get _areDataDifferentThanOriginal =>
+      amountOfSeries != originalStage?.amountOfSeries ||
+      seriesDistanceInMeters != originalStage?.seriesDistanceInMeters ||
+      walkingDistanceInMeters != originalStage?.walkingDistanceInMeters ||
+      joggingDistanceInMeters != originalStage?.joggingDistanceInMeters;
 
-  bool get _isAmountOfSeriesIncorrect =>
-      amountOfSeries == null || amountOfSeries! <= 0;
+  bool get _isAmountOfSeriesCorrect =>
+      amountOfSeries != null && amountOfSeries! > 0;
 
-  bool get _isSeriesDistanceInMetersIncorrect =>
-      seriesDistanceInMeters == null || seriesDistanceInMeters! <= 0;
+  bool get _isSeriesDistanceInMetersCorrect =>
+      seriesDistanceInMeters != null && seriesDistanceInMeters! > 0;
 
-  bool get _isBreakDistanceIncorrect {
+  bool get _isBreakDistanceCorrect {
     if (walkingDistanceInMeters != null && joggingDistanceInMeters != null) {
-      return walkingDistanceInMeters! < 0 ||
-          joggingDistanceInMeters! < 0 ||
-          (walkingDistanceInMeters! == 0 && joggingDistanceInMeters! == 0);
+      return walkingDistanceInMeters! >= 0 &&
+          joggingDistanceInMeters! >= 0 &&
+          (walkingDistanceInMeters! != 0 || joggingDistanceInMeters! != 0);
     } else if (walkingDistanceInMeters != null) {
-      return walkingDistanceInMeters! <= 0;
+      return walkingDistanceInMeters! > 0;
     } else if (joggingDistanceInMeters != null) {
-      return joggingDistanceInMeters! <= 0;
+      return joggingDistanceInMeters! > 0;
     }
-    return true;
+    return false;
   }
 
   @override

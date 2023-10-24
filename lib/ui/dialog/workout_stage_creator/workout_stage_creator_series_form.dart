@@ -270,5 +270,5 @@ class _JoggingDistanceState extends State<_JoggingDistance> {
 
 void _onSubmitted(BuildContext context) {
   final cubit = context.read<WorkoutStageCreatorCubit>();
-  if (!cubit.state.isSubmitButtonDisabled) cubit.submit();
+  if (cubit.state.canSubmit) cubit.submit();
 }

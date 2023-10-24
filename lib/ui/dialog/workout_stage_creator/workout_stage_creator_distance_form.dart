@@ -152,5 +152,5 @@ class _MaxHeartRateState extends State<_MaxHeartRate> {
 
 void _onSubmitted(BuildContext context) {
   final bloc = context.read<WorkoutStageCreatorCubit>();
-  if (!bloc.state.isSubmitButtonDisabled) bloc.submit();
+  if (bloc.state.canSubmit) bloc.submit();
 }
