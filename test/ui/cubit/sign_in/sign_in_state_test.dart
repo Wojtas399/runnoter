@@ -14,36 +14,36 @@ void main() {
   });
 
   test(
-    'is button disabled, email is empty, should be true',
+    'canSubmit, email is empty, should be false',
     () {
       state = state.copyWith(
         password: 'password',
       );
 
-      expect(state.isButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is button disabled, password is empty, should be true',
+    'canSubmit, password is empty, should be false',
     () {
       state = state.copyWith(
         email: 'email@example.com',
       );
 
-      expect(state.isButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    "is button disabled, email and password aren't empty, should be false",
+    "canSubmit, email and password aren't empty, should be true",
     () {
       state = state.copyWith(
         email: 'email@example.com',
         password: 'password',
       );
 
-      expect(state.isButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 

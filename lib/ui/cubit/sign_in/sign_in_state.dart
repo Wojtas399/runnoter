@@ -13,7 +13,7 @@ class SignInState extends CubitState<SignInState> {
   @override
   List<Object?> get props => [status, email, password];
 
-  bool get isButtonDisabled => email.isEmpty || password.isEmpty;
+  bool get canSubmit => email.isNotEmpty && password.isNotEmpty;
 
   @override
   SignInState copyWith({

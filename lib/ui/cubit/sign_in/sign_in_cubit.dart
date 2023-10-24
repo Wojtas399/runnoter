@@ -39,7 +39,7 @@ class SignInCubit
   }
 
   Future<void> submit() async {
-    if (state.isButtonDisabled) return;
+    if (!state.canSubmit) return;
     emitLoadingStatus();
     try {
       await _authService.signIn(email: state.email, password: state.password);
