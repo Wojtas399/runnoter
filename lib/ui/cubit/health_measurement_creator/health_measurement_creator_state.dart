@@ -32,9 +32,7 @@ class HealthMeasurementCreatorState
       _areDataDifferentThanOriginal;
 
   bool get _isDateValid {
-    if (date == null) {
-      return false;
-    }
+    if (date == null) return false;
     final todayDate = _dateService.getToday();
     return date!.isBefore(todayDate) ||
         _dateService.areDaysTheSame(date!, todayDate);

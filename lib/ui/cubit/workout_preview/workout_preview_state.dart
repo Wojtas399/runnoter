@@ -20,12 +20,7 @@ class WorkoutPreviewState extends Equatable {
       activityStatus != null;
 
   @override
-  List<Object?> get props => [
-        date,
-        workoutName,
-        stages,
-        activityStatus,
-      ];
+  List<Object?> get props => [date, workoutName, stages, activityStatus];
 
   WorkoutPreviewState copyWith({
     DateTime? date,

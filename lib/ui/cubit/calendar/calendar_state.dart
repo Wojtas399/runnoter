@@ -14,12 +14,7 @@ class CalendarState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        dateRangeType,
-        dateRange,
-        weeks,
-        pressedDay,
-      ];
+  List<Object?> get props => [dateRangeType, dateRange, weeks, pressedDay];
 
   CalendarState copyWith({
     DateRangeType? dateRangeType,
