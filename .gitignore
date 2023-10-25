@@ -50,4 +50,7 @@ firebase_options.dart
 firebase_app_id_file.json
 Podfile
 Podfile.lock
+
+# API related
 Keys.xcconfig
+strings.xml

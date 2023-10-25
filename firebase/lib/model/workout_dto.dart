@@ -7,7 +7,7 @@ class WorkoutDto extends Equatable {
   final String id;
   final String userId;
   final DateTime date;
-  final RunStatusDto status;
+  final ActivityStatusDto status;
   final String name;
   final List<WorkoutStageDto> stages;
 
@@ -21,14 +21,14 @@ class WorkoutDto extends Equatable {
   });
 
   WorkoutDto.fromJson({
-    required String docId,
+    required String workoutId,
     required String userId,
     required Map<String, dynamic>? json,
   }) : this(
-          id: docId,
+          id: workoutId,
           userId: userId,
           date: mapDateTimeFromString(json?[workoutDtoDateField]),
-          status: RunStatusDto.fromJson(json?[_statusField]),
+          status: ActivityStatusDto.fromJson(json?[_statusField]),
           name: json?[_nameField],
           stages: (json?[_stagesField] as List)
               .map(
@@ -58,19 +58,18 @@ class WorkoutDto extends Equatable {
 }
 
 Map<String, dynamic> createWorkoutJsonToUpdate({
+  DateTime? date,
   String? workoutName,
-  RunStatusDto? status,
+  ActivityStatusDto? status,
   List<WorkoutStageDto>? stages,
 }) =>
     {
+      if (date != null) workoutDtoDateField: mapDateTimeToString(date),
       if (workoutName != null) _nameField: workoutName,
       if (status != null) _statusField: status.toJson(),
       if (stages != null)
-        _stagesField: stages
-            .map(
-              (WorkoutStageDto stage) => stage.toJson(),
-            )
-            .toList(),
+        _stagesField:
+            stages.map((WorkoutStageDto stage) => stage.toJson()).toList(),
     };
 
 const String workoutDtoDateField = 'date';

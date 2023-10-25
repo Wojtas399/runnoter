@@ -1,5 +1,5 @@
-import 'package:runnoter/domain/entity/race.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/data/model/activity.dart';
+import 'package:runnoter/data/model/race.dart';
 
 Race createRace({
   String id = '',
@@ -9,7 +9,7 @@ Race createRace({
   String place = '',
   double distance = 0.0,
   Duration expectedDuration = const Duration(),
-  RunStatus status = const RunStatusPending(),
+  ActivityStatus status = const ActivityStatusPending(),
 }) =>
     Race(
       id: id,

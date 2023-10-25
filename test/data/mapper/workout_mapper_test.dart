@@ -1,15 +1,14 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/workout_mapper.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
-import 'package:runnoter/domain/entity/workout.dart';
-import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/data/model/activity.dart';
+import 'package:runnoter/data/model/workout.dart';
 
 import '../../creators/workout_creator.dart';
 
 void main() {
   test(
-    'map workout from firebase, '
+    'mapWorkoutFromDto, '
     'should map dto model to entity model',
     () {
       const String id = 'w1';
@@ -24,7 +23,7 @@ void main() {
         id: id,
         userId: userId,
         date: date,
-        status: firebase.RunStatusDoneDto(
+        status: firebase.ActivityStatusDoneDto(
           coveredDistanceInKm: coveredDistanceInKm,
           avgPaceDto: const firebase.PaceDto(
             minutes: avgPaceMin,
@@ -54,7 +53,7 @@ void main() {
         id: id,
         userId: userId,
         date: date,
-        status: const RunStatusDone(
+        status: const ActivityStatusDone(
           coveredDistanceInKm: coveredDistanceInKm,
           avgPace: Pace(minutes: avgPaceMin, seconds: avgPaceSeconds),
           avgHeartRate: avgHeartRate,
@@ -78,7 +77,7 @@ void main() {
         ],
       );
 
-      final Workout entity = mapWorkoutFromFirebase(dto);
+      final Workout entity = mapWorkoutFromDto(dto);
 
       expect(entity, expectedEntity);
     },

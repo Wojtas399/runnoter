@@ -21,10 +21,10 @@ class AppearanceSettingsDto extends Equatable {
         language,
       ];
 
-  AppearanceSettingsDto.fromJson(
-    String userId,
-    Map<String, dynamic>? json,
-  ) : this(
+  AppearanceSettingsDto.fromJson({
+    required String userId,
+    required Map<String, dynamic>? json,
+  }) : this(
           userId: userId,
           themeMode: mapThemeModeFromStringToEnum(
             json?[_AppearanceSettingsFields.themeMode.name],
@@ -57,14 +57,13 @@ enum Language {
 Map<String, dynamic> createAppearanceSettingsJsonToUpdate({
   ThemeMode? themeMode,
   Language? language,
-}) {
-  return {
-    if (themeMode != null)
-      _AppearanceSettingsFields.themeMode.name: themeMode.name,
-    if (language != null)
-      _AppearanceSettingsFields.language.name: language.name,
-  };
-}
+}) =>
+    {
+      if (themeMode != null)
+        _AppearanceSettingsFields.themeMode.name: themeMode.name,
+      if (language != null)
+        _AppearanceSettingsFields.language.name: language.name,
+    };
 
 enum _AppearanceSettingsFields {
   themeMode,

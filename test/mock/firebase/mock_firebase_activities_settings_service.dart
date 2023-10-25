@@ -1,33 +1,36 @@
 import 'package:firebase/firebase.dart';
 import 'package:mocktail/mocktail.dart';
 
-class FakeWorkoutSettingsDto extends Fake implements WorkoutSettingsDto {}
+class FakeWorkoutSettingsDto extends Fake implements ActivitiesSettingsDto {}
 
 class MockFirebaseActivitiesSettingsService extends Mock
     implements FirebaseActivitiesSettingsService {
+  MockFirebaseActivitiesSettingsService() {
+    registerFallbackValue(FakeWorkoutSettingsDto());
+  }
+
   void mockLoadSettingsByUserId({
-    WorkoutSettingsDto? workoutSettingsDto,
+    ActivitiesSettingsDto? activitiesSettingsDto,
   }) {
     when(
       () => loadSettingsByUserId(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(workoutSettingsDto));
+    ).thenAnswer((_) => Future.value(activitiesSettingsDto));
   }
 
   void mockAddSettings({
-    WorkoutSettingsDto? workoutSettingsDto,
+    ActivitiesSettingsDto? activitiesSettingsDto,
   }) {
-    _mockWorkoutSettingsDto();
     when(
       () => addSettings(
-        workoutSettingsDto: any(named: 'workoutSettingsDto'),
+        activitiesSettingsDto: any(named: 'activitiesSettingsDto'),
       ),
-    ).thenAnswer((invocation) => Future.value(workoutSettingsDto));
+    ).thenAnswer((_) => Future.value(activitiesSettingsDto));
   }
 
   void mockUpdateSettings({
-    WorkoutSettingsDto? updatedWorkoutSettingsDto,
+    ActivitiesSettingsDto? updatedActivitiesSettingsDto,
   }) {
     when(
       () => updateSettings(
@@ -35,7 +38,7 @@ class MockFirebaseActivitiesSettingsService extends Mock
         distanceUnit: any(named: 'distanceUnit'),
         paceUnit: any(named: 'paceUnit'),
       ),
-    ).thenAnswer((invocation) => Future.value(updatedWorkoutSettingsDto));
+    ).thenAnswer((_) => Future.value(updatedActivitiesSettingsDto));
   }
 
   void mockDeleteSettingsForUser() {
@@ -43,10 +46,6 @@ class MockFirebaseActivitiesSettingsService extends Mock
       () => deleteSettingsForUser(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
-  }
-
-  void _mockWorkoutSettingsDto() {
-    registerFallbackValue(FakeWorkoutSettingsDto());
+    ).thenAnswer((_) => Future.value());
   }
 }

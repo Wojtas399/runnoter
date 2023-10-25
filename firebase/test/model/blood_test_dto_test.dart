@@ -4,46 +4,45 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const String id = 'br1';
   const String userId = 'u1';
-  final BloodTestDto testDto = BloodTestDto(
-    id: id,
-    userId: userId,
-    date: DateTime(2023, 5, 2),
-    parameterResultDtos: const [
-      BloodParameterResultDto(
-        parameter: BloodParameter.wbc,
-        value: 4.45,
-      ),
-      BloodParameterResultDto(
-        parameter: BloodParameter.ferritin,
-        value: 54.1,
-      ),
-    ],
-  );
-  Map<String, dynamic> testJson = {
-    'date': '2023-05-02',
-    'parameterResults': [
-      {
-        'parameter': 'wbc',
-        'value': 4.45,
-      },
-      {
-        'parameter': 'ferritin',
-        'value': 54.1,
-      },
-    ],
-  };
+  final DateTime date = DateTime(2023, 5, 2);
+  const String dateStr = '2023-05-02';
+  const List<BloodParameterResultDto> parameterResults = [
+    BloodParameterResultDto(
+      parameter: BloodParameter.wbc,
+      value: 4.45,
+    ),
+    BloodParameterResultDto(
+      parameter: BloodParameter.ferritin,
+      value: 54.1,
+    ),
+  ];
+  const List<Map<String, dynamic>> parameterResultJsons = [
+    {'parameter': 'wbc', 'value': 4.45},
+    {'parameter': 'ferritin', 'value': 54.1},
+  ];
 
   test(
     'from json, '
     'should map json to dto',
     () {
-      final BloodTestDto dto = BloodTestDto.fromJson(
+      final Map<String, dynamic> json = {
+        'date': dateStr,
+        'parameterResults': parameterResultJsons,
+      };
+      final BloodTestDto expectedDto = BloodTestDto(
         id: id,
         userId: userId,
-        json: testJson,
+        date: date,
+        parameterResultDtos: parameterResults,
       );
 
-      expect(dto, testDto);
+      final BloodTestDto dto = BloodTestDto.fromJson(
+        bloodTestId: id,
+        userId: userId,
+        json: json,
+      );
+
+      expect(dto, expectedDto);
     },
   );
 
@@ -51,9 +50,50 @@ void main() {
     'to json, '
     'should map dto to json',
     () {
-      final Map<String, dynamic> json = testDto.toJson();
+      final BloodTestDto dto = BloodTestDto(
+        id: id,
+        userId: userId,
+        date: date,
+        parameterResultDtos: parameterResults,
+      );
+      final Map<String, dynamic> expectedJson = {
+        'date': dateStr,
+        'parameterResults': parameterResultJsons,
+      };
 
-      expect(json, testJson);
+      final Map<String, dynamic> json = dto.toJson();
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'date is null, '
+    'should not include date in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'parameterResults': parameterResultJsons,
+      };
+
+      final Map<String, dynamic> json = createBloodTestJsonToUpdate(
+        parameterResultDtos: parameterResults,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'parameter results are null, '
+    'should not include parameter results in json',
+    () {
+      final Map<String, dynamic> expectedJson = {'date': dateStr};
+
+      final Map<String, dynamic> json = createBloodTestJsonToUpdate(date: date);
+
+      expect(json, expectedJson);
     },
   );
 }

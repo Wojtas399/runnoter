@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase_collections.dart';
+import '../mapper/custom_firebase_exception_mapper.dart';
 import '../mapper/date_mapper.dart';
+import '../model/activity_status_dto.dart';
 import '../model/race_dto.dart';
-import '../model/run_status_dto.dart';
 import '../utils/utils.dart';
 
 class FirebaseRaceService {
@@ -54,9 +55,7 @@ class FirebaseRaceService {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  Future<List<RaceDto>?> loadAllRaces({
-    required String userId,
-  }) async {
+  Future<List<RaceDto>?> loadRacesByUserId({required String userId}) async {
     final snapshot = await getRacesRef(userId).get();
     return snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
@@ -68,7 +67,7 @@ class FirebaseRaceService {
     required String place,
     required double distance,
     required Duration? expectedDuration,
-    required RunStatusDto statusDto,
+    required ActivityStatusDto statusDto,
   }) async {
     final competitionRef = getRacesRef(userId).doc();
     final RaceDto competitionDto = RaceDto(
@@ -97,23 +96,31 @@ class FirebaseRaceService {
     double? distance,
     Duration? expectedDuration,
     bool setDurationAsNull = false,
-    RunStatusDto? statusDto,
+    ActivityStatusDto? statusDto,
   }) async {
-    final docRef = getRacesRef(userId).doc(raceId);
-    final Map<String, dynamic> jsonToUpdate = createRaceJsonToUpdate(
-      name: name,
-      date: date,
-      place: place,
-      distance: distance,
-      expectedDuration: expectedDuration,
-      setDurationAsNull: setDurationAsNull,
-      statusDto: statusDto,
-    );
-    await asyncOrSyncCall(
-      () => docRef.update(jsonToUpdate),
-    );
-    final snapshot = await docRef.get();
-    return snapshot.data();
+    try {
+      final docRef = getRacesRef(userId).doc(raceId);
+      final Map<String, dynamic> jsonToUpdate = createRaceJsonToUpdate(
+        name: name,
+        date: date,
+        place: place,
+        distance: distance,
+        expectedDuration: expectedDuration,
+        setDurationAsNull: setDurationAsNull,
+        statusDto: statusDto,
+      );
+      await asyncOrSyncCall(() => docRef.update(jsonToUpdate));
+      final snapshot = await docRef.get();
+      return snapshot.data();
+    } on FirebaseException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    } catch (exception) {
+      if (exception.toString().contains('code=not-found')) {
+        throw mapFirebaseExceptionFromCodeStr('not-found');
+      } else {
+        rethrow;
+      }
+    }
   }
 
   Future<void> deleteRace({
@@ -126,9 +133,7 @@ class FirebaseRaceService {
     );
   }
 
-  Future<List<String>> deleteAllUserRaces({
-    required String userId,
-  }) async {
+  Future<List<String>> deleteAllUserRaces({required String userId}) async {
     final competitionsRef = getRacesRef(userId);
     final WriteBatch batch = FirebaseFirestore.instance.batch();
     final snapshot = await competitionsRef.get();

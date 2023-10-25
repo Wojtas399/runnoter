@@ -1,12 +1,11 @@
-import 'package:runnoter/domain/entity/run_status.dart';
-import 'package:runnoter/domain/entity/workout.dart';
-import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/data/model/activity.dart';
+import 'package:runnoter/data/model/workout.dart';
 
 Workout createWorkout({
   String id = '',
   String userId = '',
   DateTime? date,
-  RunStatus status = const RunStatusPending(),
+  ActivityStatus status = const ActivityStatusPending(),
   String name = '',
   List<WorkoutStage> stages = const [],
 }) {

@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/blood_parameter_result_mapper.dart';
-import 'package:runnoter/domain/entity/blood_parameter.dart';
+import 'package:runnoter/data/model/blood_test.dart';
 
 void main() {
   const BloodParameterResult parameterResult = BloodParameterResult(

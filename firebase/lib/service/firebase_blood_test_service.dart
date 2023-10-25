@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../mapper/custom_firebase_exception_mapper.dart';
 import '../utils/utils.dart';
 
 class FirebaseBloodTestService {
@@ -13,7 +14,7 @@ class FirebaseBloodTestService {
     return snapshot.data();
   }
 
-  Future<List<BloodTestDto>?> loadAllTests({
+  Future<List<BloodTestDto>?> loadTestsByUserId({
     required String userId,
   }) async {
     final snapshot = await getBloodTestsRef(userId).get();
@@ -50,16 +51,26 @@ class FirebaseBloodTestService {
     DateTime? date,
     List<BloodParameterResultDto>? parameterResultDtos,
   }) async {
-    final bloodTestRef = getBloodTestsRef(userId).doc(bloodTestId);
-    final Map<String, dynamic> jsonToUpdate = createBloodTestJsonToUpdate(
-      date: date,
-      parameterResultDtos: parameterResultDtos,
-    );
-    await asyncOrSyncCall(
-      () => bloodTestRef.update(jsonToUpdate),
-    );
-    final snapshot = await bloodTestRef.get();
-    return snapshot.data();
+    try {
+      final bloodTestRef = getBloodTestsRef(userId).doc(bloodTestId);
+      final Map<String, dynamic> jsonToUpdate = createBloodTestJsonToUpdate(
+        date: date,
+        parameterResultDtos: parameterResultDtos,
+      );
+      await asyncOrSyncCall(
+        () => bloodTestRef.update(jsonToUpdate),
+      );
+      final snapshot = await bloodTestRef.get();
+      return snapshot.data();
+    } on FirebaseException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    } catch (exception) {
+      if (exception.toString().contains('code=not-found')) {
+        throw mapFirebaseExceptionFromCodeStr('not-found');
+      } else {
+        rethrow;
+      }
+    }
   }
 
   Future<void> deleteTest({
@@ -71,9 +82,7 @@ class FirebaseBloodTestService {
     );
   }
 
-  Future<List<String>> deleteAllUserTests({
-    required String userId,
-  }) async {
+  Future<List<String>> deleteAllUserTests({required String userId}) async {
     final bloodTestsRef = getBloodTestsRef(userId);
     final snapshot = await bloodTestsRef.get();
     final List<String> idsOfDeletedTests = [];
