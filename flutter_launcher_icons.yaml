@@ -3,6 +3,6 @@ flutter_launcher_icons:
   ios: true
   image_path: "assets/launch_icon.png"
   min_sdk_android: 21
-  macos:
+  web:
     generate: true
     image_path: "assets/launch_icon.png"
