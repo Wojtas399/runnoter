@@ -4,9 +4,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/model/person.dart';
 import 'package:runnoter/data/model/user.dart';
+import 'package:runnoter/data/repository/person/person_repository.dart';
 import 'package:runnoter/ui/cubit/person_details/person_details_cubit.dart';
 
 import '../../../creators/person_creator.dart';

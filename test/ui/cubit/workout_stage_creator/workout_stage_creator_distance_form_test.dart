@@ -12,105 +12,105 @@ void main() {
   });
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'distance is higher than 0 and max heart rate is higher than 0, '
-    'should be false',
+    'should be true',
     () {
       form = const WorkoutStageCreatorDistanceForm(
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'distance is null, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorDistanceForm(
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'distance is lower than 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorDistanceForm(
         distanceInKm: -10,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'distance is equal to 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorDistanceForm(
         distanceInKm: 0,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'max heart rate is null, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorDistanceForm(
         distanceInKm: distanceInKm,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'max heart rate is lower than 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorDistanceForm(
         distanceInKm: distanceInKm,
         maxHeartRate: -10,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'max heart rate is equal to 0, '
-    'should be true',
+    'should be false',
     () {
       form = const WorkoutStageCreatorDistanceForm(
         distanceInKm: distanceInKm,
         maxHeartRate: 0,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'distance is different than original, '
-    'should be false',
+    'should be true',
     () {
       const DistanceWorkoutStage originalStage = WorkoutStageCardio(
         distanceInKm: distanceInKm,
@@ -122,14 +122,14 @@ void main() {
         maxHeartRate: maxHeartRate + 10,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'max heart rate is different than original, '
-    'should be false',
+    'should be true',
     () {
       const DistanceWorkoutStage originalStage = WorkoutStageCardio(
         distanceInKm: distanceInKm,
@@ -141,14 +141,14 @@ void main() {
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.isSubmitButtonDisabled, false);
+      expect(form.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'distance and max heart rate are same as original, '
-    'should be true',
+    'should be false',
     () {
       const DistanceWorkoutStage originalStage = WorkoutStageCardio(
         distanceInKm: distanceInKm,
@@ -160,12 +160,12 @@ void main() {
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.isSubmitButtonDisabled, true);
+      expect(form.canSubmit, false);
     },
   );
 
   test(
-    'copy with distance in km, '
+    'copy with distanceInKm, '
     'should copy current value if new value is null',
     () {
       const double expected = 10.0;
@@ -179,7 +179,7 @@ void main() {
   );
 
   test(
-    'copy with max heart rate, '
+    'copy with maxHeartRate, '
     'should copy current value if new value is null',
     () {
       const int expected = 150;

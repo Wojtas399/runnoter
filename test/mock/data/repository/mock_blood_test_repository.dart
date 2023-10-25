@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/blood_test_repository.dart';
 import 'package:runnoter/data/model/blood_test.dart';
+import 'package:runnoter/data/repository/blood_test/blood_test_repository.dart';
 
 class MockBloodTestRepository extends Mock implements BloodTestRepository {
   void mockGetTestById({

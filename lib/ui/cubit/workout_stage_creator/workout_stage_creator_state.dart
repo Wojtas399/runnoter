@@ -27,13 +27,13 @@ class WorkoutStageCreatorState extends Equatable {
   bool get isEditMode =>
       distanceForm.originalStage != null || seriesForm.originalStage != null;
 
-  bool get isSubmitButtonDisabled {
+  bool get canSubmit {
     if (originalStageType != null && stageType != originalStageType) {
-      return false;
+      return true;
     }
-    return stageType == null ||
-        (isDistanceStage && distanceForm.isSubmitButtonDisabled) ||
-        (isSeriesStage && seriesForm.isSubmitButtonDisabled);
+    return stageType != null &&
+        ((isDistanceStage && distanceForm.canSubmit) ||
+            (isSeriesStage && seriesForm.canSubmit));
   }
 
   bool get isDistanceStage =>
@@ -64,7 +64,7 @@ class WorkoutStageCreatorState extends Equatable {
 abstract class WorkoutStageCreatorForm extends Equatable {
   const WorkoutStageCreatorForm();
 
-  bool get isSubmitButtonDisabled;
+  bool get canSubmit;
 
   WorkoutStageCreatorForm copyWith();
 }

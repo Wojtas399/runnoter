@@ -71,7 +71,7 @@ void main() {
 
       repository.setEntities(newEntities);
 
-      expect(repository.dataStream$, emits(newEntities));
+      expect(repository.repositoryState$, emits(newEntities));
     },
   );
 
@@ -90,7 +90,7 @@ void main() {
       repository.addEntity(entityToAdd);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([...existingEntities, entityToAdd]),
       );
     },
@@ -111,7 +111,7 @@ void main() {
       repository.addEntity(entityToAdd);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([entityToAdd, existingEntities[1]]),
       );
     },
@@ -135,7 +135,7 @@ void main() {
       repository.addOrUpdateEntities(entitiesToAdd);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([existingEntities.first, ...entitiesToAdd]),
       );
     },
@@ -151,7 +151,7 @@ void main() {
 
       repository.updateEntity(updatedEntity);
 
-      expect(repository.dataStream$, emits([updatedEntity]));
+      expect(repository.repositoryState$, emits([updatedEntity]));
     },
   );
 
@@ -169,7 +169,7 @@ void main() {
       repository.removeEntity('e2');
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([entities.first, entities.last]),
       );
     },
@@ -192,7 +192,7 @@ void main() {
       repository.removeEntities(idsOfEntitiesToRemove);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([entities[1], entities.last]),
       );
     },

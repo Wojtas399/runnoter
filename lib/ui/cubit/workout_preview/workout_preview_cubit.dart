@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../data/interface/repository/workout_repository.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../data/model/activity.dart';
 import '../../../data/model/workout.dart';
+import '../../../data/repository/workout/workout_repository.dart';
 
 part 'workout_preview_state.dart';
 

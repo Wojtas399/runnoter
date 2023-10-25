@@ -1,6 +1,6 @@
-import '../../data/interface/repository/chat_repository.dart';
-import '../../data/interface/repository/message_image_repository.dart';
-import '../../data/interface/repository/message_repository.dart';
+import '../../data/repository/chat/chat_repository.dart';
+import '../../data/repository/message/message_repository.dart';
+import '../../data/repository/message_image/message_image_repository.dart';
 import '../../dependency_injection.dart';
 
 class DeleteChatUseCase {

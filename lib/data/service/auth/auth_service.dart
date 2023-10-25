@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-abstract class AuthService {
+abstract interface class AuthService {
   Stream<String?> get loggedUserId$;
 
   Stream<String?> get loggedUserEmail$;

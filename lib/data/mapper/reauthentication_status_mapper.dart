@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 
-import '../interface/service/auth_service.dart';
+import '../service/auth/auth_service.dart';
 
 ReauthenticationStatus mapReauthenticationStatusFromFirebase(
   firebase.ReauthenticationStatus firebaseReauthenticationStatus,

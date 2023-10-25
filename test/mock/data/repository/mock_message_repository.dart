@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/message_repository.dart';
 import 'package:runnoter/data/model/message.dart';
+import 'package:runnoter/data/repository/message/message_repository.dart';
 
 class MockMessageRepository extends Mock implements MessageRepository {
   MockMessageRepository() {

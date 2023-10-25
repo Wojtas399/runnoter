@@ -2,9 +2,9 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/implementation/repository/blood_test_repository_impl.dart';
 import 'package:runnoter/data/model/blood_test.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
+import 'package:runnoter/data/repository/blood_test/blood_test_repository_impl.dart';
 
 import '../../creators/blood_test_creator.dart';
 import '../../creators/blood_test_dto_creator.dart';
@@ -228,7 +228,7 @@ void main() {
       await repository.refreshTestsByUserId(userId: userId);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([existingTests.last, ...loadedTests]),
       );
       verify(
@@ -284,7 +284,7 @@ void main() {
       );
       repository = BloodTestRepositoryImpl(initialData: existingTests);
 
-      final Stream<List<BloodTest>?> bloodTests$ = repository.dataStream$;
+      final Stream<List<BloodTest>?> bloodTests$ = repository.repositoryState$;
       bloodTests$.listen((_) {});
       repository.addNewTest(
         userId: userId,
@@ -369,7 +369,7 @@ void main() {
       );
       repository = BloodTestRepositoryImpl(initialData: existingTests);
 
-      final Stream<List<BloodTest>?> bloodTests$ = repository.dataStream$;
+      final Stream<List<BloodTest>?> bloodTests$ = repository.repositoryState$;
       bloodTests$.listen((_) {});
       repository.updateTest(
         bloodTestId: testId,
@@ -456,7 +456,7 @@ void main() {
         exception,
         const EntityException(code: EntityExceptionCode.entityNotFound),
       );
-      expect(repository.dataStream$, emits([existingTests[1]]));
+      expect(repository.repositoryState$, emits([existingTests[1]]));
       verify(
         () => dbBloodTestService.updateTest(
           bloodTestId: testId,
@@ -480,7 +480,8 @@ void main() {
       dbBloodTestService.mockDeleteTest();
       repository = BloodTestRepositoryImpl(initialData: existingTests);
 
-      final Stream<List<BloodTest>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<BloodTest>?> repositoryState$ =
+          repository.repositoryState$;
       repository.deleteTest(
         bloodTestId: bloodTestId,
         userId: userId,
@@ -519,7 +520,8 @@ void main() {
       );
       repository = BloodTestRepositoryImpl(initialData: existingTests);
 
-      final Stream<List<BloodTest>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<BloodTest>?> repositoryState$ =
+          repository.repositoryState$;
       repository.deleteAllUserTests(userId: userId);
 
       expect(

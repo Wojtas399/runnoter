@@ -2,8 +2,8 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/implementation/repository/user_repository_impl.dart';
 import 'package:runnoter/data/model/user.dart';
+import 'package:runnoter/data/repository/user/user_repository_impl.dart';
 
 import '../../creators/activities_settings_dto.dart';
 import '../../creators/appearance_settings_dto_creator.dart';
@@ -554,7 +554,7 @@ void main() {
         activitiesSettingsDto: createActivitiesSettingsDto(),
       );
 
-      final Stream<List<User>?> repoState$ = repository.dataStream$;
+      final Stream<List<User>?> repoState$ = repository.repositoryState$;
       repository.refreshUserById(userId: userId);
 
       expect(

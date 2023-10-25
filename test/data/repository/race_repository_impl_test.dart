@@ -4,10 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/implementation/repository/race_repository_impl.dart';
 import 'package:runnoter/data/model/activity.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
 import 'package:runnoter/data/model/race.dart';
+import 'package:runnoter/data/repository/race/race_repository_impl.dart';
 
 import '../../creators/race_creator.dart';
 import '../../creators/race_dto_creator.dart';
@@ -70,7 +70,7 @@ void main() {
       dbRaceService.mockLoadRaceById(raceDto: expectedRaceDto);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
-      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Race>?> repositoryState$ = repository.repositoryState$;
       final Stream<Race?> race$ = repository.getRaceById(
         raceId: raceId,
         userId: userId,
@@ -276,7 +276,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([
           existingRaces[1],
           existingRaces[2],
@@ -318,7 +318,7 @@ void main() {
       await repository.refreshRacesByUserId(userId: userId);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([existingRaces.last, ...loadedRaces]),
       );
       verify(() => dbRaceService.loadRacesByUserId(userId: userId)).called(1);
@@ -368,7 +368,7 @@ void main() {
       dbRaceService.mockAddNewRace(addedRaceDto: addedRaceDto);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
-      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Race>?> repositoryState$ = repository.repositoryState$;
       repository.addNewRace(
         userId: userId,
         name: name,
@@ -458,7 +458,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([updatedRace, ...existingRaces.slice(1)]),
       );
       verify(
@@ -529,7 +529,7 @@ void main() {
         exception,
         const EntityException(code: EntityExceptionCode.entityNotFound),
       );
-      expect(repository.dataStream$, emits(existingRaces.slice(1)));
+      expect(repository.repositoryState$, emits(existingRaces.slice(1)));
       verify(
         () => dbRaceService.updateRace(
           raceId: raceId,
@@ -560,7 +560,7 @@ void main() {
       dbRaceService.mockDeleteRace();
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
-      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Race>?> repositoryState$ = repository.repositoryState$;
       await repository.deleteRace(raceId: raceId, userId: userId);
 
       expect(repositoryState$, emits(existingRaces.slice(1)));
@@ -583,7 +583,7 @@ void main() {
       dbRaceService.mockDeleteAllUserRaces(idsOfDeletedRaces: ['c1', 'c4']);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
-      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Race>?> repositoryState$ = repository.repositoryState$;
       repository.deleteAllUserRaces(userId: userId);
 
       expect(

@@ -2,13 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../../dependency_injection.dart';
-import '../../interface/repository/user_repository.dart';
 import '../../mapper/account_type_mapper.dart';
 import '../../mapper/gender_mapper.dart';
 import '../../mapper/user_mapper.dart';
 import '../../mapper/user_settings_mapper.dart';
 import '../../model/state_repository.dart';
 import '../../model/user.dart';
+import 'user_repository.dart';
 
 class UserRepositoryImpl extends StateRepository<User>
     implements UserRepository {
@@ -26,7 +26,7 @@ class UserRepositoryImpl extends StateRepository<User>
         super(initialData: initialState);
 
   @override
-  Stream<User?> getUserById({required String userId}) => dataStream$
+  Stream<User?> getUserById({required String userId}) => repositoryState$
       .map(
         (List<User>? users) => users?.firstWhereOrNull(
           (User? user) => user?.id == userId,

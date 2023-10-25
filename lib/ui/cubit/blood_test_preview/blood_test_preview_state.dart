@@ -5,18 +5,10 @@ class BloodTestPreviewState extends Equatable {
   final Gender? gender;
   final List<BloodParameterResult>? parameterResults;
 
-  const BloodTestPreviewState({
-    this.date,
-    this.gender,
-    this.parameterResults,
-  });
+  const BloodTestPreviewState({this.date, this.gender, this.parameterResults});
 
   @override
-  List<Object?> get props => [
-        date,
-        gender,
-        parameterResults,
-      ];
+  List<Object?> get props => [date, gender, parameterResults];
 
   BloodTestPreviewState copyWith({
     DateTime? date,

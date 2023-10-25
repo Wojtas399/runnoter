@@ -57,9 +57,9 @@ void main() {
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'stage type is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         stageType: null,
@@ -69,28 +69,28 @@ void main() {
         ),
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'stage type is same as original, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         originalStageType: WorkoutStageType.zone2,
         stageType: WorkoutStageType.zone2,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'original stage type is not null and stage type is different original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalStageType: WorkoutStageType.zone2,
@@ -105,15 +105,15 @@ void main() {
         ),
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'distance stage, '
     'distance form data are invalid, '
-    'should be true',
+    'should be false',
     () {
       const WorkoutStageType stageType = WorkoutStageType.cardio;
       const distanceForm = WorkoutStageCreatorDistanceForm(
@@ -127,15 +127,15 @@ void main() {
         distanceForm: distanceForm,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'distance stage, '
     'distance form data are valid, '
-    'should be false',
+    'should be true',
     () {
       const WorkoutStageType stageType = WorkoutStageType.cardio;
       const distanceForm = WorkoutStageCreatorDistanceForm(
@@ -149,15 +149,15 @@ void main() {
         distanceForm: distanceForm,
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'series stage, '
     'series form data are invalid, '
-    'should be true',
+    'should be false',
     () {
       const WorkoutStageType stageType = WorkoutStageType.hillRepeats;
       const seriesForm = WorkoutStageCreatorSeriesForm(
@@ -173,15 +173,15 @@ void main() {
         seriesForm: seriesForm,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'canSubmit, '
     'series stage, '
     'series form data are valid, '
-    'should be false',
+    'should be true',
     () {
       const WorkoutStageType stageType = WorkoutStageType.hillRepeats;
       const seriesForm = WorkoutStageCreatorSeriesForm(
@@ -197,7 +197,7 @@ void main() {
         seriesForm: seriesForm,
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 

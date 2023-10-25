@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../data/interface/repository/race_repository.dart';
 import '../../data/model/race.dart';
+import '../../data/repository/race/race_repository.dart';
 import '../../dependency_injection.dart';
 import '../model/elements_from_year.dart';
 

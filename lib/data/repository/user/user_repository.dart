@@ -1,6 +1,6 @@
 import '../../model/user.dart';
 
-abstract class UserRepository {
+abstract interface class UserRepository {
   Stream<User?> getUserById({required String userId});
 
   Future<void> addUser({required User user});

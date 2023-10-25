@@ -17,13 +17,7 @@ class WorkoutCreatorState extends CubitState<WorkoutCreatorState> {
   }) : _dateService = dateService;
 
   @override
-  List<Object?> get props => [
-        status,
-        date,
-        workout,
-        workoutName,
-        stages,
-      ];
+  List<Object?> get props => [status, date, workout, workoutName, stages];
 
   bool get canSubmit =>
       date != null &&

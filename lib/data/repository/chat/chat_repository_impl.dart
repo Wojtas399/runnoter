@@ -5,11 +5,11 @@ import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
-import '../../interface/repository/chat_repository.dart';
 import '../../mapper/chat_mapper.dart';
 import '../../mapper/custom_exception_mapper.dart';
 import '../../model/chat.dart';
 import '../../model/state_repository.dart';
+import 'chat_repository.dart';
 
 class ChatRepositoryImpl extends StateRepository<Chat>
     implements ChatRepository {
@@ -30,7 +30,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
   @override
   Stream<List<Chat>> getChatsContainingUser({required String userId}) async* {
     await _loadChatsContainingUserFromDb(userId);
-    await for (final chats in dataStream$) {
+    await for (final chats in repositoryState$) {
       yield [
         ...?chats?.where(
           (chat) => chat.user1Id == userId || chat.user2Id == userId,
@@ -44,7 +44,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
     required String user1Id,
     required String user2Id,
   }) async {
-    final List<Chat>? existingChats = await dataStream$.first;
+    final List<Chat>? existingChats = await repositoryState$.first;
     Chat? foundChat = existingChats?.firstWhereOrNull(
       (Chat chat) {
         final List<String> userIdsToMatch = [user1Id, user2Id];

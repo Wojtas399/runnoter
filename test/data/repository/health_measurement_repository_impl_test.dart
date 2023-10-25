@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/implementation/repository/health_measurement_repository_impl.dart';
 import 'package:runnoter/data/model/health_measurement.dart';
+import 'package:runnoter/data/repository/health_measurement/health_measurement_repository_impl.dart';
 
 import '../../creators/health_measurement_creator.dart';
 import '../../mock/common/mock_date_service.dart';
@@ -377,7 +377,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([
           existingMeasurements[1],
           existingMeasurements[2],
@@ -449,7 +449,7 @@ void main() {
 
       expect(doesMeasurementExist, true);
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder(
           [
             [
@@ -508,7 +508,8 @@ void main() {
       );
       repository = HealthMeasurementRepositoryImpl();
 
-      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
+      final Stream<List<HealthMeasurement>?> state$ =
+          repository.repositoryState$;
       repository.addMeasurement(measurement: healthMeasurement);
 
       expect(
@@ -568,7 +569,8 @@ void main() {
         initialData: existingMeasurements,
       );
 
-      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
+      final Stream<List<HealthMeasurement>?> state$ =
+          repository.repositoryState$;
       repository.updateMeasurement(
         userId: userId,
         date: date,
@@ -626,7 +628,8 @@ void main() {
         initialData: existingMeasurements,
       );
 
-      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
+      final Stream<List<HealthMeasurement>?> state$ =
+          repository.repositoryState$;
       repository.deleteMeasurement(
         userId: userId,
         date: date,
@@ -684,7 +687,8 @@ void main() {
         initialData: existingMeasurements,
       );
 
-      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
+      final Stream<List<HealthMeasurement>?> state$ =
+          repository.repositoryState$;
       repository.deleteAllUserMeasurements(userId: userId);
 
       expect(

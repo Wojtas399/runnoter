@@ -5,11 +5,11 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
-import '../../interface/repository/message_repository.dart';
 import '../../mapper/message_mapper.dart';
 import '../../mapper/message_status_mapper.dart';
 import '../../model/message.dart';
 import '../../model/state_repository.dart';
+import 'message_repository.dart';
 
 class MessageRepositoryImpl extends StateRepository<Message>
     implements MessageRepository {
@@ -22,7 +22,7 @@ class MessageRepositoryImpl extends StateRepository<Message>
 
   @override
   Future<Message?> loadMessageById({required String messageId}) async {
-    Message? foundMessage = await dataStream$
+    Message? foundMessage = await repositoryState$
         .map((msgs) => msgs?.firstWhereOrNull((msg) => msg.id == messageId))
         .first;
     return foundMessage ?? await _loadMessageByIdFromDb(messageId);
@@ -59,7 +59,7 @@ class MessageRepositoryImpl extends StateRepository<Message>
         (firebase.ChatDto chatDto) {
           final String senderId =
               chatDto.user1Id == userId ? chatDto.user2Id : chatDto.user1Id;
-          return dataStream$
+          return repositoryState$
               .map(
                 (List<Message>? messages) => messages?.firstWhereOrNull(
                   (Message message) =>
@@ -131,7 +131,7 @@ class MessageRepositoryImpl extends StateRepository<Message>
   @override
   Future<void> deleteAllMessagesFromChat({required String chatId}) async {
     await _dbMessageService.deleteAllMessagesFromChat(chatId: chatId);
-    final messagesInRepo = await dataStream$.first;
+    final messagesInRepo = await repositoryState$.first;
     if (messagesInRepo == null) return;
     final List<String> idsOfMessagesToRemove = [];
     for (final msg in messagesInRepo) {
@@ -161,7 +161,8 @@ class MessageRepositoryImpl extends StateRepository<Message>
     addOrUpdateEntities(messages);
   }
 
-  Stream<List<Message>> _getMessagesFromChat(String chatId) => dataStream$.map(
+  Stream<List<Message>> _getMessagesFromChat(String chatId) =>
+      repositoryState$.map(
         (msgs) =>
             msgs?.where((message) => message.chatId == chatId).toList() ??
             const [],

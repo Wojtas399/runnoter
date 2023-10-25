@@ -1,8 +1,8 @@
-import '../../../../../data/interface/repository/user_repository.dart';
-import '../../../../../data/interface/service/auth_service.dart';
 import '../../../../../data/model/custom_exception.dart';
 import '../../../../../dependency_injection.dart';
 import '../../../data/model/user.dart';
+import '../../../data/repository/user/user_repository.dart';
+import '../../../data/service/auth/auth_service.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';
 import '../../model/cubit_with_status.dart';
@@ -39,7 +39,7 @@ class SignInCubit
   }
 
   Future<void> submit() async {
-    if (state.isButtonDisabled) return;
+    if (!state.canSubmit) return;
     emitLoadingStatus();
     try {
       await _authService.signIn(email: state.email, password: state.password);

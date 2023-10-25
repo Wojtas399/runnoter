@@ -4,9 +4,9 @@ import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/implementation/repository/chat_repository_impl.dart';
 import 'package:runnoter/data/model/chat.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
+import 'package:runnoter/data/repository/chat/chat_repository_impl.dart';
 
 import '../../creators/chat_creator.dart';
 import '../../creators/chat_dto_creator.dart';
@@ -58,7 +58,7 @@ void main() {
         ),
       );
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           existingChats,
           [...existingChats, expectedChat],
@@ -102,7 +102,7 @@ void main() {
         ),
       );
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           existingChats,
           [...existingChats, ...loadedChats],
@@ -167,7 +167,7 @@ void main() {
 
       expect(chatId, expectedChatId);
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           [...existingChats, loadedChat]
         ]),
@@ -207,7 +207,7 @@ void main() {
 
       expect(chatId, expectedChatId);
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emitsInOrder([
           [addedChat],
         ]),
@@ -286,7 +286,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([existingChats[0], existingChats[1], updatedChat]),
       );
       verify(
@@ -315,7 +315,7 @@ void main() {
       await repository.deleteChat(chatId: chatId);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([existingChats.first, existingChats.last]),
       );
       verify(() => dbChatService.deleteChat(chatId: chatId)).called(1);

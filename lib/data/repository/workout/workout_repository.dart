@@ -1,7 +1,7 @@
 import '../../model/activity.dart';
 import '../../model/workout.dart';
 
-abstract class WorkoutRepository {
+abstract interface class WorkoutRepository {
   Stream<List<Workout>?> getWorkoutsByDateRange({
     required DateTime startDate,
     required DateTime endDate,

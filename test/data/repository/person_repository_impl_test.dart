@@ -2,9 +2,9 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/implementation/repository/person_repository_impl.dart';
 import 'package:runnoter/data/model/person.dart';
 import 'package:runnoter/data/model/user.dart';
+import 'package:runnoter/data/repository/person/person_repository_impl.dart';
 
 import '../../creators/person_creator.dart';
 import '../../creators/user_dto_creator.dart';
@@ -75,7 +75,8 @@ void main() {
       dbUserService.mockLoadUserById(userDto: loadedUserDto);
 
       final Stream<Person?> person$ = repository.getPersonById(personId: 'u1');
-      final Stream<List<Person>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Person>?> repositoryState$ =
+          repository.repositoryState$;
 
       expect(person$, emitsInOrder([expectedPerson]));
       expect(
@@ -112,7 +113,8 @@ void main() {
 
       final Stream<List<Person>?> persons$ =
           repository.getPersonsByCoachId(coachId: coachId);
-      final Stream<List<Person>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Person>?> repositoryState$ =
+          repository.repositoryState$;
 
       expect(
         persons$,
@@ -197,7 +199,8 @@ void main() {
         searchQuery: 'li',
         accountType: AccountType.coach,
       );
-      final Stream<List<Person>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Person>?> repositoryState$ =
+          repository.repositoryState$;
 
       expect(persons, expectedPersons);
       expect(
@@ -255,7 +258,7 @@ void main() {
         personId: personId,
         coachId: coachId,
       );
-      final Stream<List<Person>?> repoState$ = repository.dataStream$;
+      final Stream<List<Person>?> repoState$ = repository.repositoryState$;
 
       expect(
         repoState$,
@@ -292,7 +295,7 @@ void main() {
       dbUserService.mockUpdateUserData(userDto: updatedUserDto);
 
       await repository.updateCoachIdOfPerson(personId: personId, coachId: null);
-      final Stream<List<Person>?> repoState$ = repository.dataStream$;
+      final Stream<List<Person>?> repoState$ = repository.repositoryState$;
 
       expect(
         repoState$,
@@ -335,7 +338,7 @@ void main() {
       await repository.refreshPersonById(personId: personId);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([...existingPersons, loadedPerson]),
       );
       verify(() => dbUserService.loadUserById(userId: personId)).called(1);
@@ -369,7 +372,7 @@ void main() {
       await repository.refreshPersonById(personId: personId);
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([loadedPerson, existingPersons[1], existingPersons[2]]),
       );
       verify(() => dbUserService.loadUserById(userId: personId)).called(1);
@@ -398,7 +401,8 @@ void main() {
       dbUserService.mockLoadUsersByCoachId(users: loadedUserDtos);
       repository = PersonRepositoryImpl(initialData: existingPersons);
 
-      final Stream<List<Person>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Person>?> repositoryState$ =
+          repository.repositoryState$;
       repository.refreshPersonsByCoachId(coachId: coachId);
 
       expect(
@@ -437,7 +441,7 @@ void main() {
       );
       repository = PersonRepositoryImpl(initialData: existingPersons);
 
-      final Stream<List<Person>?> repoState$ = repository.dataStream$;
+      final Stream<List<Person>?> repoState$ = repository.repositoryState$;
       await repository.removeCoachIdInAllMatchingPersons(coachId: coachId);
 
       expect(repoState$, emitsInOrder([updatedUsers]));

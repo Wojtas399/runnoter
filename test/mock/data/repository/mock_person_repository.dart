@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/person_repository.dart';
 import 'package:runnoter/data/model/person.dart';
+import 'package:runnoter/data/repository/person/person_repository.dart';
 
 class MockPersonRepository extends Mock implements PersonRepository {
   void mockGetPersonById({Person? person, Stream<Person?>? personStream}) {

@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/repository/user_repository.dart';
 import 'package:runnoter/data/model/user.dart';
+import 'package:runnoter/data/repository/user/user_repository.dart';
 
 class _FakeUser extends Fake implements User {}
 

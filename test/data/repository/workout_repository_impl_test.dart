@@ -5,10 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/data/implementation/repository/workout_repository_impl.dart';
 import 'package:runnoter/data/model/activity.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
 import 'package:runnoter/data/model/workout.dart';
+import 'package:runnoter/data/repository/workout/workout_repository_impl.dart';
 
 import '../../creators/workout_creator.dart';
 import '../../creators/workout_dto_creator.dart';
@@ -411,7 +411,7 @@ void main() {
       );
 
       expect(
-        repository.dataStream$,
+        repository.repositoryState$,
         emits([
           existingWorkouts[1],
           existingWorkouts[2],
@@ -488,7 +488,7 @@ void main() {
       );
 
       expect(
-        await repository.dataStream$.first,
+        await repository.repositoryState$.first,
         [...existingWorkouts, expectedAddedWorkout],
       );
       verify(
@@ -639,7 +639,7 @@ void main() {
         exception,
         const EntityException(code: EntityExceptionCode.entityNotFound),
       );
-      expect(repository.dataStream$, emits([]));
+      expect(repository.repositoryState$, emits([]));
       verify(
         () => dbWorkoutService.updateWorkout(
           workoutId: id,
@@ -665,7 +665,8 @@ void main() {
       repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
       dbWorkoutService.mockDeleteWorkout();
 
-      final Stream<List<Workout>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Workout>?> repositoryState$ =
+          repository.repositoryState$;
       repositoryState$.listen((_) {});
       repository.deleteWorkout(
         userId: userId,
@@ -708,7 +709,8 @@ void main() {
         idsOfDeletedWorkouts: ['w2', 'w1', 'w4'],
       );
 
-      final Stream<List<Workout>?> repositoryState$ = repository.dataStream$;
+      final Stream<List<Workout>?> repositoryState$ =
+          repository.repositoryState$;
       repositoryState$.listen((_) {});
       repository.deleteAllUserWorkouts(
         userId: userId,

@@ -13,7 +13,6 @@ dependencies:
   firebase_core: ^2.11.0
   firebase_auth: ^4.5.0
   cloud_firestore: ^4.6.0
-  firebase_auth_web: ^5.4.0
   mocktail: ^0.3.0
   flutter_lints: ^2.0.1
   equatable: ^2.0.5
@@ -22,8 +21,8 @@ dependencies:
   flutter_facebook_auth: ^6.0.0
   collection: ^1.17.1
   intl: ^0.17.0
-  firebase_storage: ^11.2.6
   uuid: ^4.0.0
+  firebase_storage: ^11.3.1
 
 dev_dependencies:
   flutter_test:

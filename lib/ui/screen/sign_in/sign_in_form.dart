@@ -47,7 +47,7 @@ class _Email extends StatelessWidget {
 
   void _onSubmitted(BuildContext context) {
     final SignInCubit cubit = context.read<SignInCubit>();
-    if (!cubit.state.isButtonDisabled) cubit.submit();
+    if (cubit.state.canSubmit) cubit.submit();
   }
 }
 
@@ -77,7 +77,7 @@ class _Password extends StatelessWidget {
 
   void _onSubmitted(BuildContext context) {
     final SignInCubit cubit = context.read<SignInCubit>();
-    if (!cubit.state.isButtonDisabled) cubit.submit();
+    if (cubit.state.canSubmit) cubit.submit();
   }
 
   void _onForgotPasswordSelected() {
@@ -91,7 +91,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isButtonDisabled = context.select(
-      (SignInCubit bloc) => bloc.state.isButtonDisabled,
+      (SignInCubit cubit) => !cubit.state.canSubmit,
     );
 
     return BigButton(

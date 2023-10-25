@@ -5,11 +5,11 @@ import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
-import '../../interface/repository/message_image_repository.dart';
 import '../../mapper/message_image_mapper.dart';
 import '../../model/custom_exception.dart';
 import '../../model/message_image.dart';
 import '../../model/state_repository.dart';
+import 'message_image_repository.dart';
 
 class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     implements MessageImageRepository {
@@ -177,14 +177,14 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
   }
 
   Stream<List<MessageImage>> _getImagesByMessageId(String messageId) =>
-      dataStream$.map(
+      repositoryState$.map(
         (images) =>
             images?.where((img) => img.messageId == messageId).toList() ??
             const [],
       );
 
   Stream<List<MessageImage>?> _getImagesFromChat(String chatId) =>
-      dataStream$.asyncMap(
+      repositoryState$.asyncMap(
         (images) async {
           final List<MessageImage> matchedImages = [];
           for (final image in [...?images]) {

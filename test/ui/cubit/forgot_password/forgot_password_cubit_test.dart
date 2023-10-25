@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/interface/service/auth_service.dart';
 import 'package:runnoter/data/model/custom_exception.dart';
+import 'package:runnoter/data/service/auth/auth_service.dart';
 import 'package:runnoter/ui/cubit/forgot_password/forgot_password_cubit.dart';
 import 'package:runnoter/ui/model/cubit_status.dart';
 
