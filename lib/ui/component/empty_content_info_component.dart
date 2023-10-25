@@ -22,7 +22,6 @@ class EmptyContentInfo extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
