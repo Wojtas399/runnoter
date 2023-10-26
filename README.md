@@ -11,8 +11,8 @@
 # Description
 
 Runnoter is an app which helps you manage your running plan. Using this app you can schedule
-running workouts and competitions, manage status and result of scheduled workouts,
-follow progress of mileage or weight and store blood test results.
+running workouts and races, manage status and result of scheduled workouts,
+follow progress of mileage or weight and store blood test results. You can also use this app in coach mode which allows you to create your own client network.
 
 # Features
 
@@ -77,19 +77,18 @@ If you have any troubles with installation process, below is link to the officia
 https://docs.flutter.dev/get-started/install
 ```
 # Screenshots
-<img width="300" alt="lightCurrentWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/b37467e5-5ae4-4f74-b65d-e6684a611055.png"><img width="300" alt="darkCurrentWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/a7a8fcb0-8af8-4d70-93d3-3c15f2576027.png">
+<img width="300" alt="lightCalendarWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/57b13271-eab5-4b26-82df-01fb83a1149d"><img width="300" alt="darkCalendarWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/1f5dba33-aff7-4801-8864-eaa58d3ae528">
 
-<img width="300" alt="lightWorkoutPreview" src="https://github.com/Wojtas399/runnoter/assets/72093398/58031c8b-1195-433d-a28c-84fd40ed9f14.png"><img width="300" alt="darkWorkoutPreview" src="https://github.com/Wojtas399/runnoter/assets/72093398/fa423723-59c3-4f3f-8d07-aa043fa362b3.png">
+<img width="300" alt="lightCalendarMonth" src="https://github.com/Wojtas399/runnoter/assets/72093398/d54078cf-3d96-477a-b747-a400aecc1052"><img width="300" alt="darkCalendarMonth" src="https://github.com/Wojtas399/runnoter/assets/72093398/6323c07f-8fa0-4c19-beab-976b09f41dc0">
 
+<img width="300" alt="lightWorkoutPreview" src="https://github.com/Wojtas399/runnoter/assets/72093398/58031c8b-1195-433d-a28c-84fd40ed9f14"><img width="300" alt="darkWorkoutPreview" src="https://github.com/Wojtas399/runnoter/assets/72093398/fa423723-59c3-4f3f-8d07-aa043fa362b3">
 
-<img width="300" alt="lightCalendar" src="https://github.com/Wojtas399/runnoter/assets/72093398/6b4df555-176e-49a8-ac89-eab30f6eb5ab.png"><img width="300" alt="darkCalendar" src="https://github.com/Wojtas399/runnoter/assets/72093398/902b62bf-2773-48b2-9456-4b7edf26caaf.png">
+<img width="300" alt="lightHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/4f73651d-cd87-4b52-9090-77d3e8059685"><img width="300" alt="darkHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/fa132814-6143-4087-9960-8b5880459e6f">
 
-<img width="300" alt="lightHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/7e73ea7c-575f-41e6-8923-1d112f89b8d8.png"><img width="300" alt="darkHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/31730b26-0dc0-4b67-a4f4-e13832ec1544.png">
+<img width="300" alt="lightBloodTests" src="https://github.com/Wojtas399/runnoter/assets/72093398/a2e1d366-8889-4d29-8540-f80a3ef18c21"><img width="300" alt="darkBloodTests" src="https://github.com/Wojtas399/runnoter/assets/72093398/43d37dc2-9ee2-4ce2-8dd5-85f748544609">
 
-<img width="300" alt="lightBloodTests" src="https://github.com/Wojtas399/runnoter/assets/72093398/10e3aaea-08bb-4cde-bf80-6e8ecbc13d29.png"><img width="300" alt="darkBloodTests" src="https://github.com/Wojtas399/runnoter/assets/72093398/cb8bd32d-e020-42e8-a5b4-ea791dea1a45">
+<img width="300" alt="lightRaces" src="https://github.com/Wojtas399/runnoter/assets/72093398/cd15e56e-e74c-41f0-b071-2027f6f62f49"><img width="300" alt="darkRaces" src="https://github.com/Wojtas399/runnoter/assets/72093398/a72ad4db-f5c6-49ac-9655-4c0d029d5da2">
 
-<img width="300" alt="lightRaces" src="https://github.com/Wojtas399/runnoter/assets/72093398/40d14c41-e1ac-4edc-9b70-75f72bb550b1.png"><img width="300" alt="darkRaces" src="https://github.com/Wojtas399/runnoter/assets/72093398/7c7adb2c-4792-476a-9ccd-7195bde7bc90.png">
-
-<img width="1840" alt="webCurrentWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/6c500a69-b610-4e45-a70c-fcbb012344da">
-<img width="1840" alt="webCalendar" src="https://github.com/Wojtas399/runnoter/assets/72093398/b4b2cff5-f4bd-4577-b520-010e4c2e1bdc">
-<img width="1840" alt="webHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/23ea0099-1afa-4ea7-a40b-7832fcb57cc4">
+<img width="1840" alt="webCalendarWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/9ce956c6-e7c2-4483-b566-20aedab92e9b">
+<img width="1840" alt="webCalendarMonth" src="https://github.com/Wojtas399/runnoter/assets/72093398/408830bd-88ce-41fb-bb1f-906d508b0279">
+<img width="1840" alt="webHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/89d30f20-f14e-4a7e-aba7-c8965222b109">
