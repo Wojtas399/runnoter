@@ -4,6 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/model/activity.dart';
 import 'package:runnoter/data/model/health_measurement.dart';
 import 'package:runnoter/data/model/race.dart';
@@ -17,6 +18,7 @@ import '../../creators/activity_status_creator.dart';
 import '../../creators/health_measurement_creator.dart';
 import '../../creators/race_creator.dart';
 import '../../creators/workout_creator.dart';
+import '../../mock/common/mock_date_service.dart';
 import '../../mock/data/repository/mock_health_measurement_repository.dart';
 import '../../mock/data/repository/mock_race_repository.dart';
 import '../../mock/data/repository/mock_workout_repository.dart';
@@ -25,6 +27,7 @@ void main() {
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
+  final dateService = MockDateService();
   const String userId = 'u1';
 
   setUpAll(() {
@@ -33,35 +36,61 @@ void main() {
     );
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
+    GetIt.I.registerFactory<DateService>(() => dateService);
   });
 
   tearDown(() {
     reset(healthMeasurementRepository);
     reset(workoutRepository);
     reset(raceRepository);
+    reset(dateService);
   });
 
   blocTest(
     'number of activities, '
-    'should sum all activities',
+    'should sum all activities from date range of stats',
     build: () => CalendarUserDataCubit(
       userId: userId,
       initialUserData: CalendarUserData(
         healthMeasurements: const [],
         workouts: [
-          createWorkout(id: 'w1'),
-          createWorkout(id: 'w3'),
-          createWorkout(id: 'w2')
+          createWorkout(id: 'w1', date: DateTime(2023, 10, 2)),
+          createWorkout(id: 'w3', date: DateTime(2023, 9, 28)),
+          createWorkout(id: 'w2', date: DateTime(2023, 10, 30))
         ],
-        races: [createRace(id: 'c1'), createRace(id: 'c2')],
+        races: [
+          createRace(id: 'c1', date: DateTime(2023, 11, 2)),
+          createRace(id: 'c2', date: DateTime(2023, 10, 25)),
+        ],
       ),
     ),
-    verify: (bloc) => expect(bloc.numberOfActivities, 5),
+    setUp: () {
+      dateService.mockIsDateFromRange(expected: true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 9, 28),
+          startDate: DateTime(2023, 10),
+          endDate: DateTime(2023, 10, 31),
+        ),
+      ).thenReturn(false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 11, 2),
+          startDate: DateTime(2023, 10),
+          endDate: DateTime(2023, 10, 31),
+        ),
+      ).thenReturn(false);
+    },
+    act: (cubit) => cubit.dateRangeOfStatsChanged(
+      startDateOfStats: DateTime(2023, 10),
+      endDateOfStats: DateTime(2023, 10, 31),
+    ),
+    verify: (bloc) => expect(bloc.numberOfActivities, 3),
   );
 
   blocTest(
     'scheduled total distance, '
-    'should sum distance of all activities',
+    'should sum distance of all activities from date range of stats',
     build: () => CalendarUserDataCubit(
       userId: userId,
       initialUserData: CalendarUserData(
@@ -72,12 +101,14 @@ void main() {
             stages: [
               const WorkoutStageCardio(distanceInKm: 5.2, maxHeartRate: 150),
             ],
+            date: DateTime(2023, 9, 30),
           ),
           createWorkout(
             id: 'w3',
             stages: [
               const WorkoutStageCardio(distanceInKm: 2.5, maxHeartRate: 150),
             ],
+            date: DateTime(2023, 10, 15),
           ),
           createWorkout(
             id: 'w2',
@@ -89,20 +120,42 @@ void main() {
                 joggingDistanceInMeters: 200,
               ),
             ],
+            date: DateTime(2023, 11, 3),
           )
         ],
         races: [
-          createRace(id: 'c1', distance: 10.0),
-          createRace(id: 'c2', distance: 2.0),
+          createRace(id: 'c1', distance: 10.0, date: DateTime(2023, 10, 20)),
+          createRace(id: 'c2', distance: 2.0, date: DateTime(2023, 10, 21)),
         ],
       ),
     ),
-    verify: (bloc) => expect(bloc.scheduledTotalDistance, 24.7),
+    setUp: () {
+      dateService.mockIsDateFromRange(expected: true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 9, 30),
+          startDate: DateTime(2023, 10),
+          endDate: DateTime(2023, 10, 31),
+        ),
+      ).thenReturn(false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 11, 3),
+          startDate: DateTime(2023, 10),
+          endDate: DateTime(2023, 10, 31),
+        ),
+      ).thenReturn(false);
+    },
+    act: (cubit) => cubit.dateRangeOfStatsChanged(
+      startDateOfStats: DateTime(2023, 10),
+      endDateOfStats: DateTime(2023, 10, 31),
+    ),
+    verify: (bloc) => expect(bloc.scheduledTotalDistance, 14.5),
   );
 
   blocTest(
     'covered total distance, '
-    'should sum covered distance of all activities',
+    'should sum covered distance of all activities from date range of stats',
     build: () => CalendarUserDataCubit(
       userId: userId,
       initialUserData: CalendarUserData(
@@ -111,31 +164,63 @@ void main() {
           createWorkout(
             id: 'w1',
             status: createActivityStatusDone(coveredDistanceInKm: 5.2),
+            date: DateTime(2023, 10, 29),
           ),
           createWorkout(
             id: 'w3',
             status: createActivityStatusAborted(coveredDistanceInKm: 2.5),
+            date: DateTime(2023, 11, 4),
           ),
-          createWorkout(id: 'w2', status: const ActivityStatusPending())
+          createWorkout(
+            id: 'w2',
+            status: const ActivityStatusPending(),
+            date: DateTime(2023, 10, 30),
+          ),
         ],
         races: [
           createRace(
             id: 'c1',
             status: createActivityStatusDone(coveredDistanceInKm: 10.0),
+            date: DateTime(2023, 9, 28),
           ),
-          createRace(id: 'c2', status: const ActivityStatusUndone()),
+          createRace(
+            id: 'c2',
+            status: const ActivityStatusUndone(),
+            date: DateTime(2023, 10, 1),
+          ),
         ],
       ),
     ),
-    verify: (bloc) => expect(bloc.coveredTotalDistance, 17.7),
+    setUp: () {
+      dateService.mockIsDateFromRange(expected: true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 9, 28),
+          startDate: DateTime(2023, 10),
+          endDate: DateTime(2023, 10, 31),
+        ),
+      ).thenReturn(false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 11, 4),
+          startDate: DateTime(2023, 10),
+          endDate: DateTime(2023, 10, 31),
+        ),
+      ).thenReturn(false);
+    },
+    act: (cubit) => cubit.dateRangeOfStatsChanged(
+      startDateOfStats: DateTime(2023, 10),
+      endDateOfStats: DateTime(2023, 10, 31),
+    ),
+    verify: (bloc) => expect(bloc.coveredTotalDistance, 5.2),
   );
 
   group(
     'date range changed',
     () {
       final List<HealthMeasurement> healthMeasurements = [
-        createHealthMeasurement(date: DateTime(2023, 2, 11)),
-        createHealthMeasurement(date: DateTime(2023, 2, 22)),
+        createHealthMeasurement(date: DateTime(2023, 10, 11)),
+        createHealthMeasurement(date: DateTime(2023, 10, 22)),
       ];
       final List<Workout> workouts = [
         createWorkout(id: 'w1', name: 'first workout'),
@@ -159,11 +244,12 @@ void main() {
         ..add(workouts);
       final StreamController<List<Race>> races$ = StreamController()
         ..add(races);
-      final DateTime startDate = DateTime(2023, 2);
-      final DateTime endDate = DateTime(2023, 3);
+      final DateTime startDate = DateTime(2023, 9, 25);
+      final DateTime endDate = DateTime(2023, 11, 5);
 
       blocTest(
-        'should set listener of health measurements, workouts and races from date range',
+        'should set listener of health measurements, workouts and races from '
+        'date range',
         build: () => CalendarUserDataCubit(userId: userId),
         setUp: () {
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
@@ -175,7 +261,10 @@ void main() {
           raceRepository.mockGetRacesByDateRange(racesStream: races$.stream);
         },
         act: (cubit) async {
-          cubit.dateRangeChanged(startDate: startDate, endDate: endDate);
+          cubit.dateRangeChanged(
+            startDate: startDate,
+            endDate: endDate,
+          );
           await cubit.stream.first;
           healthMeasurements$.add([]);
           workouts$.add(updatedWorkouts);

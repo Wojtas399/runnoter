@@ -29,6 +29,7 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DateRange? dateRange = context.read<CalendarCubit>().state.dateRange;
     final List<Week>? calendarWeeks = context.read<CalendarCubit>().state.weeks;
 
     return BlocProvider(
@@ -36,6 +37,10 @@ class Calendar extends StatelessWidget {
         ..dateRangeChanged(
           startDate: calendarWeeks?.first.days.first.date,
           endDate: calendarWeeks?.last.days.last.date,
+        )
+        ..dateRangeOfStatsChanged(
+          startDateOfStats: dateRange?.startDate,
+          endDateOfStats: dateRange?.endDate,
         ),
       child: const _BlocsListener(
         child: _Content(),
@@ -55,6 +60,7 @@ class _BlocsListener extends StatelessWidget {
       listeners: [
         BlocListener<CalendarCubit, CalendarState>(
           listenWhen: (previousState, currentState) =>
+              currentState.dateRange != null &&
               previousState.dateRange != currentState.dateRange &&
               currentState.weeks != null,
           listener: _onDateRangeChanged,
@@ -74,12 +80,15 @@ class _BlocsListener extends StatelessWidget {
   }
 
   void _onDateRangeChanged(BuildContext context, CalendarState state) {
-    final DateTime startDate = state.weeks!.first.days.first.date;
-    final DateTime endDate = state.weeks!.last.days.last.date;
-    context.read<CalendarUserDataCubit>().dateRangeChanged(
-          startDate: startDate,
-          endDate: endDate,
-        );
+    final CalendarUserDataCubit cubit = context.read<CalendarUserDataCubit>();
+    cubit.dateRangeChanged(
+      startDate: state.weeks!.first.days.first.date,
+      endDate: state.weeks!.last.days.last.date,
+    );
+    cubit.dateRangeOfStatsChanged(
+      startDateOfStats: state.dateRange!.startDate,
+      endDateOfStats: state.dateRange!.endDate,
+    );
   }
 
   void _onDayPressed(BuildContext context, CalendarState state) {

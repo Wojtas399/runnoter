@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../common/date_service.dart';
 import '../../data/model/health_measurement.dart';
 import '../../data/model/race.dart';
 import '../../data/model/workout.dart';
@@ -19,7 +20,10 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
   final HealthMeasurementRepository _healthMeasurementRepository;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
+  final DateService _dateService;
   StreamSubscription<CalendarUserData?>? _listener;
+  DateTime? _startDateOfStats;
+  DateTime? _endDateOfStats;
 
   CalendarUserDataCubit({
     required this.userId,
@@ -27,19 +31,53 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
   })  : _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
+        _dateService = getIt<DateService>(),
         super(initialUserData);
 
   int? get numberOfActivities =>
-      state == null ? null : state!.workouts.length + state!.races.length;
+      _canCreateStats ? _workoutsToStats.length + _racesToStats.length : null;
 
-  double? get scheduledTotalDistance => _calculateScheduledTotalDistance();
+  double? get scheduledTotalDistance =>
+      _canCreateStats ? _calculateScheduledTotalDistance() : null;
 
-  double? get coveredTotalDistance => _calculateCoveredTotalDistance();
+  double? get coveredTotalDistance =>
+      _canCreateStats ? _calculateCoveredTotalDistance() : null;
+
+  bool get _canCreateStats =>
+      state != null && _startDateOfStats != null && _endDateOfStats != null;
+
+  List<Workout> get _workoutsToStats => state!.workouts
+      .where(
+        (Workout workout) => _dateService.isDateFromRange(
+          date: workout.date,
+          startDate: _startDateOfStats!,
+          endDate: _endDateOfStats!,
+        ),
+      )
+      .toList();
+
+  List<Race> get _racesToStats => state!.races
+      .where(
+        (Race race) => _dateService.isDateFromRange(
+          date: race.date,
+          startDate: _startDateOfStats!,
+          endDate: _endDateOfStats!,
+        ),
+      )
+      .toList();
 
   @override
   Future<void> close() {
     _disposeListener();
     return super.close();
+  }
+
+  void dateRangeOfStatsChanged({
+    required final DateTime? startDateOfStats,
+    required final DateTime? endDateOfStats,
+  }) {
+    _startDateOfStats = startDateOfStats;
+    _endDateOfStats = endDateOfStats;
   }
 
   void dateRangeChanged({
@@ -109,23 +147,21 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
   }
 
   double? _calculateScheduledTotalDistance() {
-    if (state == null) return null;
-    final double workoutsDistance = state!.workouts
+    final double workoutsDistance = _workoutsToStats
         .map(
           (workout) => workout.stages.map(calculateDistanceOfWorkoutStage).sum,
         )
         .sum;
     final double racesDistance =
-        state!.races.map((Race race) => race.distance).sum;
+        _racesToStats.map((Race race) => race.distance).sum;
     return workoutsDistance + racesDistance;
   }
 
   double? _calculateCoveredTotalDistance() {
-    if (state == null) return null;
     final double workoutsCoveredDistance =
-        state!.workouts.map((workout) => workout.coveredDistance).sum;
+        _workoutsToStats.map((workout) => workout.coveredDistance).sum;
     final double racesCoveredDistance =
-        state!.races.map((race) => race.coveredDistance).sum;
+        _racesToStats.map((race) => race.coveredDistance).sum;
     return workoutsCoveredDistance + racesCoveredDistance;
   }
 }
