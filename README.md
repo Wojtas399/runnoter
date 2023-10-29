@@ -79,7 +79,7 @@ https://docs.flutter.dev/get-started/install
 # Screenshots
 <img width="300" alt="lightCalendarWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/57b13271-eab5-4b26-82df-01fb83a1149d"><img width="300" alt="darkCalendarWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/1f5dba33-aff7-4801-8864-eaa58d3ae528">
 
-<img width="300" alt="lightCalendarMonth" src="https://github.com/Wojtas399/runnoter/assets/72093398/d54078cf-3d96-477a-b747-a400aecc1052"><img width="300" alt="darkCalendarMonth" src="https://github.com/Wojtas399/runnoter/assets/72093398/6323c07f-8fa0-4c19-beab-976b09f41dc0">
+<img width="300" alt="lightCalendarMonth" src="https://github.com/Wojtas399/runnoter/assets/72093398/357bd331-5a75-4fb8-a200-f5c6c9390e0a"><img width="300" alt="darkCalendarMonth" src="https://github.com/Wojtas399/runnoter/assets/72093398/7c64edec-3f59-4776-ba01-e2975b787e44">
 
 <img width="300" alt="lightWorkoutPreview" src="https://github.com/Wojtas399/runnoter/assets/72093398/58031c8b-1195-433d-a28c-84fd40ed9f14"><img width="300" alt="darkWorkoutPreview" src="https://github.com/Wojtas399/runnoter/assets/72093398/fa423723-59c3-4f3f-8d07-aa043fa362b3">
 
