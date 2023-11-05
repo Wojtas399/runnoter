@@ -2,24 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-			    <string>fb$(FACEBOOK_APP_ID)</string>
-				<string>com.googleusercontent.apps.$(REVERSED_CLIENT_ID)</string>
-			</array>
-		</dict>
-	</array>
-	<key>FacebookAppID</key>
-    <string>$(FACEBOOK_APP_ID)</string>
-    <key>FacebookClientToken</key>
-    <string>$(FACEBOOK_CLIENT_TOKEN)</string>
-    <key>FacebookDisplayName</key>
-    <string>Runnoter</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -40,10 +22,34 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb$(FACEBOOK_APP_ID)</string>
+				<string>com.googleusercontent.apps.$(REVERSED_CLIENT_ID)</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FacebookAppID</key>
+	<string>$(FACEBOOK_APP_ID)</string>
+	<key>FacebookClientToken</key>
+	<string>$(FACEBOOK_CLIENT_TOKEN)</string>
+	<key>FacebookDisplayName</key>
+	<string>Runnoter</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Capture a photo from camera for chat</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Capture audio for videos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pick images from gallery for chat</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -54,13 +60,14 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Pick images from gallery for chat</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Capture a photo from camera for chat</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Capture audio for videos</string>
 </dict>
 </plist>

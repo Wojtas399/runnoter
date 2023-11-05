@@ -47,8 +47,7 @@ class ActivityStatusCreatorState
           (duration == null || duration!.inSeconds > 0) &&
           moodRate != null &&
           avgPace != null &&
-          avgPace!.minutes > 0 &&
-          avgPace!.seconds > 0 &&
+          (avgPace!.minutes > 0 || avgPace!.seconds > 0) &&
           avgHeartRate != null &&
           avgHeartRate! > 0);
 

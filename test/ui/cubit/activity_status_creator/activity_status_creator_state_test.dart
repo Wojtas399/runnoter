@@ -140,7 +140,7 @@ void main() {
 
   test(
     'can submit, '
-    'average pace minutes and seconds is 0, '
+    'average pace minutes and seconds are 0, '
     'should be false',
     () {
       state = state.copyWith(
@@ -152,6 +152,40 @@ void main() {
       );
 
       expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'average pace minutes are higher than 0 and seconds are 0, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        activityStatusType: ActivityStatusType.done,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        avgPace: const Pace(minutes: 5, seconds: 0),
+        avgHeartRate: 150,
+      );
+
+      expect(state.canSubmit, true);
+    },
+  );
+
+  test(
+    'can submit, '
+    'average pace minutes are 0 and seconds are higher than 0, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        activityStatusType: ActivityStatusType.done,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        avgPace: const Pace(minutes: 0, seconds: 45),
+        avgHeartRate: 150,
+      );
+
+      expect(state.canSubmit, true);
     },
   );
 

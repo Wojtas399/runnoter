@@ -29,7 +29,7 @@ class _State extends State<HealthMeasurementsItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 24, right: 16),
+      padding: const EdgeInsets.only(left: 24, right: 8),
       child: Row(
         children: [
           Expanded(

@@ -10,19 +10,19 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_core: ^2.11.0
-  firebase_auth: ^4.5.0
-  cloud_firestore: ^4.6.0
-  mocktail: ^0.3.0
+  firebase_core: ^2.21.0
+  firebase_auth: ^4.12.1
+  cloud_firestore: ^4.12.2
+  mocktail: ^1.0.1
   flutter_lints: ^2.0.1
   equatable: ^2.0.5
-  connectivity_plus: ^3.0.3
-  google_sign_in: ^6.1.4
-  flutter_facebook_auth: ^6.0.0
-  collection: ^1.17.1
-  intl: ^0.17.0
+  connectivity_plus: ^5.0.1
+  google_sign_in: ^6.1.5
+  flutter_facebook_auth: ^6.0.2
+  collection: ^1.17.2
+  intl: ^0.18.1
   uuid: ^4.0.0
-  firebase_storage: ^11.3.1
+  firebase_storage: ^11.4.1
 
 dev_dependencies:
   flutter_test:
