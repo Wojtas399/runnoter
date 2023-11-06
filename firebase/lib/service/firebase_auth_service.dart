@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../mapper/custom_firebase_exception_mapper.dart';
 import '../model/auth_provider.dart';
+import '../social_auth/apple_auth_service.dart';
 import '../social_auth/facebook_auth_service.dart';
 import '../social_auth/google_auth_service.dart';
 import '../social_auth/social_auth_service.dart';
@@ -9,6 +10,7 @@ import '../social_auth/social_auth_service.dart';
 class FirebaseAuthService {
   final SocialAuthService _googleAuthService = GoogleAuthService();
   final SocialAuthService _facebookAuthService = FacebookAuthService();
+  final SocialAuthService _appleAuthService = AppleAuthService();
 
   Stream<String?> get loggedUserId$ =>
       FirebaseAuth.instance.authStateChanges().map((User? user) => user?.uid);
@@ -39,10 +41,9 @@ class FirebaseAuthService {
       return await _googleAuthService.signIn();
     } on FirebaseAuthException catch (exception) {
       if (_hasPopupBeenCancelled(exception)) return null;
-      String code = exception.code;
-      if (_isInternalError(exception)) {
-        code = 'network-request-failed';
-      }
+      String code = _isInternalError(exception)
+          ? 'network-request-failed'
+          : exception.code;
       throw mapFirebaseAuthExceptionFromCodeStr(code);
     }
   }
@@ -52,10 +53,23 @@ class FirebaseAuthService {
       return await _facebookAuthService.signIn();
     } on FirebaseAuthException catch (exception) {
       if (_hasPopupBeenCancelled(exception)) return null;
-      String code = exception.code;
-      if (_isInternalError(exception)) {
-        code = 'network-request-failed';
+      String code = _isInternalError(exception)
+          ? 'network-request-failed'
+          : exception.code;
+      throw mapFirebaseAuthExceptionFromCodeStr(code);
+    }
+  }
+
+  Future<String?> signInWithApple() async {
+    try {
+      return await _appleAuthService.signIn();
+    } on FirebaseAuthException catch (exception) {
+      if (exception.code == 'unknown' || _hasPopupBeenCancelled(exception)) {
+        return null;
       }
+      String code = _isInternalError(exception)
+          ? 'network-request-failed'
+          : exception.code;
       throw mapFirebaseAuthExceptionFromCodeStr(code);
     }
   }
