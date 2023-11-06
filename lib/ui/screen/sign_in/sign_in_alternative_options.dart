@@ -59,6 +59,8 @@ class _SocialSignIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SignInCubit signInCubit = context.read<SignInCubit>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -66,20 +68,18 @@ class _SocialSignIn extends StatelessWidget {
           if (Platform.isIOS) ...[
             _AlternativeSignInButton(
               svgLogo: SvgPicture.asset('assets/apple_logo.svg'),
-              onPressed: () {
-                //TODO: Sign in with Apple,
-              },
+              onPressed: signInCubit.signInWithApple,
             ),
             const Gap16(),
           ],
           _AlternativeSignInButton(
             svgLogo: SvgPicture.asset('assets/google_logo.svg'),
-            onPressed: context.read<SignInCubit>().signInWithGoogle,
+            onPressed: signInCubit.signInWithGoogle,
           ),
           const Gap16(),
           _AlternativeSignInButton(
             svgLogo: SvgPicture.asset('assets/facebook_logo.svg'),
-            onPressed: context.read<SignInCubit>().signInWithFacebook,
+            onPressed: signInCubit.signInWithFacebook,
           ),
         ],
       ),

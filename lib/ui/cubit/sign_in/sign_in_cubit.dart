@@ -96,6 +96,22 @@ class SignInCubit
     }
   }
 
+  Future<void> signInWithApple() async {
+    try {
+      emitLoadingStatus();
+      final String? loggedUserId = await _authService.signInWithApple();
+      if (loggedUserId == null) {
+        emitCompleteStatus();
+        return;
+      }
+      await _checkIfLoggedUserDataExist(loggedUserId);
+    } on NetworkException catch (exception) {
+      if (exception.code == NetworkExceptionCode.requestFailed) {
+        emitNoInternetConnectionStatus();
+      }
+    }
+  }
+
   Future<void> deleteRecentlyCreatedAccount() async {
     emitLoadingStatus();
     await _authService.deleteAccount();
