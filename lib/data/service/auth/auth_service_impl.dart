@@ -54,7 +54,11 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<String?> signInWithApple() async {
-    throw UnimplementedError();
+    try {
+      return await _firebaseAuthService.signInWithApple();
+    } on firebase.CustomFirebaseException catch (exception) {
+      throw mapExceptionFromDb(exception);
+    }
   }
 
   @override
