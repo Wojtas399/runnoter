@@ -13,6 +13,8 @@ abstract interface class AuthService {
 
   Future<String?> signInWithFacebook();
 
+  Future<String?> signInWithApple();
+
   Future<String?> signUp({required String email, required String password});
 
   Future<void> sendEmailVerification();

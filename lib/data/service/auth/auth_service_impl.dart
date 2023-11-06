@@ -53,6 +53,11 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
+  Future<String?> signInWithApple() async {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<String?> signUp({
     required String email,
     required String password,
