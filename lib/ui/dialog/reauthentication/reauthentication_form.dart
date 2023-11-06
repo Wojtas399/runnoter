@@ -18,6 +18,7 @@ class ReauthenticationForm extends StatelessWidget {
     final str = Str.of(context);
     const Widget gap = Gap24();
 
+    //TODO: Add apple reauthentication option
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -66,7 +67,7 @@ class _GoogleAuthentication extends StatelessWidget {
     );
 
     return _SocialAuthenticationButton(
-      svgIconPath: 'assets/google_icon.svg',
+      svgIconPath: 'assets/google_logo.svg',
       isLoading: cubitStatus is CubitStatusLoading &&
           cubitStatus.loadingInfo ==
               ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
@@ -86,7 +87,7 @@ class _FacebookAuthentication extends StatelessWidget {
     );
 
     return _SocialAuthenticationButton(
-      svgIconPath: 'assets/facebook_icon.svg',
+      svgIconPath: 'assets/facebook_logo.svg',
       isLoading: cubitStatus is CubitStatusLoading &&
           cubitStatus.loadingInfo ==
               ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
