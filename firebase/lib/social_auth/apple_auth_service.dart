@@ -5,15 +5,15 @@ import 'social_auth_service.dart';
 class AppleAuthService implements SocialAuthService {
   @override
   Future<String?> signIn() async {
-    final AppleAuthProvider appleProvider = AppleAuthProvider();
     final UserCredential credential =
-        await FirebaseAuth.instance.signInWithProvider(appleProvider);
+        await FirebaseAuth.instance.signInWithProvider(AppleAuthProvider());
     return credential.user?.uid;
   }
 
   @override
-  Future<String?> reauthenticate() {
-    // TODO: implement reauthenticate
-    throw UnimplementedError();
+  Future<String?> reauthenticate() async {
+    final UserCredential? credential = await FirebaseAuth.instance.currentUser
+        ?.reauthenticateWithProvider(AppleAuthProvider());
+    return credential?.user?.uid;
   }
 }
