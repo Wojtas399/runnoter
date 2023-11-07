@@ -2,6 +2,9 @@ import 'package:equatable/equatable.dart';
 
 sealed class FirebaseAuthProvider extends Equatable {
   const FirebaseAuthProvider();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class FirebaseAuthProviderPassword extends FirebaseAuthProvider {
@@ -15,14 +18,12 @@ class FirebaseAuthProviderPassword extends FirebaseAuthProvider {
 
 class FirebaseAuthProviderGoogle extends FirebaseAuthProvider {
   const FirebaseAuthProviderGoogle();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class FirebaseAuthProviderFacebook extends FirebaseAuthProvider {
   const FirebaseAuthProviderFacebook();
+}
 
-  @override
-  List<Object?> get props => [];
+class FirebaseAuthProviderApple extends FirebaseAuthProvider {
+  const FirebaseAuthProviderApple();
 }

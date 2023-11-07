@@ -183,6 +183,7 @@ class FirebaseAuthService {
           _reauthenticateWithPassword(authProvider.password),
         FirebaseAuthProviderGoogle() => _googleAuthService.reauthenticate(),
         FirebaseAuthProviderFacebook() => _facebookAuthService.reauthenticate(),
+        FirebaseAuthProviderApple() => _appleAuthService.reauthenticate(),
       };
 
   Future<String?> _reauthenticateWithPassword(String password) async {
