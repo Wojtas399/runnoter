@@ -44,6 +44,14 @@ class MockAuthService extends Mock implements AuthService {
     }
   }
 
+  void mockSignInWithApple({String? userId, Object? throwable}) {
+    if (throwable != null) {
+      when(signInWithApple).thenThrow(throwable);
+    } else {
+      when(signInWithApple).thenAnswer((_) => Future.value(userId));
+    }
+  }
+
   void mockSignUp({String? userId, Object? throwable}) {
     if (throwable != null) {
       when(_signUpCall).thenThrow(throwable);

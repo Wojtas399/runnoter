@@ -208,6 +208,19 @@ void main() {
   );
 
   test(
+    'sign in with apple, '
+    'should call firebase method to sign in with apple',
+    () async {
+      firebaseAuthService.mockSignInWithApple(userId: 'u1');
+
+      final String? loggedUserId = await service.signInWithApple();
+
+      expect(loggedUserId, 'u1');
+      verify(firebaseAuthService.signInWithApple).called(1);
+    },
+  );
+
+  test(
     'sign up, '
     "should call firebase service's method to sign up user and should return user id",
     () async {

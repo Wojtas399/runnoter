@@ -1,7 +1,10 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/svg.dart' '';
 
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -31,6 +34,10 @@ class ReauthenticationForm extends StatelessWidget {
         gap,
         const _FacebookAuthentication(),
         gap,
+        if (!kIsWeb && Platform.isIOS) ...[
+          const _AppleAuthentication(),
+          gap,
+        ],
       ],
     );
   }
@@ -66,7 +73,7 @@ class _GoogleAuthentication extends StatelessWidget {
     );
 
     return _SocialAuthenticationButton(
-      svgIconPath: 'assets/google_icon.svg',
+      svgIconPath: 'assets/google_logo.svg',
       isLoading: cubitStatus is CubitStatusLoading &&
           cubitStatus.loadingInfo ==
               ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
@@ -86,12 +93,32 @@ class _FacebookAuthentication extends StatelessWidget {
     );
 
     return _SocialAuthenticationButton(
-      svgIconPath: 'assets/facebook_icon.svg',
+      svgIconPath: 'assets/facebook_logo.svg',
       isLoading: cubitStatus is CubitStatusLoading &&
           cubitStatus.loadingInfo ==
               ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
       isDisabled: cubitStatus is CubitStatusLoading,
       onPressed: context.read<ReauthenticationCubit>().useFacebook,
+    );
+  }
+}
+
+class _AppleAuthentication extends StatelessWidget {
+  const _AppleAuthentication();
+
+  @override
+  Widget build(BuildContext context) {
+    final CubitStatus cubitStatus = context.select(
+      (ReauthenticationCubit cubit) => cubit.state.status,
+    );
+
+    return _SocialAuthenticationButton(
+      svgIconPath: 'assets/apple_logo.svg',
+      isLoading: cubitStatus is CubitStatusLoading &&
+          cubitStatus.loadingInfo ==
+              ReauthenticationCubitLoadingInfo.appleReauthenticationLoading,
+      isDisabled: cubitStatus is CubitStatusLoading,
+      onPressed: context.read<ReauthenticationCubit>().useApple,
     );
   }
 }

@@ -655,6 +655,117 @@ void main() {
   );
 
   blocTest(
+    'sign in with apple, '
+    'existing user with verified email, '
+    'should emit complete status with signed in info',
+    build: () => SignInCubit(),
+    setUp: () {
+      authService.mockSignInWithApple(userId: 'u1');
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
+      authService.mockHasLoggedUserVerifiedEmail(expected: true);
+    },
+    act: (cubit) => cubit.signInWithApple(),
+    expect: () => [
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(
+        status: CubitStatusComplete<SignInCubitInfo>(
+          info: SignInCubitInfo.signedIn,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(authService.signInWithApple).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with apple, '
+    'existing user with unverified email, '
+    'should emit error status with unverified email error and should call '
+    "auth service's method to send email verification",
+    build: () => SignInCubit(),
+    setUp: () {
+      authService.mockSignInWithApple(userId: 'u1');
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
+      authService.mockHasLoggedUserVerifiedEmail(expected: false);
+      authService.mockSendEmailVerification();
+    },
+    act: (cubit) => cubit.signInWithApple(),
+    expect: () => [
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(
+        status: CubitStatusError<SignInCubitError>(
+          error: SignInCubitError.unverifiedEmail,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(authService.signInWithApple).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+      verify(authService.sendEmailVerification).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with apple, '
+    'new user, '
+    'should emit complete status with new signed in user info',
+    build: () => SignInCubit(),
+    setUp: () {
+      authService.mockSignInWithApple(userId: 'u1');
+      userRepository.mockGetUserById();
+    },
+    act: (cubit) => cubit.signInWithApple(),
+    expect: () => [
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(
+        status: CubitStatusComplete<SignInCubitInfo>(
+          info: SignInCubitInfo.newSignedInUser,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(authService.signInWithApple).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with apple, '
+    'signed in user has not been found, '
+    'should emit complete status without info',
+    build: () => SignInCubit(),
+    setUp: () => authService.mockSignInWithApple(),
+    act: (cubit) => cubit.signInWithApple(),
+    expect: () => [
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusComplete()),
+    ],
+    verify: (_) => verify(authService.signInWithApple).called(1),
+  );
+
+  blocTest(
+    'sign in with apple, '
+    'network exception with requestFailed code'
+    'should emit network request failed status',
+    build: () => SignInCubit(),
+    setUp: () => authService.mockSignInWithApple(
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
+    ),
+    act: (cubit) => cubit.signInWithApple(),
+    expect: () => [
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusNoInternetConnection()),
+    ],
+    verify: (_) => verify(authService.signInWithApple).called(1),
+  );
+
+  blocTest(
     'delete recently created account, '
     'should call auth service method to delete logged user and should emit complete status',
     build: () => SignInCubit(),

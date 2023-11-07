@@ -417,4 +417,114 @@ void main() {
       ),
     ).called(1),
   );
+
+  blocTest(
+    'use apple, '
+    'confirmed, '
+    'should emit complete status with userConfirmed info',
+    build: () => ReauthenticationCubit(),
+    setUp: () => authService.mockReauthenticate(
+      reauthenticationStatus: ReauthenticationStatus.confirmed,
+    ),
+    act: (cubit) => cubit.useApple(),
+    expect: () => [
+      const ReauthenticationState(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
+          loadingInfo:
+              ReauthenticationCubitLoadingInfo.appleReauthenticationLoading,
+        ),
+      ),
+      const ReauthenticationState(
+        status: CubitStatusComplete<ReauthenticationCubitInfo>(
+          info: ReauthenticationCubitInfo.userConfirmed,
+        ),
+      ),
+    ],
+    verify: (_) => verify(
+      () => authService.reauthenticate(
+        authProvider: const AuthProviderApple(),
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'use apple, '
+    'cancelled, '
+    'should emit complete status without any info',
+    build: () => ReauthenticationCubit(),
+    setUp: () => authService.mockReauthenticate(
+      reauthenticationStatus: ReauthenticationStatus.cancelled,
+    ),
+    act: (cubit) => cubit.useApple(),
+    expect: () => [
+      const ReauthenticationState(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
+          loadingInfo:
+              ReauthenticationCubitLoadingInfo.appleReauthenticationLoading,
+        ),
+      ),
+      const ReauthenticationState(status: CubitStatusComplete()),
+    ],
+    verify: (_) => verify(
+      () => authService.reauthenticate(
+        authProvider: const AuthProviderApple(),
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'use apple, '
+    'user mismatch, '
+    'should emit error status with userMismatch error',
+    build: () => ReauthenticationCubit(),
+    setUp: () => authService.mockReauthenticate(
+      reauthenticationStatus: ReauthenticationStatus.userMismatch,
+    ),
+    act: (cubit) => cubit.useApple(),
+    expect: () => [
+      const ReauthenticationState(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
+          loadingInfo:
+              ReauthenticationCubitLoadingInfo.appleReauthenticationLoading,
+        ),
+      ),
+      const ReauthenticationState(
+        status: CubitStatusError<ReauthenticationCubitError>(
+          error: ReauthenticationCubitError.userMismatch,
+        ),
+      ),
+    ],
+    verify: (_) => verify(
+      () => authService.reauthenticate(
+        authProvider: const AuthProviderApple(),
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'use apple, '
+    'network exception with requestFailed code, '
+    'should emit no internet connection status',
+    build: () => ReauthenticationCubit(),
+    setUp: () => authService.mockReauthenticate(
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
+    ),
+    act: (cubit) => cubit.useApple(),
+    expect: () => [
+      const ReauthenticationState(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
+          loadingInfo:
+              ReauthenticationCubitLoadingInfo.appleReauthenticationLoading,
+        ),
+      ),
+      const ReauthenticationState(status: CubitStatusNoInternetConnection()),
+    ],
+    verify: (_) => verify(
+      () => authService.reauthenticate(
+        authProvider: const AuthProviderApple(),
+      ),
+    ).called(1),
+  );
 }
