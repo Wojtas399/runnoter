@@ -1,7 +1,10 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/svg.dart' '';
 
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -18,7 +21,6 @@ class ReauthenticationForm extends StatelessWidget {
     final str = Str.of(context);
     const Widget gap = Gap24();
 
-    //TODO: Add apple reauthentication option
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -32,6 +34,10 @@ class ReauthenticationForm extends StatelessWidget {
         gap,
         const _FacebookAuthentication(),
         gap,
+        if (!kIsWeb && Platform.isIOS) ...[
+          const _AppleAuthentication(),
+          gap,
+        ],
       ],
     );
   }
@@ -93,6 +99,26 @@ class _FacebookAuthentication extends StatelessWidget {
               ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
       isDisabled: cubitStatus is CubitStatusLoading,
       onPressed: context.read<ReauthenticationCubit>().useFacebook,
+    );
+  }
+}
+
+class _AppleAuthentication extends StatelessWidget {
+  const _AppleAuthentication();
+
+  @override
+  Widget build(BuildContext context) {
+    final CubitStatus cubitStatus = context.select(
+      (ReauthenticationCubit cubit) => cubit.state.status,
+    );
+
+    return _SocialAuthenticationButton(
+      svgIconPath: 'assets/apple_logo.svg',
+      isLoading: cubitStatus is CubitStatusLoading &&
+          cubitStatus.loadingInfo ==
+              ReauthenticationCubitLoadingInfo.appleReauthenticationLoading,
+      isDisabled: cubitStatus is CubitStatusLoading,
+      onPressed: context.read<ReauthenticationCubit>().useApple,
     );
   }
 }

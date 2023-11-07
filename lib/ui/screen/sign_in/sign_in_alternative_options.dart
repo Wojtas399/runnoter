@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -65,7 +66,7 @@ class _SocialSignIn extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          if (Platform.isIOS) ...[
+          if (!kIsWeb && Platform.isIOS) ...[
             _AlternativeSignInButton(
               svgLogo: SvgPicture.asset('assets/apple_logo.svg'),
               onPressed: signInCubit.signInWithApple,

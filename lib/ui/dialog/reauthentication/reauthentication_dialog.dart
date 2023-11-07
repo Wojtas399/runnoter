@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -40,6 +41,7 @@ class ReauthenticationBottomSheet extends StatelessWidget {
                   child: Text(Str.of(context).cancel),
                 ),
               ),
+              if (!kIsWeb) const SizedBox(height: 24),
             ],
           ),
         ),

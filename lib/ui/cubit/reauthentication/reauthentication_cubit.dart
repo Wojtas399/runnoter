@@ -25,12 +25,36 @@ class ReauthenticationCubit extends CubitWithStatus<ReauthenticationState,
   Future<void> usePassword() async {
     final String? password = state.password;
     if (password == null || password.isEmpty) return;
-    emitLoadingStatus(
-      loadingInfo:
-          ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
+    await _reauthenticateWithProvider(
+      AuthProviderPassword(password: state.password!),
     );
+  }
+
+  Future<void> useGoogle() async {
+    await _reauthenticateWithProvider(const AuthProviderGoogle());
+  }
+
+  Future<void> useFacebook() async {
+    await _reauthenticateWithProvider(const AuthProviderFacebook());
+  }
+
+  Future<void> useApple() async {
+    await _reauthenticateWithProvider(const AuthProviderApple());
+  }
+
+  Future<void> _reauthenticateWithProvider(AuthProvider authProvider) async {
+    final ReauthenticationCubitLoadingInfo loadingInfo = switch (authProvider) {
+      AuthProviderPassword() =>
+        ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
+      AuthProviderGoogle() =>
+        ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
+      AuthProviderFacebook() =>
+        ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
+      AuthProviderApple() =>
+        ReauthenticationCubitLoadingInfo.appleReauthenticationLoading,
+    };
+    emitLoadingStatus(loadingInfo: loadingInfo);
     try {
-      final authProvider = AuthProviderPassword(password: state.password!);
       final ReauthenticationStatus reauthenticationStatus =
           await _authService.reauthenticate(authProvider: authProvider);
       _manageReauthenticationStatus(reauthenticationStatus);
@@ -38,38 +62,6 @@ class ReauthenticationCubit extends CubitWithStatus<ReauthenticationState,
       if (authException.code == AuthExceptionCode.wrongPassword) {
         emitErrorStatus(ReauthenticationCubitError.wrongPassword);
       }
-    } on NetworkException catch (networkException) {
-      if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNoInternetConnectionStatus();
-      }
-    }
-  }
-
-  Future<void> useGoogle() async {
-    emitLoadingStatus(
-      loadingInfo:
-          ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
-    );
-    try {
-      final ReauthenticationStatus reauthenticationStatus = await _authService
-          .reauthenticate(authProvider: const AuthProviderGoogle());
-      _manageReauthenticationStatus(reauthenticationStatus);
-    } on NetworkException catch (networkException) {
-      if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNoInternetConnectionStatus();
-      }
-    }
-  }
-
-  Future<void> useFacebook() async {
-    emitLoadingStatus(
-      loadingInfo:
-          ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
-    );
-    try {
-      final ReauthenticationStatus reauthenticationStatus = await _authService
-          .reauthenticate(authProvider: const AuthProviderFacebook());
-      _manageReauthenticationStatus(reauthenticationStatus);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
         emitNoInternetConnectionStatus();
@@ -95,6 +87,7 @@ enum ReauthenticationCubitLoadingInfo {
   passwordReauthenticationLoading,
   googleReauthenticationLoading,
   facebookReauthenticationLoading,
+  appleReauthenticationLoading,
 }
 
 enum ReauthenticationCubitInfo { userConfirmed }
