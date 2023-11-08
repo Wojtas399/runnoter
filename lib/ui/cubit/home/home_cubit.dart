@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../dependency_injection.dart';
 import '../../../data/model/user.dart';
 import '../../../data/repository/user/user_repository.dart';
 import '../../../data/service/auth/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../model/cubit_state.dart';
 import '../../model/cubit_status.dart';
 import '../../model/cubit_with_status.dart';
@@ -39,7 +39,6 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
         )
         .listen(
           (User? loggedUser) => emit(state.copyWith(
-            status: loggedUser == null ? const CubitStatusNoLoggedUser() : null,
             accountType: loggedUser?.accountType,
             loggedUserName: loggedUser?.name,
             userSettings: loggedUser?.settings,

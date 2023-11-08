@@ -106,13 +106,13 @@ void main() {
 
       blocTest(
         'logged user does not exist, '
-        'should emit no logged user status',
+        'should emit complete status',
         build: () => HomeCubit(),
         setUp: () => authService.mockGetLoggedUserId(),
         act: (cubit) => cubit.initialize(),
         expect: () => [
           const HomeState(status: CubitStatusLoading()),
-          const HomeState(status: CubitStatusNoLoggedUser()),
+          const HomeState(status: CubitStatusComplete()),
         ],
         verify: (_) => verify(() => authService.loggedUserId$).called(1),
       );
