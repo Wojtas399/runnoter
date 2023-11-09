@@ -1,7 +1,10 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/svg.dart' '';
 
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -57,16 +60,27 @@ class _SocialSignIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
+    final SignInCubit signInCubit = context.read<SignInCubit>();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
         children: [
-          Expanded(
-            child: _SignInWithGoogle(),
+          if (!kIsWeb && Platform.isIOS) ...[
+            _AlternativeSignInButton(
+              svgLogo: SvgPicture.asset('assets/apple_logo.svg'),
+              onPressed: signInCubit.signInWithApple,
+            ),
+            const Gap16(),
+          ],
+          _AlternativeSignInButton(
+            svgLogo: SvgPicture.asset('assets/google_logo.svg'),
+            onPressed: signInCubit.signInWithGoogle,
           ),
-          GapHorizontal16(),
-          Expanded(
-            child: _SignInWithFacebook(),
+          const Gap16(),
+          _AlternativeSignInButton(
+            svgLogo: SvgPicture.asset('assets/facebook_logo.svg'),
+            onPressed: signInCubit.signInWithFacebook,
           ),
         ],
       ),
@@ -74,36 +88,26 @@ class _SocialSignIn extends StatelessWidget {
   }
 }
 
-class _SignInWithGoogle extends StatelessWidget {
-  const _SignInWithGoogle();
+class _AlternativeSignInButton extends StatelessWidget {
+  final SvgPicture svgLogo;
+  final VoidCallback onPressed;
+
+  const _AlternativeSignInButton({
+    required this.svgLogo,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: 40,
+      width: double.infinity,
+      constraints: const BoxConstraints(maxWidth: 300),
       child: OutlinedButton(
-        onPressed: context.read<SignInCubit>().signInWithGoogle,
+        onPressed: onPressed,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SvgPicture.asset('assets/google_icon.svg'),
-        ),
-      ),
-    );
-  }
-}
-
-class _SignInWithFacebook extends StatelessWidget {
-  const _SignInWithFacebook();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: OutlinedButton(
-        onPressed: context.read<SignInCubit>().signInWithFacebook,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SvgPicture.asset('assets/facebook_icon.svg'),
+          padding: const EdgeInsets.all(8),
+          child: svgLogo,
         ),
       ),
     );

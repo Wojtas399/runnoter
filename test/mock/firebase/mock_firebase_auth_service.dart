@@ -46,6 +46,15 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
+  void mockSignInWithApple({String? userId, Object? throwable}) {
+    if (throwable != null) {
+      when(signInWithApple).thenThrow(throwable);
+    }
+    {
+      when(signInWithApple).thenAnswer((_) => Future.value(userId));
+    }
+  }
+
   void mockSignUp({String? userId, Object? throwable}) {
     if (throwable != null) {
       when(_signUpCall).thenThrow(throwable);

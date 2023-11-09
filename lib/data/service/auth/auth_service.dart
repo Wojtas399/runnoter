@@ -13,6 +13,8 @@ abstract interface class AuthService {
 
   Future<String?> signInWithFacebook();
 
+  Future<String?> signInWithApple();
+
   Future<String?> signUp({required String email, required String password});
 
   Future<void> sendEmailVerification();
@@ -38,6 +40,9 @@ enum ReauthenticationStatus { confirmed, cancelled, userMismatch }
 
 sealed class AuthProvider extends Equatable {
   const AuthProvider();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class AuthProviderPassword extends AuthProvider {
@@ -51,14 +56,12 @@ class AuthProviderPassword extends AuthProvider {
 
 class AuthProviderGoogle extends AuthProvider {
   const AuthProviderGoogle();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class AuthProviderFacebook extends AuthProvider {
   const AuthProviderFacebook();
+}
 
-  @override
-  List<Object?> get props => [];
+class AuthProviderApple extends AuthProvider {
+  const AuthProviderApple();
 }

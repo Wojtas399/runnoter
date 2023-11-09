@@ -9,4 +9,5 @@ FirebaseAuthProvider mapAuthProviderToDb(AuthProvider authProvider) =>
         ),
       AuthProviderGoogle() => const FirebaseAuthProviderGoogle(),
       AuthProviderFacebook() => const FirebaseAuthProviderFacebook(),
+      AuthProviderApple() => const FirebaseAuthProviderApple(),
     };
