@@ -19,11 +19,15 @@ class BloodTestCreatorContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges:
-            context.read<BloodTestCreatorCubit>().state.canSubmit,
-      ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        final bool isLeaveConfirmed = await askForConfirmationToLeave(
+          areUnsavedChanges:
+              context.read<BloodTestCreatorCubit>().state.canSubmit,
+        );
+        if (context.mounted && isLeaveConfirmed) Navigator.pop(context);
+      },
       child: const Scaffold(
         appBar: BloodTestCreatorAppBar(),
         body: SafeArea(

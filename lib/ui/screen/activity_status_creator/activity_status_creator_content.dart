@@ -18,11 +18,15 @@ class ActivityStatusCreatorContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges:
-            context.read<ActivityStatusCreatorCubit>().state.canSubmit,
-      ),
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        final bool isLeaveConfirmed = await askForConfirmationToLeave(
+          areUnsavedChanges:
+              context.read<ActivityStatusCreatorCubit>().state.canSubmit,
+        );
+        if (context.mounted && isLeaveConfirmed) Navigator.pop(context);
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(Str.of(context).activityStatus),
