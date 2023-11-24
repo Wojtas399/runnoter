@@ -33,6 +33,7 @@ class _NormalDialogContent extends StatelessWidget {
       title: Text(str.healthMeasurementCreatorScreenTitle),
       content: const SizedBox(
         width: 500,
+        height: 250,
         child: _Form(),
       ),
       actions: [
@@ -83,7 +84,9 @@ class _Form extends StatelessWidget {
 
     return cubitStatus is CubitStatusInitial
         ? const LoadingInfo()
-        : const HealthMeasurementCreatorForm();
+        : const SingleChildScrollView(
+            child: HealthMeasurementCreatorForm(),
+          );
   }
 }
 
