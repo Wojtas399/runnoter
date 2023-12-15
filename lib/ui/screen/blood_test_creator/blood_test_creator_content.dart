@@ -11,6 +11,7 @@ import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../cubit/blood_test_creator/blood_test_creator_cubit.dart';
+import '../../model/cubit_status.dart';
 import '../../service/dialog_service.dart';
 import 'blood_test_creator_app_bar.dart';
 
@@ -19,9 +20,15 @@ class BloodTestCreatorContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CubitStatus cubitStatus = context.select(
+      (BloodTestCreatorCubit cubit) => cubit.state.status,
+    );
     return PopScope(
-      canPop: false,
+      canPop: cubitStatus is CubitStatusComplete &&
+          (cubitStatus.info == BloodTestCreatorCubitInfo.bloodTestAdded ||
+              cubitStatus.info == BloodTestCreatorCubitInfo.bloodTestUpdated),
       onPopInvoked: (bool didPop) async {
+        if (didPop) return;
         final bool isLeaveConfirmed = await askForConfirmationToLeave(
           areUnsavedChanges:
               context.read<BloodTestCreatorCubit>().state.canSubmit,
