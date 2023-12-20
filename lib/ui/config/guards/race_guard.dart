@@ -1,32 +1,34 @@
 import 'package:auto_route/auto_route.dart';
 
-import '../../../data/model/workout.dart';
-import '../../../data/repository/workout/workout_repository.dart';
+import '../../../data/model/race.dart';
+import '../../../data/repository/race/race_repository.dart';
 import '../../../dependency_injection.dart';
 import '../navigation/router.dart';
 
-class WorkoutGuard extends AutoRouteGuard {
-  final WorkoutRepository _workoutRepository;
+class RaceGuard extends AutoRouteGuard {
+  final RaceRepository _raceRepository;
 
-  WorkoutGuard() : _workoutRepository = getIt<WorkoutRepository>();
+  RaceGuard() : _raceRepository = getIt<RaceRepository>();
 
   @override
   void onNavigation(NavigationResolver resolver, StackRouter router) async {
     final Parameters pathParams = resolver.route.pathParams;
     final String userId = pathParams.get('userId');
-    final String workoutId = pathParams.get('workoutId');
-    final Stream<Workout?> workout$ = _workoutRepository.getWorkoutById(
+    final String raceId = pathParams.get('raceId');
+    final Stream<Race?> race$ = _raceRepository.getRaceById(
+      raceId: raceId,
       userId: userId,
-      workoutId: workoutId,
     );
-    await for (final workout in workout$) {
-      if (workout != null) {
+    await for (final race in race$) {
+      if (race != null) {
         resolver.next(true);
         return;
       } else {
         final PageRouteInfo redirectPage = switch (router.topRoute.name) {
           CalendarRoute.name => const CalendarRoute(),
+          RacesRoute.name => const RacesRoute(),
           ClientCalendarRoute.name => const ClientCalendarRoute(),
+          ClientRacesRoute.name => const ClientRacesRoute(),
           _ => const HomeBaseRoute(),
         };
         resolver.redirect(redirectPage);
