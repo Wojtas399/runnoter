@@ -216,17 +216,21 @@ class _ProfileBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool? areThereUnreadMessagesFromCoach = context.select(
+    final bool areThereUnreadMessagesFromCoach = context.select(
       (NotificationsCubit cubit) => cubit.state.areThereUnreadMessagesFromCoach,
     );
     final bool areThereCoachingReqsFromCoaches = context.select(
       (NotificationsCubit cubit) =>
           cubit.state.numberOfCoachingRequestsFromCoaches > 0,
     );
+    final bool hasLoggedUserCoach = context.select(
+      (HomeCubit cubit) => cubit.state.hasLoggedUserCoach,
+    );
 
     return Badge(
-      isLabelVisible: areThereUnreadMessagesFromCoach == true ||
-          areThereCoachingReqsFromCoaches,
+      isLabelVisible: hasLoggedUserCoach
+          ? areThereUnreadMessagesFromCoach
+          : areThereCoachingReqsFromCoaches,
       child: child,
     );
   }

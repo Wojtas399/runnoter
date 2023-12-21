@@ -63,7 +63,6 @@ void main() {
           distanceUnit: DistanceUnit.kilometers,
           paceUnit: PaceUnit.milesPerHour,
         ),
-        coachId: 'coach1',
       );
       final StreamController<User?> loggedUser$ =
           BehaviorSubject.seeded(loggedUser);
@@ -87,12 +86,14 @@ void main() {
             status: const CubitStatusComplete(),
             accountType: loggedUser.accountType,
             loggedUserName: loggedUser.name,
+            hasLoggedUserCoach: true,
             userSettings: loggedUser.settings,
           ),
           HomeState(
             status: const CubitStatusComplete(),
             accountType: updatedLoggedUser.accountType,
             loggedUserName: updatedLoggedUser.name,
+            hasLoggedUserCoach: false,
             userSettings: updatedLoggedUser.settings,
           ),
         ],
