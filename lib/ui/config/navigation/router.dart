@@ -6,6 +6,7 @@ import '../../screen/home/home_base.dart';
 import '../../screen/screens.dart';
 import '../guards/auth_guard.dart';
 import '../guards/blood_test_guard.dart';
+import '../guards/client_guard.dart';
 import '../guards/race_guard.dart';
 import '../guards/workout_guard.dart';
 
@@ -116,6 +117,7 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ClientRoute.page,
               path: 'client/:clientId',
+              guards: [ClientGuard()],
               children: [
                 RedirectRoute(path: '', redirectTo: 'calendar'),
                 AutoRoute(
