@@ -179,6 +179,9 @@ class _RequestItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+    final theme = Theme.of(context);
+
     return ListTile(
       contentPadding: EdgeInsets.symmetric(
         horizontal: context.isMobileSize ? 8 : 0,
@@ -187,29 +190,38 @@ class _RequestItem extends StatelessWidget {
       subtitle: Text(request.person.email),
       leading: Icon(request.person.gender.toIconData()),
       trailing: switch (requestDirection) {
-        CoachingRequestDirection.coachToClient => IconButton(
-            onPressed: () => _onDelete(context),
-            icon: Icon(
-              Icons.delete_outline,
-              color: Theme.of(context).colorScheme.error,
+        CoachingRequestDirection.coachToClient => Tooltip(
+            message: str.delete,
+            child: IconButton(
+              onPressed: () => _onDelete(context),
+              icon: Icon(
+                Icons.delete_outline,
+                color: theme.colorScheme.error,
+              ),
             ),
           ),
         CoachingRequestDirection.clientToCoach => Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                onPressed: () =>
-                    context.read<ClientsCubit>().acceptRequest(request.id),
-                icon: Icon(
-                  Icons.check,
-                  color: Theme.of(context).colorScheme.primary,
+              Tooltip(
+                message: str.confirm,
+                child: IconButton(
+                  onPressed: () =>
+                      context.read<ClientsCubit>().acceptRequest(request.id),
+                  icon: Icon(
+                    Icons.check,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
               ),
-              IconButton(
-                onPressed: () => _onDelete(context),
-                icon: Icon(
-                  Icons.close,
-                  color: Theme.of(context).colorScheme.error,
+              Tooltip(
+                message: str.delete,
+                child: IconButton(
+                  onPressed: () => _onDelete(context),
+                  icon: Icon(
+                    Icons.close,
+                    color: theme.colorScheme.error,
+                  ),
                 ),
               ),
             ],
