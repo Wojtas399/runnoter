@@ -26,9 +26,9 @@ class WorkoutGuard extends AutoRouteGuard {
       } else {
         final PageRouteInfo redirectPage = switch (router.topRoute.name) {
           CalendarRoute.name => const CalendarRoute(),
-          ClientCalendarRoute.name => const ClientCalendarRoute(),
+          ClientCalendarRoute.name => ClientRoute(clientId: userId),
           _ => const HomeBaseRoute(),
-        };
+        } as PageRouteInfo;
         resolver.redirect(redirectPage);
         return;
       }

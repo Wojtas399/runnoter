@@ -27,8 +27,8 @@ class RaceGuard extends AutoRouteGuard {
         final PageRouteInfo redirectPage = switch (router.topRoute.name) {
           CalendarRoute.name => const CalendarRoute(),
           RacesRoute.name => const RacesRoute(),
-          ClientCalendarRoute.name => const ClientCalendarRoute(),
-          ClientRacesRoute.name => const ClientRacesRoute(),
+          ClientCalendarRoute.name => ClientRoute(clientId: userId),
+          ClientRacesRoute.name => ClientRoute(clientId: userId),
           _ => const HomeBaseRoute(),
         };
         resolver.redirect(redirectPage);
