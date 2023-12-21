@@ -76,7 +76,10 @@ void main() {
     'logged user does not exist, '
     'should do nothing',
     build: () => ProfileCoachCubit(),
-    setUp: () => authService.mockGetLoggedUserId(),
+    setUp: () {
+      authService.mockGetLoggedUserEmail();
+      authService.mockGetLoggedUserId();
+    },
     act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
@@ -130,7 +133,9 @@ void main() {
         'else should only listen to sent and received coaching requests',
         build: () => ProfileCoachCubit(),
         setUp: () {
+          authService.mockGetLoggedUserEmail(userEmail: 'e@example.com');
           authService.mockGetLoggedUserId(userId: loggedUserId);
+          userRepository.mockRefreshUserById();
           userRepository.mockGetUserById(userStream: loggedUser$.stream);
           personRepository.mockGetPersonById(personStream: coach$.stream);
           getSentCoachingRequestsWithReceiverInfoUseCase.mock(

@@ -57,7 +57,7 @@ class ProfileCoachCubit extends CubitWithStatus<ProfileCoachState,
   }
 
   void initialize() {
-    _listener ??= _getLoggedUser()
+    _listener ??= _loggedUser$
         .switchMap(
           (User loggedUser) => loggedUser.coachId != null
               ? _personRepository
@@ -176,12 +176,27 @@ class ProfileCoachCubit extends CubitWithStatus<ProfileCoachState,
     return false;
   }
 
-  Stream<User> _getLoggedUser() => _authService.loggedUserId$
+  Stream<User> get _loggedUser$ => _onLoggedUserRefreshed$
+      .switchMap((_) => _authService.loggedUserId$)
       .whereNotNull()
+      .doOnData(
+        (String loggedUserId) => _userRepository.refreshUserById(
+          userId: loggedUserId,
+        ),
+      )
       .switchMap(
-        (loggedUserId) => _userRepository.getUserById(userId: loggedUserId),
+        (String loggedUserId) => _userRepository.getUserById(
+          userId: loggedUserId,
+        ),
       )
       .whereNotNull();
+
+  // We need below method because loggedUserId is not reloaded. When we listen
+  // to loggedUserEmail (which is reloaded every time we execute the reload
+  // procedure) we can reload the logged user's coach information, when the
+  // reload procedure is being executed.
+  Stream<void> get _onLoggedUserRefreshed$ =>
+      _authService.loggedUserEmail$.map((_) {});
 
   Stream<List<CoachingRequestWithPerson>> _getSentCoachingRequests(
     String loggedUserId,
