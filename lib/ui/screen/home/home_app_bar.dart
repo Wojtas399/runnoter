@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../component/date_range_header_component.dart';
@@ -136,13 +137,16 @@ class _Avatar extends StatelessWidget {
       (HomeCubit cubit) => cubit.state.loggedUserName,
     );
 
-    return IconButton(
-      onPressed: onPressed,
-      padding: const EdgeInsets.all(0),
-      icon: _ProfileBadge(
-        child: CircleAvatar(
-          radius: 18,
-          child: Text(loggedUserName?[0] ?? '?'),
+    return Tooltip(
+      message: Str.of(context).profile,
+      child: IconButton(
+        onPressed: onPressed,
+        padding: const EdgeInsets.all(0),
+        icon: _ProfileBadge(
+          child: CircleAvatar(
+            radius: 18,
+            child: Text(loggedUserName?[0] ?? '?'),
+          ),
         ),
       ),
     );
