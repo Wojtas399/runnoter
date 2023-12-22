@@ -54,13 +54,19 @@ class EditDeleteActions extends StatelessWidget {
     }
     return Row(
       children: [
-        IconButton(
-          onPressed: _emitEditEvent,
-          icon: Icon(editIcon, color: theme.colorScheme.primary),
+        Tooltip(
+          message: str.edit,
+          child: IconButton(
+            onPressed: _emitEditEvent,
+            icon: Icon(editIcon, color: theme.colorScheme.primary),
+          ),
         ),
-        IconButton(
-          onPressed: _emitDeleteEvent,
-          icon: Icon(deleteIcon, color: theme.colorScheme.error),
+        Tooltip(
+          message: str.delete,
+          child: IconButton(
+            onPressed: _emitDeleteEvent,
+            icon: Icon(deleteIcon, color: theme.colorScheme.error),
+          ),
         ),
       ],
     );
