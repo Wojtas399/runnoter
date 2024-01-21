@@ -28,6 +28,9 @@ class HealthMeasurementInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -42,19 +45,25 @@ class HealthMeasurementInfo extends StatelessWidget {
                     if (onEdit != null &&
                         (healthMeasurement != null ||
                             displayBigButtonIfHealthMeasurementIsNull == false))
-                      IconButton(
-                        onPressed: onEdit,
-                        icon: Icon(
-                          Icons.edit_outlined,
-                          color: Theme.of(context).colorScheme.primary,
+                      Tooltip(
+                        message: str.edit,
+                        child: IconButton(
+                          onPressed: onEdit,
+                          icon: Icon(
+                            Icons.edit_outlined,
+                            color: theme.colorScheme.primary,
+                          ),
                         ),
                       ),
                     if (onDelete != null && healthMeasurement != null)
-                      IconButton(
-                        onPressed: onDelete,
-                        icon: Icon(
-                          Icons.delete_outline,
-                          color: Theme.of(context).colorScheme.error,
+                      Tooltip(
+                        message: str.delete,
+                        child: IconButton(
+                          onPressed: onDelete,
+                          icon: Icon(
+                            Icons.delete_outline,
+                            color: theme.colorScheme.error,
+                          ),
                         ),
                       ),
                   ],

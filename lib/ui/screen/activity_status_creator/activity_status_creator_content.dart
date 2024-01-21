@@ -10,6 +10,7 @@ import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../formatter/activity_status_formatter.dart';
+import '../../model/cubit_status.dart';
 import '../../service/dialog_service.dart';
 import 'activity_status_creator_params_form.dart';
 
@@ -18,11 +19,21 @@ class ActivityStatusCreatorContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges:
-            context.read<ActivityStatusCreatorCubit>().state.canSubmit,
-      ),
+    final CubitStatus cubitStatus = context.select(
+      (ActivityStatusCreatorCubit cubit) => cubit.state.status,
+    );
+    return PopScope(
+      canPop: cubitStatus is CubitStatusComplete &&
+          cubitStatus.info ==
+              ActivityStatusCreatorCubitInfo.activityStatusSaved,
+      onPopInvoked: (bool didPop) async {
+        if (didPop) return;
+        final bool isLeaveConfirmed = await askForConfirmationToLeave(
+          areUnsavedChanges:
+              context.read<ActivityStatusCreatorCubit>().state.canSubmit,
+        );
+        if (context.mounted && isLeaveConfirmed) Navigator.pop(context);
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(Str.of(context).activityStatus),

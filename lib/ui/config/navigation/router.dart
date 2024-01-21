@@ -4,7 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screen/home/home_base.dart';
 import '../../screen/screens.dart';
-import '../auth_guard.dart';
+import '../guards/auth_guard.dart';
+import '../guards/blood_test_guard.dart';
+import '../guards/client_guard.dart';
+import '../guards/race_guard.dart';
+import '../guards/workout_guard.dart';
 
 part 'router.gr.dart';
 
@@ -74,6 +78,7 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: WorkoutPreviewRoute.page,
               path: 'workout-preview/:userId/:workoutId',
+              guards: [WorkoutGuard()],
             ),
             AutoRoute(
               page: WorkoutCreatorRoute.page,
@@ -82,6 +87,7 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: RacePreviewRoute.page,
               path: 'race-preview/:userId/:raceId',
+              guards: [RaceGuard()],
             ),
             AutoRoute(
               page: RaceCreatorRoute.page,
@@ -98,6 +104,7 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: BloodTestPreviewRoute.page,
               path: 'blood-test-preview/:userId/:bloodTestId',
+              guards: [BloodTestGuard()],
             ),
             AutoRoute(
               page: ActivityStatusCreatorRoute.page,
@@ -110,6 +117,7 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ClientRoute.page,
               path: 'client/:clientId',
+              guards: [ClientGuard()],
               children: [
                 RedirectRoute(path: '', redirectTo: 'calendar'),
                 AutoRoute(

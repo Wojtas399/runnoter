@@ -8,6 +8,7 @@ import '../../component/card_body_component.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
@@ -45,7 +46,9 @@ class _BloodTests extends StatelessWidget {
       null => const LoadingInfo(),
       [] => RefreshIndicator(
           onRefresh: context.read<BloodTestsCubit>().refresh,
-          child: const _NoTestsContent(),
+          child: const Paddings24(
+            child: _NoTestsContent(),
+          ),
         ),
       [...] => RefreshIndicator(
           onRefresh: context.read<BloodTestsCubit>().refresh,

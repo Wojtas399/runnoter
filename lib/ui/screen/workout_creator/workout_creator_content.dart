@@ -21,10 +21,21 @@ class WorkoutCreatorContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges: context.read<WorkoutCreatorCubit>().state.canSubmit,
-      ),
+    final CubitStatus cubitStatus = context.select(
+      (WorkoutCreatorCubit cubit) => cubit.state.status,
+    );
+    return PopScope(
+      canPop: cubitStatus is CubitStatusComplete &&
+          (cubitStatus.info == WorkoutCreatorCubitInfo.workoutAdded ||
+              cubitStatus.info == WorkoutCreatorCubitInfo.workoutUpdated),
+      onPopInvoked: (bool didPop) async {
+        if (didPop) return;
+        final bool isLeaveConfirmed = await askForConfirmationToLeave(
+          areUnsavedChanges:
+              context.read<WorkoutCreatorCubit>().state.canSubmit,
+        );
+        if (context.mounted && isLeaveConfirmed) Navigator.pop(context);
+      },
       child: Scaffold(
         appBar: AppBar(
           title: const _AppBarTitle(),

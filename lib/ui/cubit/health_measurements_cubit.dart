@@ -36,8 +36,8 @@ class HealthMeasurementsCubit extends Cubit<List<HealthMeasurement>?> {
         .listen(
       (List<HealthMeasurement>? measurements) {
         List<HealthMeasurement>? sortedMeasurements;
-        if (measurements != null) sortedMeasurements = [...measurements];
-        sortedMeasurements?.sort(_compareDatesOfMeasurements);
+        sortedMeasurements = [...?measurements];
+        sortedMeasurements.sort(_compareDatesOfMeasurements);
         emit(sortedMeasurements);
       },
     );

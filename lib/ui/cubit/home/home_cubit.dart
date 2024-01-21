@@ -41,6 +41,7 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
           (User? loggedUser) => emit(state.copyWith(
             accountType: loggedUser?.accountType,
             loggedUserName: loggedUser?.name,
+            hasLoggedUserCoach: loggedUser?.coachId != null,
             userSettings: loggedUser?.settings,
           )),
         );

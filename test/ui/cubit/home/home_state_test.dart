@@ -53,6 +53,19 @@ void main() {
   );
 
   test(
+    'copy with hasLoggedUserCoach',
+    () {
+      const bool expected = true;
+
+      state = state.copyWith(hasLoggedUserCoach: expected);
+      final state2 = state.copyWith();
+
+      expect(state.hasLoggedUserCoach, expected);
+      expect(state2.hasLoggedUserCoach, expected);
+    },
+  );
+
+  test(
     'copy with userSettings, '
     'should set new value or should copy current value if new value is null',
     () {

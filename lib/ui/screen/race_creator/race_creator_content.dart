@@ -18,10 +18,20 @@ class RaceCreatorContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges: context.read<RaceCreatorCubit>().state.canSubmit,
-      ),
+    final CubitStatus cubitStatus = context.select(
+      (RaceCreatorCubit cubit) => cubit.state.status,
+    );
+    return PopScope(
+      canPop: cubitStatus is CubitStatusComplete &&
+          (cubitStatus.info == RaceCreatorCubitInfo.raceAdded ||
+              cubitStatus.info == RaceCreatorCubitInfo.raceUpdated),
+      onPopInvoked: (bool didPop) async {
+        if (didPop) return;
+        final bool isLeaveConfirmed = await askForConfirmationToLeave(
+          areUnsavedChanges: context.read<RaceCreatorCubit>().state.canSubmit,
+        );
+        if (context.mounted && isLeaveConfirmed) Navigator.pop(context);
+      },
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,

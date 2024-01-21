@@ -85,6 +85,8 @@ class _ClientItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return ListTile(
       title: Text('${clientInfo.name} ${clientInfo.surname}'),
       subtitle: Text(clientInfo.email),
@@ -94,20 +96,29 @@ class _ClientItem extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          IconButton(
-            onPressed: () => _onOpenChat(context),
-            icon: Badge(
-              isLabelVisible: showMessageBadge,
-              child: const Icon(Icons.message_outlined),
+          Tooltip(
+            message: str.chat,
+            child: IconButton(
+              onPressed: () => _onOpenChat(context),
+              icon: Badge(
+                isLabelVisible: showMessageBadge,
+                child: const Icon(Icons.message_outlined),
+              ),
             ),
           ),
-          IconButton(
-            onPressed: () => _onShowProfile(context),
-            icon: const Icon(Icons.assignment_ind_outlined),
+          Tooltip(
+            message: str.profile,
+            child: IconButton(
+              onPressed: () => _onShowProfile(context),
+              icon: const Icon(Icons.assignment_ind_outlined),
+            ),
           ),
-          IconButton(
-            onPressed: () => _onDeleteClient(context),
-            icon: const Icon(Icons.person_remove_outlined),
+          Tooltip(
+            message: str.delete,
+            child: IconButton(
+              onPressed: () => _onDeleteClient(context),
+              icon: const Icon(Icons.person_remove_outlined),
+            ),
           ),
         ].addSeparator(
           !context.isMobileSize ? const GapHorizontal8() : const SizedBox(),
