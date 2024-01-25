@@ -6,6 +6,7 @@ import 'package:provider/single_child_widget.dart';
 
 import '../../component/cubit_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
+import '../../cubit/home/home_cubit.dart';
 import '../../cubit/profile/coach/profile_coach_cubit.dart';
 import '../../cubit/profile/identities/profile_identities_cubit.dart';
 import '../../cubit/profile/settings/profile_settings_cubit.dart';
@@ -29,6 +30,7 @@ class ProfileScreen extends StatelessWidget {
         listeners: const [
           _IdentitiesCubitListener(),
           _CoachCubitListener(),
+          _HomeCubitListener(),
         ],
         child: const ProfileContent(),
       ),
@@ -155,5 +157,22 @@ class _CoachCubitListener extends SingleChildStatelessWidget {
           message: str.profileUserNoLongerHasCoachDialogMessage,
         );
     }
+  }
+}
+
+class _HomeCubitListener extends SingleChildStatelessWidget {
+  const _HomeCubitListener();
+
+  @override
+  Widget buildWithChild(BuildContext context, Widget? child) {
+    return CubitWithStatusListener<HomeCubit, HomeState, HomeCubitInfo,
+        dynamic>(
+      onInfo: (HomeCubitInfo info) {
+        if (info == HomeCubitInfo.userSignedOut) {
+          context.read<ProfileCoachCubit>().close();
+        }
+      },
+      child: child,
+    );
   }
 }
