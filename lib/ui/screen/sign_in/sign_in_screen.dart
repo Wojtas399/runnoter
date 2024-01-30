@@ -45,7 +45,7 @@ class _CubitListener extends StatelessWidget {
   Future<void> _manageInfo(BuildContext context, SignInCubitInfo info) async {
     switch (info) {
       case SignInCubitInfo.signedIn:
-        navigateAndRemoveUntil(const HomeRoute());
+        _navigateToHome();
         break;
       case SignInCubitInfo.newSignedInUser:
         await _manageNewUser(context);
@@ -81,6 +81,10 @@ class _CubitListener extends StatelessWidget {
     }
   }
 
+  void _navigateToHome() {
+    navigateAndRemoveUntil(const HomeRoute());
+  }
+
   Future<void> _manageNewUser(BuildContext context) async {
     final SignInCubit cubit = context.read<SignInCubit>();
     final bool wantToCreateAccount =
@@ -90,7 +94,7 @@ class _CubitListener extends StatelessWidget {
         const RequiredDataCompletionDialog(),
       );
       if (hasDataBeenAdded) {
-        await showDialogDependingOnScreenSize(const EmailVerificationDialog());
+        _navigateToHome();
         return;
       }
     }

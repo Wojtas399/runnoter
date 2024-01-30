@@ -163,6 +163,7 @@ class FirebaseAuthService {
   }
 
   bool _hasPopupBeenCancelled(FirebaseAuthException exception) =>
+      exception.code == 'canceled' ||
       exception.code == 'web-context-cancelled' ||
       exception.code == 'web-context-canceled' ||
       exception.message?.contains('popup-closed-by-user') == true ||
